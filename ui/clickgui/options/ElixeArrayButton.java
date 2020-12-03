@@ -196,7 +196,7 @@ public class ElixeArrayButton extends ElixeButtonBase {
 		return index;
 	}
 	
-	public boolean overlayClick(int mouseX, int mouseY) {
+	public boolean overlayClick(int mouseX, int mouseY, int mouseButton) {
 		int overIndex = getOverIndex(mouseX, mouseY);
 		if (overIndex != -1) {
 			selectedText = listOptions[overIndex];
