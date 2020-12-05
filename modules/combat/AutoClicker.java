@@ -70,7 +70,7 @@ public class AutoClicker extends Module {
 	};
 
 	// randomizacao
-	TimerUtils clickTimer = new TimerUtils();
+	TimerUtils.MilisecondTimer clickTimer = new TimerUtils().new MilisecondTimer();
 	Random r = new Random();
 
 	int cps = 0;

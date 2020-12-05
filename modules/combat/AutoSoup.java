@@ -94,9 +94,10 @@ public class AutoSoup extends Module {
 	boolean autoSouping = false;
 	int autoSoupStep = 0;
 
-	TimerUtils refillTimer = new TimerUtils();
+	TimerUtils.MilisecondTimer refillTimer = new TimerUtils().new MilisecondTimer();
 
-	TimerUtils recraftTimer = new TimerUtils();
+	TimerUtils.MilisecondTimer recraftTimer = new TimerUtils().new MilisecondTimer();
+	
 	boolean recrafting = false;
 	int recraftStep = 0;
 	InventoryItem bowlRecraft, redMushRecraft, brownMushRecraft;
