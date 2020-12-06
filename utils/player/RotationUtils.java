@@ -1,5 +1,6 @@
 package elixe.utils.player;
 
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;
 
 public class RotationUtils {
@@ -7,6 +8,17 @@ public class RotationUtils {
 	public static float getAngleDifference(final float a, final float b) {
 		return ((((a - b) % 360F) + 540F) % 360F) - 180F;
 	}
+	
+	public static double getDirection(EntityPlayerSP ent) {
+
+        float rotationYaw = ent.rotationYaw;
+        if (ent.moveForward < 0f) rotationYaw += 180f;
+        float forward = 1f;
+        if (ent.moveForward < 0f) { forward = -0.5f; } else if (ent.moveForward > 0f) forward = 0.5f;
+        if (ent.moveStrafing > 0f) rotationYaw -= 90f * forward;
+        if (ent.moveStrafing < 0f) rotationYaw += 90f * forward;
+        return Math.toRadians(rotationYaw);
+    }
 
 	public static float[] rotationUntilTarget(Entity ent, Entity toEnt) {
         if (ent != null) {
