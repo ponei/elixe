@@ -50,7 +50,7 @@ public class ElixeKeyButton extends ElixeButtonBase {
 		} else {
 			keyName = Mouse.getButtonName(keyCode + 100).toLowerCase();
 		}
-	
+
 		keyNameTextWid = fontrenderer.getStringWidth(keyName) / 2;
 	}
 
@@ -59,8 +59,10 @@ public class ElixeKeyButton extends ElixeButtonBase {
 	}
 
 	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) {
-		if (!containsKeyButton(mouseX, mouseY)) {
-			return false;
+		if (!waiting) {
+			if (!containsKeyButton(mouseX, mouseY)) {
+				return false;
+			}
 		}
 
 		if (!waiting) {
@@ -69,11 +71,11 @@ public class ElixeKeyButton extends ElixeButtonBase {
 			keyNameTextWid = fontrenderer.getStringWidth(keyName) / 2;
 		} else {
 			if (mouseButton > 1) {
-				option.setValue(mouseButton - 100);				
+				option.setValue(mouseButton - 100);
 			}
 			waiting = false;
 			setTextCurrentKey();
-			
+
 		}
 		return true;
 	}

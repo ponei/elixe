@@ -195,32 +195,33 @@ public class ElixeMenu extends GuiScreen {
 			}
 		}
 
+		// category change
+		for (int i = 0; catButtons.length > i; i++) {
+			if (catButtons[i].checkMouseClick(mouseX, mouseY)) {
+				changeCategory(catButtons[i].getCategory());
+				return;
+			}
+		}
+		// module toggle/options
+		for (ElixeModuleButton bt : modButtons) {
+			if (bt.mouseClick(mouseX, mouseY, mouseButton)) {
+				return;
+			}
+
+			if (bt.containsArrow(mouseX, mouseY)) {
+				addOptions(bt.getModule());
+				return;
+			}
+		}
+		
+		//base
+		for (ElixeButtonBase opt : modOptions) {
+			if (opt.mouseClick(mouseX, mouseY, mouseButton)) {
+				return;
+			}
+		}
+
 		if (isInGUIArea(mouseX, mouseY)) {
-			// category change
-
-			for (int i = 0; catButtons.length > i; i++) {
-				if (catButtons[i].checkMouseClick(mouseX, mouseY)) {
-					changeCategory(catButtons[i].getCategory());
-					return;
-				}
-			}
-			// module toggle/options
-			for (ElixeModuleButton bt : modButtons) {
-				if (bt.mouseClick(mouseX, mouseY, mouseButton)) {
-					return;
-				}
-
-				if (bt.containsArrow(mouseX, mouseY)) {
-					addOptions(bt.getModule());
-					return;
-				}
-			}
-			for (ElixeButtonBase opt : modOptions) {
-				if (opt.mouseClick(mouseX, mouseY, mouseButton)) {
-					return;
-				}
-			}
-
 			if (!dragging) {
 				dragging = true;
 				clickX = mouseX;
