@@ -182,7 +182,7 @@ public class AimAssist extends Module {
 				angleChange = 1f / angleEvent;
 				angleEvent = 0;
 			}
-			
+
 			float[] requiredAngles = RotationUtils.rotationUntilTarget(filteredEntity, mc.thePlayer);
 			float requiredYaw = RotationUtils.getAngleDifference(mc.thePlayer.rotationYaw, requiredAngles[0]);
 			float requiredPitch = RotationUtils.getAngleDifference(mc.thePlayer.rotationPitch, requiredAngles[1]);
@@ -218,7 +218,7 @@ public class AimAssist extends Module {
 		}
 
 		if (needSprint) {
-			if (!mc.thePlayer.isSprinting()) {
+			if (!conditionals.isSprinting()) {
 				return false;
 			}
 		}
@@ -230,21 +230,12 @@ public class AimAssist extends Module {
 		}
 
 		if (needAttackButton) {
-			int attack = mc.gameSettings.keyBindAttack.getKeyCode() + 100;
-			if (!Mouse.isButtonDown(attack)) {
+			if (!conditionals.isHoldingAttack()) {
 				return false;
 			}
 		}
 		if (needWeapon) {
-			ItemStack item = mc.thePlayer.getCurrentEquippedItem();
-			if (item != null) {
-				boolean weapon = (item.getItem() instanceof ItemSword || item.getItem() instanceof ItemAxe
-						|| item.getItem() instanceof ItemPickaxe || item.getItem() instanceof ItemSpade
-						|| item.getItem() instanceof ItemHoe);
-				if (!weapon) {
-					return false;
-				}
-			} else {
+			if (!conditionals.isHoldingWeapon()) {
 				return false;
 			}
 		}
@@ -262,17 +253,18 @@ public class AimAssist extends Module {
 
 		return reverse ? -toClamp : toClamp;
 	}
-	
-	public void setAngles(float yaw, float pitch)
-    {
+
+	public void setAngles(float yaw, float pitch) {
 		float f = mc.thePlayer.rotationPitch;
-        float f1 = mc.thePlayer.rotationYaw;
-        mc.thePlayer.rotationYaw = (float)((double)mc.thePlayer.rotationYaw + (double)yaw * 0.15D + (-yawStep * aimSpeed));
-        mc.thePlayer.rotationPitch = (float)((double)mc.thePlayer.rotationPitch - (double)pitch * 0.15D - (pitchStep * aimSpeed));
-        mc.thePlayer.rotationPitch = MathHelper.clamp_float(mc.thePlayer.rotationPitch, -90.0F, 90.0F);
-        mc.thePlayer.prevRotationPitch += mc.thePlayer.rotationPitch - f;
-        mc.thePlayer.prevRotationYaw += mc.thePlayer.rotationYaw - f1;
-    }
+		float f1 = mc.thePlayer.rotationYaw;
+		mc.thePlayer.rotationYaw = (float) ((double) mc.thePlayer.rotationYaw + (double) yaw * 0.15D
+				+ (-yawStep * aimSpeed));
+		mc.thePlayer.rotationPitch = (float) ((double) mc.thePlayer.rotationPitch - (double) pitch * 0.15D
+				- (pitchStep * aimSpeed));
+		mc.thePlayer.rotationPitch = MathHelper.clamp_float(mc.thePlayer.rotationPitch, -90.0F, 90.0F);
+		mc.thePlayer.prevRotationPitch += mc.thePlayer.rotationPitch - f;
+		mc.thePlayer.prevRotationYaw += mc.thePlayer.rotationYaw - f1;
+	}
 
 	private Entity getClosestEntity(ArrayList<Entity> filteredEntities) {
 		float distance = aimDistance;

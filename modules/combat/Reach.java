@@ -128,28 +128,20 @@ public class Reach extends Module {
 			return;
 		}
 		if (needSprint) {			
-			if (!mc.thePlayer.isSprinting()) {
+			if (!conditionals.isSprinting()) {
 				return;
 			}
 		}
 		
-		if (!waterCheck) {
-			if (mc.thePlayer.isInWater()) {
+		if (waterCheck) {
+			if (conditionals.isInWater()) {
 				return;
 			}
 		}
 		
 		
 		if (needWeapon) {
-			ItemStack item = mc.thePlayer.getCurrentEquippedItem();
-			if (item != null) {
-				boolean weapon = (item.getItem() instanceof ItemSword || item.getItem() instanceof ItemAxe
-						|| item.getItem() instanceof ItemPickaxe || item.getItem() instanceof ItemSpade
-						|| item.getItem() instanceof ItemHoe);
-				if (!weapon) {
-					return;
-				}
-			} else {
+			if (!conditionals.isHoldingWeapon()) {
 				return;
 			}
 		}
