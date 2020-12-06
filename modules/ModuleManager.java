@@ -8,6 +8,7 @@ import elixe.modules.combat.*;
 import elixe.modules.misc.*;
 import elixe.modules.movement.*;
 import elixe.modules.render.*;
+import elixe.modules.player.*;
 
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listenable;
@@ -17,6 +18,7 @@ public class ModuleManager implements Listenable {
     private ArrayList<Module> modules = new ArrayList<Module>();
 
     //player    
+    public Phase PHASE = new Phase();
     //render
     public elixe.modules.render.HUD HUD = new elixe.modules.render.HUD();
     public Chams CHAMS = new Chams();
@@ -40,6 +42,7 @@ public class ModuleManager implements Listenable {
     
     public ModuleManager() {
     	//player    	
+    	modules.add(PHASE);
         //render
     	modules.add(HUD);
     	modules.add(CHAMS);
