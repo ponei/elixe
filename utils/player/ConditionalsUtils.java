@@ -19,8 +19,11 @@ public class ConditionalsUtils {
 		INSTANCE = this;
 	}
 
-	boolean sprinting, holdingWeapon, holdingAttack, inWater;
+	private boolean sprinting, holdingWeapon, holdingAttack, inWater;
 
+	//runTick() : void - net.minecraft.client.Minecraft
+	//L:1579
+	//antes do event de tick
 	public void updateConditionals() {
 		if (mc.currentScreen == null) {
 			sprinting = mc.thePlayer.isSprinting();
