@@ -25,7 +25,7 @@ public class Phase extends Module {
 			phaseNames[i] = phaseTypes[i].getName();
 		}
 		
-		phaseTypeIndexOption = new ModuleArray("phase type", 0, phaseNames) {
+		phaseTypeIndexOption = new ModuleArray("type", 0, phaseNames) {
 			public void valueChanged() {
 				phaseTypeIndex = (int) this.getValue();
 				updatePhaseType();
@@ -51,12 +51,12 @@ public class Phase extends Module {
 	});
 	
 	@EventHandler
-	private Listener<OnMoveEvent> asd = new Listener<>(e -> {
+	private Listener<OnMoveEvent> onMoveEvent = new Listener<>(e -> {
 		selectedPhase.OnMove(e);
 	});
 	
 	@EventHandler
-	private Listener<OnPacketSendEvent> asdf = new Listener<>(e -> {
+	private Listener<OnPacketSendEvent> onPacketSendEvent = new Listener<>(e -> {
 		selectedPhase.OnPacket(e);
 	});
 	
