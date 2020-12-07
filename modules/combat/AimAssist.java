@@ -12,10 +12,12 @@ import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleFloat;
+import elixe.utils.player.EntityUtils;
 import elixe.utils.player.RotationUtils;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -48,6 +50,7 @@ public class AimAssist extends Module {
 		moduleOptions.add(needAttackButtonOption);
 		moduleOptions.add(needWeaponOption);
 
+		moduleOptions.add(ignoreNakedOption);
 		moduleOptions.add(stopOnHitboxOption);
 	}
 
@@ -130,6 +133,13 @@ public class AimAssist extends Module {
 		}
 	};
 
+	boolean ignoreNaked = false;
+	ModuleBoolean ignoreNakedOption = new ModuleBoolean("ignore naked", false) {
+		public void valueChanged() {
+			ignoreNaked = (boolean) this.getValue();
+		}
+	};
+	
 	boolean stopOnHitbox = false;
 	ModuleBoolean stopOnHitboxOption = new ModuleBoolean("stop on hitbox", false) {
 		public void valueChanged() {
@@ -178,6 +188,12 @@ public class AimAssist extends Module {
 
 		Entity filteredEntity = getClosestEntity(filteredEntities);
 		if (filteredEntity != null) {
+			if (ignoreNaked) {
+				if (EntityUtils.isNaked((EntityLivingBase) filteredEntity)) {
+					return;
+				}
+			}
+			
 			if (angleEvent != 0) {
 				angleChange = 1f / angleEvent;
 				angleEvent = 0;

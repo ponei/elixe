@@ -13,6 +13,7 @@ import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
+import elixe.utils.player.EntityUtils;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -42,8 +43,10 @@ public class Reach extends Module {
 
 		moduleOptions.add(needSprintOption);
 		moduleOptions.add(needWeaponOption);
-					
-		moduleOptions.add(ignoreBlocksOption);		
+
+		moduleOptions.add(ignoreBlocksOption);
+		moduleOptions.add(ignoreNakedOption);
+
 		moduleOptions.add(waterCheckOption);
 		moduleOptions.add(yCheckOption);
 	}
@@ -91,22 +94,28 @@ public class Reach extends Module {
 			needSprint = (boolean) this.getValue();
 		}
 	};
-	
+
 	boolean needWeapon = false;
 	ModuleBoolean needWeaponOption = new ModuleBoolean("require weapon", false) {
 		public void valueChanged() {
 			needWeapon = (boolean) this.getValue();
 		}
 	};
-	
-	
+
 	boolean ignoreBlocks = false;
 	ModuleBoolean ignoreBlocksOption = new ModuleBoolean("ignore blocks", false) {
 		public void valueChanged() {
 			ignoreBlocks = (boolean) this.getValue();
 		}
 	};
-	
+
+	boolean ignoreNaked = false;
+	ModuleBoolean ignoreNakedOption = new ModuleBoolean("ignore naked", false) {
+		public void valueChanged() {
+			ignoreNaked = (boolean) this.getValue();
+		}
+	};
+
 	boolean waterCheck = false;
 	ModuleBoolean waterCheckOption = new ModuleBoolean("water check", false) {
 		public void valueChanged() {
@@ -127,25 +136,24 @@ public class Reach extends Module {
 		if (mc.thePlayer == null) {
 			return;
 		}
-		if (needSprint) {			
+		if (needSprint) {
 			if (!conditionals.isSprinting()) {
 				return;
 			}
 		}
-		
+
 		if (waterCheck) {
 			if (conditionals.isInWater()) {
 				return;
 			}
 		}
-		
-		
+
 		if (needWeapon) {
 			if (!conditionals.isHoldingWeapon()) {
 				return;
 			}
 		}
-		
+
 		e.cancel();
 		EntityRenderer entityRenderer = e.getEntityRenderer();
 		float partialTicks = e.getPartialTicks();
@@ -233,10 +241,20 @@ public class Reach extends Module {
 					}
 				}
 			}
+			
+			if (entityRenderer.pointedEntity != null) {
+				if (yCheck) {
+					if (isEntityInDifferentY(entityRenderer.pointedEntity, entity)) {
+						customReach = 3f;
+					}
+				}
+				if (ignoreNaked) {
+					if (EntityUtils.isNaked((EntityLivingBase) entityRenderer.pointedEntity)) {
+						customReach = 3f;
+					}
+				}
+			}
 
-			
-			customReach = isEntityInDifferentY(entityRenderer.pointedEntity, entity) ? 3.0f : customReach;
-			
 			// olhos -> posicao do hit
 			// dá miss caso entidade estiver mais de 3d
 			if (entityRenderer.pointedEntity != null && flag && vec3.distanceTo(vec33) > customReach) {
@@ -259,15 +277,12 @@ public class Reach extends Module {
 	});
 
 	private boolean isEntityInDifferentY(Entity ent, Entity player) {
-		if (yCheck && ent != null) {
-			double maxUp = player.posY + 0.3;
-			double maxDown = player.posY - 0.3;
-			if (ent.posY > maxUp || maxDown > ent.posY) {
-				return true;
-			} else {
-				return false;
-			}
+		double maxUp = player.posY + 0.3;
+		double maxDown = player.posY - 0.3;
+		if (ent.posY > maxUp || maxDown > ent.posY) {
+			return true;
+		} else {
+			return false;
 		}
-		return false;
 	}
 }
