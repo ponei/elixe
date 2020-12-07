@@ -155,7 +155,7 @@ public class ESP extends Module {
 			armorLocation = (int) this.getValue();
 		}
 	};
-	
+
 	boolean armorColor = false;
 	ModuleBoolean armorColorOption = new ModuleBoolean("armor color", false) {
 		public void valueChanged() {
@@ -246,7 +246,7 @@ public class ESP extends Module {
 	int spacingYUp = 0, spacingYDown = 0, spacingXLeft = 0, spacingXRight = 0;
 	int espWid = 0;
 	@EventHandler
-	private Listener<OnRender3DEvent> onRender3DEvent = new Listener<>(e -> {	
+	private Listener<OnRender3DEvent> onRender3DEvent = new Listener<>(e -> {
 		mvMatrix = WorldToScreen.getMatrix(GL11.GL_MODELVIEW_MATRIX);
 		projectionMatrix = WorldToScreen.getMatrix(GL11.GL_PROJECTION_MATRIX);
 
@@ -313,7 +313,7 @@ public class ESP extends Module {
 				GL11.glColor4f(0.95f, 0f, 0f, 1.0f); // vermleho
 			} else if (0.66f > perc) {
 				GL11.glColor4f(0.96f, 0.8f, 0f, 1.0f); // amarelo
-			} else if (1f >= perc){
+			} else if (1f >= perc) {
 				GL11.glColor4f(0.26f, 0.88f, 0f, 1.0f); // verde
 			} else {
 				GL11.glColor4f(1f, 1f, 0f, 1.0f); // amarelo forte
@@ -335,7 +335,7 @@ public class ESP extends Module {
 			base = minX - 5;
 
 			healthHeight = h > maxH ? maxY - minY - 2 : ((h * (maxY - minY - 2)) / maxH);
-			
+
 			GL11.glColor4f(0f, 0f, 0f, 1.0f);
 			GL11.glLineWidth(3f);
 			GL11.glBegin(GL11.GL_LINES);
@@ -404,7 +404,7 @@ public class ESP extends Module {
 			break;
 		case 2: // up
 			base = minY - 5;
-			healthHeight = h > maxH ?  maxX - minX - 2 : ((h * (maxX - minX - 2)) / maxH);
+			healthHeight = h > maxH ? maxX - minX - 2 : ((h * (maxX - minX - 2)) / maxH);
 			GL11.glColor4f(0f, 0f, 0f, 1.0f);
 			GL11.glLineWidth(3f);
 			GL11.glBegin(GL11.GL_LINES);
@@ -437,7 +437,7 @@ public class ESP extends Module {
 			break;
 		case 3: // down
 			base = maxY + 5;
-			healthHeight = h > maxH ?  maxX - minX - 2 : ((h * (maxX - minX - 2)) / maxH);
+			healthHeight = h > maxH ? maxX - minX - 2 : ((h * (maxX - minX - 2)) / maxH);
 			GL11.glColor4f(0f, 0f, 0f, 1.0f);
 			GL11.glLineWidth(3f);
 			GL11.glBegin(GL11.GL_LINES);
@@ -470,11 +470,11 @@ public class ESP extends Module {
 			break;
 		}
 	}
-	
+
 	private void getArmorColor(ArmorMaterial material) {
 		if (armorColor) {
 			switch (material) {
-			case DIAMOND:	
+			case DIAMOND:
 				GL11.glColor4f(0.19f, 0.89f, 0.76f, 1.0f);
 				break;
 			case IRON:
@@ -503,7 +503,7 @@ public class ESP extends Module {
 		case 0: // left
 			linhasDiv = ((maxY - minY - 2) / 4f);
 			base = minX - 5 - spacingXLeft;
-			
+
 			for (int i = 1; 4 >= i; i++) {
 				ItemStack armor = entLiving.getEquipmentInSlot(i);
 				if (armor != null) {
@@ -518,7 +518,7 @@ public class ESP extends Module {
 
 							GL11.glEnd();
 
-							GL11.glLineWidth(1f);						
+							GL11.glLineWidth(1f);
 						}
 						hasArmor = true;
 						ItemArmor entArmor = (ItemArmor) armor.getItem();
@@ -527,11 +527,11 @@ public class ESP extends Module {
 						float minYArmor = minY + (linhasDiv * (armorType + 1));
 
 						ArmorMaterial material = entArmor.getArmorMaterial();
-						float armorDamageReduction = armorColor ? linhasDiv : (linhasDiv
-								* material.getDamageReductionAmount(armorType))
-								/ ArmorMaterial.DIAMOND.getDamageReductionAmount(armorType);
+						float armorDamageReduction = armorColor ? linhasDiv
+								: (linhasDiv * material.getDamageReductionAmount(armorType))
+										/ ArmorMaterial.DIAMOND.getDamageReductionAmount(armorType);
 
-						getArmorColor(material);						
+						getArmorColor(material);
 						GL11.glBegin(GL11.GL_LINES);
 						GL11.glVertex2f(base, minYArmor - armorDamageReduction + 1);
 						GL11.glVertex2f(base, minYArmor + 1);
@@ -547,9 +547,9 @@ public class ESP extends Module {
 					GL11.glVertex2f(base, minY + 1 + (linhasDiv * i));
 				}
 				GL11.glEnd();
+				spacingXLeft += 6;
 			}
 
-			spacingXLeft += 6;
 			break;
 
 		case 1: // right
@@ -571,7 +571,7 @@ public class ESP extends Module {
 
 							GL11.glEnd();
 
-							GL11.glLineWidth(1f);					
+							GL11.glLineWidth(1f);
 						}
 						hasArmor = true;
 						ItemArmor entArmor = (ItemArmor) armor.getItem();
@@ -580,9 +580,9 @@ public class ESP extends Module {
 						float minYArmor = minY + (linhasDiv * (armorType + 1));
 
 						ArmorMaterial material = entArmor.getArmorMaterial();
-						float armorDamageReduction = armorColor ? linhasDiv : (linhasDiv
-								* material.getDamageReductionAmount(armorType))
-								/ ArmorMaterial.DIAMOND.getDamageReductionAmount(armorType);
+						float armorDamageReduction = armorColor ? linhasDiv
+								: (linhasDiv * material.getDamageReductionAmount(armorType))
+										/ ArmorMaterial.DIAMOND.getDamageReductionAmount(armorType);
 
 						getArmorColor(material);
 						GL11.glBegin(GL11.GL_LINES);
@@ -596,12 +596,12 @@ public class ESP extends Module {
 				GL11.glColor4f(0f, 0f, 0f, 1.0f);
 				GL11.glBegin(GL11.GL_POINTS);
 				for (float i = 1; i < 4; i++) {
-					GL11.glVertex2f(base, minY + 1 + (linhasDiv * i));		
+					GL11.glVertex2f(base, minY + 1 + (linhasDiv * i));
 				}
 				GL11.glEnd();
+				spacingXRight += 6;
 			}
 
-			spacingXRight += 6;
 			break;
 		case 2: // up
 			linhasDiv = ((maxX - minX - 2) / 4f);
@@ -622,9 +622,9 @@ public class ESP extends Module {
 
 							GL11.glEnd();
 
-							GL11.glLineWidth(1f);						
+							GL11.glLineWidth(1f);
 						}
-						
+
 						hasArmor = true;
 						ItemArmor entArmor = (ItemArmor) armor.getItem();
 
@@ -632,9 +632,9 @@ public class ESP extends Module {
 						float minXArmor = minX + (linhasDiv * (armorType + 1));
 
 						ArmorMaterial material = entArmor.getArmorMaterial();
-						float armorDamageReduction = armorColor ? linhasDiv : (linhasDiv
-								* material.getDamageReductionAmount(armorType))
-								/ ArmorMaterial.DIAMOND.getDamageReductionAmount(armorType);
+						float armorDamageReduction = armorColor ? linhasDiv
+								: (linhasDiv * material.getDamageReductionAmount(armorType))
+										/ ArmorMaterial.DIAMOND.getDamageReductionAmount(armorType);
 
 						getArmorColor(material);
 						GL11.glBegin(GL11.GL_LINES);
@@ -651,15 +651,15 @@ public class ESP extends Module {
 					GL11.glVertex2f(minX + 1 + (linhasDiv * i), base);
 				}
 				GL11.glEnd();
+				spacingYUp += 6;
 			}
 
-			spacingYUp += 6;
 			break;
 		case 3: // down
 			linhasDiv = ((maxX - minX - 2) / 4f);
 
 			base = maxY + 5 + spacingYDown;
-			
+
 			for (int i = 1; 4 >= i; i++) {
 				ItemStack armor = entLiving.getEquipmentInSlot(i);
 				if (armor != null) {
@@ -674,9 +674,9 @@ public class ESP extends Module {
 
 							GL11.glEnd();
 
-							GL11.glLineWidth(1f);	
+							GL11.glLineWidth(1f);
 						}
-						
+
 						hasArmor = true;
 						ItemArmor entArmor = (ItemArmor) armor.getItem();
 
@@ -684,9 +684,9 @@ public class ESP extends Module {
 						float minXArmor = minX + (linhasDiv * (armorType + 1));
 
 						ArmorMaterial material = entArmor.getArmorMaterial();
-						float armorDamageReduction = armorColor ? linhasDiv : (linhasDiv
-								* material.getDamageReductionAmount(armorType))
-								/ ArmorMaterial.DIAMOND.getDamageReductionAmount(armorType);
+						float armorDamageReduction = armorColor ? linhasDiv
+								: (linhasDiv * material.getDamageReductionAmount(armorType))
+										/ ArmorMaterial.DIAMOND.getDamageReductionAmount(armorType);
 
 						getArmorColor(material);
 						GL11.glBegin(GL11.GL_LINES);
@@ -703,8 +703,9 @@ public class ESP extends Module {
 					GL11.glVertex2f(minX + 1 + (linhasDiv * i), base);
 				}
 				GL11.glEnd();
+				spacingYDown += 6;
 			}
-			spacingYDown += 6;
+
 			break;
 		}
 	}
