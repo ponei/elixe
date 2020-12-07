@@ -15,7 +15,7 @@ import net.minecraft.client.gui.inventory.GuiInventory;
 public class ClickGUI extends Module {
 	
 	public ClickGUI() {
-		super("ClickGUI", ModuleCategory.RENDER, 41);
+		super("ClickGUI", ModuleCategory.RENDER, 45); //x
 	} 
 
 	public ElixeMenu menu = new ElixeMenu(this);
