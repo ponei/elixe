@@ -25,6 +25,7 @@ public class ModuleManager implements Listenable {
     public elixe.modules.render.ESP ESP = new elixe.modules.render.ESP();
     public ClickGUI CLICKGUI = new ClickGUI();
     public NameProtect NAMEPROTECT = new NameProtect();
+    public Camera CAMERA = new Camera();
     public HealthLog HEALTHLOG = new HealthLog();
     //combat
     public AimAssist AIMASSIST = new AimAssist();
@@ -49,6 +50,7 @@ public class ModuleManager implements Listenable {
     	modules.add(ESP);
     	modules.add(CLICKGUI);
     	modules.add(NAMEPROTECT);
+    	modules.add(CAMERA);
     	//modules.add(HEALTHLOG);
     	//combat
     	modules.add(AIMASSIST);
