@@ -57,6 +57,7 @@ public class HUD extends Module {
 		Collections.sort(modules);
 	}
 
+	String address = "";
 	@EventHandler
 	private Listener<OnRender2DEvent> onRender2DEvent = new Listener<>(e -> {
 		if (!this.mc.gameSettings.showDebugInfo) {
@@ -64,12 +65,13 @@ public class HUD extends Module {
 			int xSpacing = 10;
 			
 			if (watermark) {
+				mc.fontRendererObj.drawStringWithShadow("(" + address + ")", 10f, ySpacing + 14, 0.5f, 0.4f);
 				GL11.glPushMatrix();
 				GL11.glScalef(1.5f, 1.5f, 1.5f);
 				mc.fontRendererObj.drawStringWithShadow("elixe", 7f, ySpacing, 1f, 1f);
 				GL11.glPopMatrix();
 				mc.fontRendererObj.drawStringWithShadow("(" + Elixe.INSTANCE.build + ")", 48f, ySpacing + 6, 0.5f, 0.8f);
-				ySpacing += 20;
+				ySpacing += 23;
 				xSpacing += 110;
 			}
 
@@ -93,4 +95,15 @@ public class HUD extends Module {
 
 		}
 	});
+	
+	//channelActive(ChannelHandlerContext) : void - net.minecraft.network.NetworkManager
+	//L:111
+	public void setRemoteAddress(String addr) {
+		
+		if (addr.contains("local:")) {
+			address = addr;
+		} else {
+			address = addr.split("/")[1];
+		}
+	}
 }
