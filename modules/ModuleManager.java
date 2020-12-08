@@ -32,7 +32,8 @@ public class ModuleManager implements Listenable {
     public AutoClicker AUTOCLICKER = new AutoClicker();
     public Reach REACH = new Reach();
     public Velocity VELOCITY = new Velocity();
-    public AutoSoup AUTOSOUP = new AutoSoup();    
+    public AutoSoup AUTOSOUP = new AutoSoup(); 
+    public Misplace MISPLACE = new Misplace();
     //world
     //movement
     public Sprint SPRINT = new Sprint();
@@ -55,6 +56,7 @@ public class ModuleManager implements Listenable {
     	//combat
     	modules.add(AIMASSIST);
     	modules.add(AUTOCLICKER);
+    	//modules.add(MISPLACE);
     	modules.add(REACH);
     	modules.add(VELOCITY);
     	modules.add(AUTOSOUP);  	
