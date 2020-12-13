@@ -31,6 +31,7 @@ public class Chams extends Module {
 
 		moduleOptions.add(useColorOption);
 		moduleOptions.add(flatColorOption);
+		moduleOptions.add(hurtColorOption);
 		moduleOptions.add(visibleColorOption);
 		moduleOptions.add(invisibleColorOption);
 	}
@@ -61,6 +62,13 @@ public class Chams extends Module {
 	ModuleBoolean flatColorOption = new ModuleBoolean("flat color", false) {
 		public void valueChanged() {
 			flatColor = (boolean) this.getValue();
+		}
+	};
+
+	boolean hurtColor;
+	ModuleBoolean hurtColorOption = new ModuleBoolean("hurt color", false) {
+		public void valueChanged() {
+			hurtColor = (boolean) this.getValue();
 		}
 	};
 
@@ -108,63 +116,72 @@ public class Chams extends Module {
 	private Listener<OnRenderEntityEvent> onRenderEntityEvent = new Listener<>(e -> {
 		if (e.getEntity().chamsAllowed) {
 			switch (e.getState()) {
-			case 0: //pre all
-				//nao da setup quando tem cor, o depth test ja faz esse trabalho
-				//a diferença é que com o polygon fill não tem como fazer o efeito de duas cores do depth
-				if (!useColor) { 
+			case 0: // pre all
+				// nao da setup quando tem cor, o depth test ja faz esse trabalho
+				// a diferença é que com o polygon fill não tem como fazer o efeito de duas
+				// cores do depth
+				if (!useColor) {
 					preRender();
 				}
 				break;
 
-			case 1: //model
+			case 1: // model
 				if (useColor) {
-					e.setAlreadyRendered(true); //ignora na classe
+					e.setAlreadyRendered(true); // ignora na classe
+					boolean hurt = false;
+					if (hurtColor) {
+						hurt = e.setBrightness();
+					}
 
 					GL11.glPushMatrix();
-					
-					//teste de profundidade
-					GL11.glDisable(GL11.GL_DEPTH_TEST);	
-					
-					//setup
+
+					// teste de profundidade
+					GL11.glDisable(GL11.GL_DEPTH_TEST);
+
+					// setup
 					GL11.glDisable(GL11.GL_TEXTURE_2D);
 					GL11.glEnable(GL11.GL_BLEND);
 
-					if (flatColor) { //ignora luz
+					if (flatColor) { // ignora luz
 						GL11.glDisable(GL11.GL_LIGHTING);
 					}
-					
-					GL11.glColor3f(invisibleColor[0], invisibleColor[1], invisibleColor[2]); //invis color
+
+					GL11.glColor3f(invisibleColor[0], invisibleColor[1], invisibleColor[2]); // invis color
 
 					e.renderModel();
 
-					GL11.glColor3f(visibleColor[0], visibleColor[1], visibleColor[2]); //vis cor
-					
-					//ativa profundidade
+					GL11.glColor3f(visibleColor[0], visibleColor[1], visibleColor[2]); // vis cor
+
+					// ativa profundidade
 					GL11.glEnable(GL11.GL_DEPTH_TEST);
-					
+
 					e.renderModel();
 
-					//setup reset
+					// setup reset
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 					GL11.glDisable(GL11.GL_BLEND);
-					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-					
-					if (flatColor) { //reset na luz
+					GL11.glColor4f(1, 1, 1, 1);
+
+					if (flatColor) { // reset na luz
 						GL11.glEnable(GL11.GL_LIGHTING);
 					}
-					
+
 					GL11.glPopMatrix();
 					
+					if (hurt) {
+						e.unsetBrightness();
+					}
+
 				}
 				break;
 
-			case 2: //layers
-				if (useColor) { //nao foi usado cor entao o check la de cima falhou
+			case 2: // layers
+				if (useColor) { // nao foi usado cor entao o check la de cima falhou
 					preRender();
 				}
 				break;
 
-			case 3: //post all
+			case 3: // post all
 				postRender();
 				break;
 
