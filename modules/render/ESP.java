@@ -90,7 +90,7 @@ public class ESP extends Module {
 		moduleOptions.add(rotateWeaponIconOption);
 	}
 
-	boolean[] allowedEntities = { true, false, false, false };
+	boolean[] allowedEntities;
 	ModuleArrayMultiple allowedEntitiesOption = new ModuleArrayMultiple("allowed entities",
 			new boolean[] { true, false, false, false }, new String[] { "player", "animal", "monster", "villager" }) {
 		public void valueChanged() {
@@ -98,28 +98,28 @@ public class ESP extends Module {
 		}
 	};
 
-	boolean drawBox = false;
+	boolean drawBox;
 	ModuleBoolean boxOption = new ModuleBoolean("draw box", false) {
 		public void valueChanged() {
 			drawBox = (boolean) this.getValue();
 		}
 	};
 
-	int boxStyle = 0;
+	int boxStyle;
 	ModuleArray boxStyleOption = new ModuleArray("box style", 0, new String[] { "closed" }) {
 		public void valueChanged() {
 			boxStyle = (int) this.getValue();
 		}
 	};
 
-	boolean drawHealth = false;
+	boolean drawHealth;
 	ModuleBoolean healthOption = new ModuleBoolean("draw health", false) {
 		public void valueChanged() {
 			drawHealth = (boolean) this.getValue();
 		}
 	};
 
-	int healthLocation = 0;
+	int healthLocation;
 	ModuleArray healthLocationOption = new ModuleArray("health location", 0,
 			new String[] { "left", "right", "up", "down" }) {
 		public void valueChanged() {
@@ -127,28 +127,28 @@ public class ESP extends Module {
 		}
 	};
 
-	int healthLines = 3;
+	int healthLines;
 	ModuleInteger healthLinesOption = new ModuleInteger("health lines", 3, 0, 8) {
 		public void valueChanged() {
 			healthLines = (int) this.getValue();
 		}
 	};
 
-	boolean healthColor = false;
+	boolean healthColor;
 	ModuleBoolean healthColorOption = new ModuleBoolean("health color", false) {
 		public void valueChanged() {
 			healthColor = (boolean) this.getValue();
 		}
 	};
 
-	boolean drawArmor = false;
+	boolean drawArmor;
 	ModuleBoolean armorOption = new ModuleBoolean("draw armor", false) {
 		public void valueChanged() {
 			drawArmor = (boolean) this.getValue();
 		}
 	};
 
-	int armorLocation = 0;
+	int armorLocation;
 	ModuleArray armorLocationOption = new ModuleArray("armor location", 0,
 			new String[] { "left", "right", "up", "down" }) {
 		public void valueChanged() {
@@ -156,56 +156,56 @@ public class ESP extends Module {
 		}
 	};
 
-	boolean armorColor = false;
+	boolean armorColor;
 	ModuleBoolean armorColorOption = new ModuleBoolean("armor color", false) {
 		public void valueChanged() {
 			armorColor = (boolean) this.getValue();
 		}
 	};
 
-	boolean drawName = false;
+	boolean drawName;
 	ModuleBoolean nameOption = new ModuleBoolean("draw name", false) {
 		public void valueChanged() {
 			drawName = (boolean) this.getValue();
 		}
 	};
 
-	int nameLocation = 0;
+	int nameLocation;
 	ModuleArray nameLocationOption = new ModuleArray("name location", 0, new String[] { "up", "down" }) {
 		public void valueChanged() {
 			nameLocation = (int) this.getValue();
 		}
 	};
 
-	boolean drawItemName = false;
+	boolean drawItemName;
 	ModuleBoolean itemNameOption = new ModuleBoolean("draw item name", false) {
 		public void valueChanged() {
 			drawItemName = (boolean) this.getValue();
 		}
 	};
 
-	int itemNameLocation = 0;
+	int itemNameLocation;
 	ModuleArray itemNameLocationOption = new ModuleArray("item name location", 0, new String[] { "up", "down" }) {
 		public void valueChanged() {
 			itemNameLocation = (int) this.getValue();
 		}
 	};
 
-	boolean drawItemIcon = false;
+	boolean drawItemIcon;
 	ModuleBoolean itemIconOption = new ModuleBoolean("draw item icon", false) {
 		public void valueChanged() {
 			drawItemIcon = (boolean) this.getValue();
 		}
 	};
 
-	int itemIconLocation = 0;
+	int itemIconLocation;
 	ModuleArray itemIconLocationOption = new ModuleArray("item icon location", 0, new String[] { "up", "down" }) {
 		public void valueChanged() {
 			itemIconLocation = (int) this.getValue();
 		}
 	};
 
-	boolean rotateWeaponIcon = false;
+	boolean rotateWeaponIcon;
 	ModuleBoolean rotateWeaponIconOption = new ModuleBoolean("rotate weapon icons", false) {
 		public void valueChanged() {
 			rotateWeaponIcon = (boolean) this.getValue();

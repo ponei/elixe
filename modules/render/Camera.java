@@ -21,14 +21,14 @@ public class Camera extends Module {
 		moduleOptions.add(distanceCameraOption);
 	}
 	
-	boolean clipCamera = false;
+	boolean clipCamera;
 	ModuleBoolean clipCameraOption = new ModuleBoolean("clip", false) {
 		public void valueChanged() {
 			clipCamera = (boolean) this.getValue();
 		}
 	};
 	
-	float distanceCamera = 4f;
+	float distanceCamera;
 	ModuleFloat distanceCameraOption = new ModuleFloat("distance", 4f, 0f, 15f) {
 		public void valueChanged() {
 			distanceCamera = (float) this.getValue();

@@ -36,7 +36,7 @@ public class Phase extends Module {
 		updatePhaseType();
 	}
 	
-	int phaseTypeIndex = 0;
+	int phaseTypeIndex;
 	ModuleArray phaseTypeIndexOption;
 	
 	private void updatePhaseType() {

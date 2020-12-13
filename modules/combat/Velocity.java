@@ -24,42 +24,42 @@ public class Velocity extends Module {
 		moduleOptions.add(waterCheckOption);
 	}
 
-	float horizontalMultiplier = 0.9f;
+	float horizontalMultiplier;
 	ModuleFloat horizontalMultiplierOption = new ModuleFloat("horizontal multiplier", 0.9f, 0f, 1f) {
 		public void valueChanged() {
 			horizontalMultiplier = (float) this.getValue();
 		}
 	};
 
-	float verticalMultiplier = 0.9f;
+	float verticalMultiplier;
 	ModuleFloat verticalMultiplierOption = new ModuleFloat("vertical multiplier", 0.9f, 0f, 1f) {
 		public void valueChanged() {
 			verticalMultiplier = (float) this.getValue();
 		}
 	};
 
-	boolean needSprint = false;
+	boolean needSprint;
 	ModuleBoolean needSprintOption = new ModuleBoolean("require sprint", false) {
 		public void valueChanged() {
 			needSprint = (boolean) this.getValue();
 		}
 	};
 
-	boolean needAttackButton = false;
+	boolean needAttackButton;
 	ModuleBoolean needAttackButtonOption = new ModuleBoolean("require attack button", false) {
 		public void valueChanged() {
 			needAttackButton = (boolean) this.getValue();
 		}
 	};
 
-	boolean needWeapon = false;
+	boolean needWeapon;
 	ModuleBoolean needWeaponOption = new ModuleBoolean("require weapon", false) {
 		public void valueChanged() {
 			needWeapon = (boolean) this.getValue();
 		}
 	};
 
-	boolean waterCheck = false;
+	boolean waterCheck;
 	ModuleBoolean waterCheckOption = new ModuleBoolean("water check", false) {
 		public void valueChanged() {
 			waterCheck = (boolean) this.getValue();

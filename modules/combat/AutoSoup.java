@@ -47,42 +47,42 @@ public class AutoSoup extends Module {
 		moduleOptions.add(recraftDelayOption);
 	}
 
-	float healthToSoup = 12f;
+	float healthToSoup;
 	ModuleFloat healthToSoupOption = new ModuleFloat("health to soup", 12f, 1f, 20f) {
 		public void valueChanged() {
 			healthToSoup = (float) this.getValue();
 		}
 	};
 
-	boolean dropBowl = false;
+	boolean dropBowl;
 	ModuleBoolean dropBowlOption = new ModuleBoolean("drop bowl", false) {
 		public void valueChanged() {
 			dropBowl = (boolean) this.getValue();
 		}
 	};
 
-	boolean refill = false;
+	boolean refill;
 	ModuleBoolean refillOption = new ModuleBoolean("refill", false) {
 		public void valueChanged() {
 			refill = (boolean) this.getValue();
 		}
 	};
 
-	int refillDelay = 100;
+	int refillDelay;
 	ModuleInteger refillDelayOption = new ModuleInteger("refill delay", 100, 1, 300) {
 		public void valueChanged() {
 			refillDelay = (int) this.getValue();
 		}
 	};
 
-	boolean recraft = false;
+	boolean recraft;
 	ModuleBoolean recraftOption = new ModuleBoolean("recraft", false) {
 		public void valueChanged() {
 			recraft = (boolean) this.getValue();
 		}
 	};
 
-	int recraftDelay = 100;
+	int recraftDelay;
 	ModuleInteger recraftDelayOption = new ModuleInteger("recraft delay", 100, 1, 300) {
 		public void valueChanged() {
 			recraftDelay = (int) this.getValue();

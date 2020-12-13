@@ -51,79 +51,83 @@ public class Reach extends Module {
 		moduleOptions.add(yCheckOption);
 	}
 
-	float reachMin = 3f;
+	float reachMin;
 	ModuleFloat reachMinOption = new ModuleFloat("reach min", 3f, 3f, 6f) {
 		public void valueChanged() {
 			float newReach = (float) this.getValue();
 
-			if (newReach > reachMax) {
-				// fix
-				reachMax = newReach;
-				if (reachMaxOption.getButton() != null) {
-					reachMaxOption.getButton().setValue(newReach);
-				}
+			if (reachMaxOption != null) {
+				if (newReach > reachMax) {
+					// fix
+					reachMax = newReach;
+					if (reachMaxOption.getButton() != null) {
+						reachMaxOption.getButton().setValue(newReach);
+					}
 
-				reachMaxOption.setValueSilent(newReach);
+					reachMaxOption.setValueSilent(newReach);
+				}
 			}
 
 			reachMin = newReach;
 		}
 	};
 
-	float reachMax = 3.5f;
+	float reachMax;
 	ModuleFloat reachMaxOption = new ModuleFloat("reach max", 3.5f, 3f, 6f) {
 		public void valueChanged() {
 			float newReach = (float) this.getValue();
 
-			if (reachMin > newReach) {
-				// fix
-				reachMin = newReach;
-				if (reachMinOption.getButton() != null) {
-					reachMinOption.getButton().setValue(newReach);
+			if (reachMinOption != null) {
+				if (reachMin > newReach) {
+					// fix
+					reachMin = newReach;
+					if (reachMinOption.getButton() != null) {
+						reachMinOption.getButton().setValue(newReach);
+					}
+					reachMinOption.setValueSilent(newReach);
 				}
-				reachMinOption.setValueSilent(newReach);
 			}
 
 			reachMax = newReach;
 		}
 	};
 
-	boolean needSprint = false;
+	boolean needSprint;
 	ModuleBoolean needSprintOption = new ModuleBoolean("require sprint", false) {
 		public void valueChanged() {
 			needSprint = (boolean) this.getValue();
 		}
 	};
 
-	boolean needWeapon = false;
+	boolean needWeapon;
 	ModuleBoolean needWeaponOption = new ModuleBoolean("require weapon", false) {
 		public void valueChanged() {
 			needWeapon = (boolean) this.getValue();
 		}
 	};
 
-	boolean ignoreBlocks = false;
+	boolean ignoreBlocks;
 	ModuleBoolean ignoreBlocksOption = new ModuleBoolean("ignore blocks", false) {
 		public void valueChanged() {
 			ignoreBlocks = (boolean) this.getValue();
 		}
 	};
 
-	boolean ignoreNaked = false;
+	boolean ignoreNaked;
 	ModuleBoolean ignoreNakedOption = new ModuleBoolean("ignore naked", false) {
 		public void valueChanged() {
 			ignoreNaked = (boolean) this.getValue();
 		}
 	};
 
-	boolean waterCheck = false;
+	boolean waterCheck;
 	ModuleBoolean waterCheckOption = new ModuleBoolean("water check", false) {
 		public void valueChanged() {
 			waterCheck = (boolean) this.getValue();
 		}
 	};
 
-	boolean yCheck = false;
+	boolean yCheck;
 	ModuleBoolean yCheckOption = new ModuleBoolean("y check", false) {
 		public void valueChanged() {
 			yCheck = (boolean) this.getValue();
@@ -241,7 +245,7 @@ public class Reach extends Module {
 					}
 				}
 			}
-			
+
 			if (entityRenderer.pointedEntity != null) {
 				if (yCheck) {
 					if (isEntityInDifferentY(entityRenderer.pointedEntity, entity)) {
