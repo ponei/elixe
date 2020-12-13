@@ -62,6 +62,14 @@ public class OnRenderEntityEvent {
 		this.state = state;
 	}
 	
+	public void unsetBrightness() {
+		renderer.unsetBrightness();
+	}
+	
+	public boolean setBrightness() {
+		return renderer.setDoRenderBrightness(entity, partialTicks);
+	}
+	
 	public void renderModel() {
 		renderer.renderModel(entity, renderLimbSwing, renderLimbSwingAmount, renderAgeInTicks, renderHeadYaw, renderHeadPitch, renderScaleFactor);
 	}
@@ -87,7 +95,7 @@ public class OnRenderEntityEvent {
 
 	public OnRenderEntityEvent(RendererLivingEntity renderer, EntityLivingBase entity, float renderLimbSwing,
 			float renderLimbSwingAmount, float renderAgeInTicks, float renderHeadYaw, float renderHeadPitch,
-			float renderScaleFactor) {
+			float renderScaleFactor, float partialTicks) {
 		super();
 		this.renderer = renderer;
 		this.entity = entity;
@@ -97,6 +105,7 @@ public class OnRenderEntityEvent {
 		this.renderHeadYaw = renderHeadYaw;
 		this.renderHeadPitch = renderHeadPitch;
 		this.renderScaleFactor = renderScaleFactor;
+		this.partialTicks = partialTicks;
 	}
 	
 	
