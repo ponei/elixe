@@ -277,6 +277,7 @@ public class ElixeColorButton extends ElixeButtonBase {
 		GL11.glBegin(GL11.GL_POINTS);
 		GL11.glVertex2f(pickerXStart + saturationX, pickerYStart + valueY);
 		GL11.glEnd();
+		GL11.glPointSize(1f);
 		
 		GL11.glBegin(GL11.GL_LINES);
 		GL11.glVertex2f(hueXStart, pickerYStart + hueY);
