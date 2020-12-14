@@ -387,7 +387,7 @@ public class ESP extends Module {
 
 			healthHeight = h > maxH ? maxY - minY - 2 : ((h * (maxY - minY - 2)) / maxH);
 
-			GL11.glColor4f(0f, 0f, 0f, 1.0f);
+			GL11.glColor3f(0f, 0f, 0f);
 			GL11.glLineWidth(3f);
 			GL11.glBegin(GL11.GL_LINES);
 
@@ -405,7 +405,7 @@ public class ESP extends Module {
 
 			GL11.glEnd();
 			if (healthLines > 0) {
-				GL11.glColor4f(0f, 0f, 0f, 1.0f);
+				GL11.glColor3f(0f, 0f, 0f);
 				float linhasDiv = ((maxY - minY) / (healthLines + 1));
 				if (linhasDiv > 3f) {
 					GL11.glBegin(GL11.GL_POINTS);
@@ -423,7 +423,7 @@ public class ESP extends Module {
 			base = maxX + 5;
 
 			healthHeight = h > maxH ? maxY - minY - 2 : ((h * (maxY - minY - 2)) / maxH);
-			GL11.glColor4f(0f, 0f, 0f, 1.0f);
+			GL11.glColor3f(0f, 0f, 0f);
 			GL11.glLineWidth(3f);
 			GL11.glBegin(GL11.GL_LINES);
 
@@ -441,7 +441,7 @@ public class ESP extends Module {
 
 			GL11.glEnd();
 			if (healthLines > 0) {
-				GL11.glColor4f(0f, 0f, 0f, 1.0f);
+				GL11.glColor3f(0f, 0f, 0f);
 				float linhasDiv = ((maxY - minY) / (healthLines + 1));
 				if (linhasDiv > 3f) {
 					GL11.glBegin(GL11.GL_POINTS);
@@ -456,7 +456,7 @@ public class ESP extends Module {
 		case 2: // up
 			base = minY - 5;
 			healthHeight = h > maxH ? maxX - minX - 2 : ((h * (maxX - minX - 2)) / maxH);
-			GL11.glColor4f(0f, 0f, 0f, 1.0f);
+			GL11.glColor3f(0f, 0f, 0f);
 			GL11.glLineWidth(3f);
 			GL11.glBegin(GL11.GL_LINES);
 
@@ -474,7 +474,7 @@ public class ESP extends Module {
 
 			GL11.glEnd();
 			if (healthLines > 0) {
-				GL11.glColor4f(0f, 0f, 0f, 1.0f);
+				GL11.glColor3f(0f, 0f, 0f);
 				float linhasDiv = ((maxX - minX) / (healthLines + 1));
 				if (linhasDiv > 3f) {
 					GL11.glBegin(GL11.GL_POINTS);
@@ -489,7 +489,7 @@ public class ESP extends Module {
 		case 3: // down
 			base = maxY + 5;
 			healthHeight = h > maxH ? maxX - minX - 2 : ((h * (maxX - minX - 2)) / maxH);
-			GL11.glColor4f(0f, 0f, 0f, 1.0f);
+			GL11.glColor3f(0f, 0f, 0f);
 			GL11.glLineWidth(3f);
 			GL11.glBegin(GL11.GL_LINES);
 
@@ -507,7 +507,7 @@ public class ESP extends Module {
 
 			GL11.glEnd();
 			if (healthLines > 0) {
-				GL11.glColor4f(0f, 0f, 0f, 1.0f);
+				GL11.glColor3f(0f, 0f, 0f);
 				float linhasDiv = ((maxX - minX) / (healthLines + 1));
 				if (linhasDiv > 3f) {
 					GL11.glBegin(GL11.GL_POINTS);
@@ -526,23 +526,23 @@ public class ESP extends Module {
 		if (armorColor) {
 			switch (material) {
 			case DIAMOND:
-				GL11.glColor4f(0.19f, 0.89f, 0.76f, 1.0f);
+				GL11.glColor3f(0.19f, 0.89f, 0.76f);
 				break;
 			case IRON:
-				GL11.glColor4f(0.7f, 0.7f, 0.7f, 1.0f);
+				GL11.glColor3f(0.7f, 0.7f, 0.7f);
 				break;
 			case CHAIN:
-				GL11.glColor4f(0.39f, 0.39f, 0.39f, 1.0f);
+				GL11.glColor3f(0.39f, 0.39f, 0.39f);
 				break;
 			case GOLD:
-				GL11.glColor4f(0.84f, 0.84f, 0.24f, 1.0f);
+				GL11.glColor3f(0.84f, 0.84f, 0.24f);
 				break;
 			case LEATHER:
-				GL11.glColor4f(0.59f, 0.36f, 0.23f, 1.0f);
+				GL11.glColor3f(0.59f, 0.36f, 0.23f);
 				break;
 			}
 		} else {
-			GL11.glColor4f(1f, 1f, 1f, 1.0f);
+			GL11.glColor3f(1f, 1f, 1f);
 		}
 	}
 
@@ -560,7 +560,7 @@ public class ESP extends Module {
 				if (armor != null) {
 					if (armor.getItem() instanceof ItemArmor) {
 						if (!hasArmor) {
-							GL11.glColor4f(0f, 0f, 0f, 1.0f);
+							GL11.glColor3f(0f, 0f, 0f);
 							GL11.glLineWidth(3f);
 							GL11.glBegin(GL11.GL_LINES);
 
@@ -592,7 +592,7 @@ public class ESP extends Module {
 				}
 			}
 			if (hasArmor) {
-				GL11.glColor4f(0f, 0f, 0f, 1.0f);
+				GL11.glColor3f(0f, 0f, 0f);
 				GL11.glBegin(GL11.GL_POINTS);
 				for (float i = 1; i < 4; i++) {
 					GL11.glVertex2f(base, minY + 1 + (linhasDiv * i));
@@ -613,7 +613,7 @@ public class ESP extends Module {
 				if (armor != null) {
 					if (armor.getItem() instanceof ItemArmor) {
 						if (!hasArmor) {
-							GL11.glColor4f(0f, 0f, 0f, 1.0f);
+							GL11.glColor3f(0f, 0f, 0f);
 							GL11.glLineWidth(3f);
 							GL11.glBegin(GL11.GL_LINES);
 
@@ -644,7 +644,7 @@ public class ESP extends Module {
 				}
 			}
 			if (hasArmor) {
-				GL11.glColor4f(0f, 0f, 0f, 1.0f);
+				GL11.glColor3f(0f, 0f, 0f);
 				GL11.glBegin(GL11.GL_POINTS);
 				for (float i = 1; i < 4; i++) {
 					GL11.glVertex2f(base, minY + 1 + (linhasDiv * i));
@@ -664,7 +664,7 @@ public class ESP extends Module {
 				if (armor != null) {
 					if (armor.getItem() instanceof ItemArmor) {
 						if (!hasArmor) {
-							GL11.glColor4f(0f, 0f, 0f, 1.0f);
+							GL11.glColor3f(0f, 0f, 0f);
 							GL11.glLineWidth(3f);
 							GL11.glBegin(GL11.GL_LINES);
 
@@ -696,7 +696,7 @@ public class ESP extends Module {
 				}
 			}
 			if (hasArmor) {
-				GL11.glColor4f(0f, 0f, 0f, 1.0f);
+				GL11.glColor3f(0f, 0f, 0f);
 				GL11.glBegin(GL11.GL_POINTS);
 				for (float i = 1; i < 4; i++) {
 					GL11.glVertex2f(minX + 1 + (linhasDiv * i), base);
@@ -716,7 +716,7 @@ public class ESP extends Module {
 				if (armor != null) {
 					if (armor.getItem() instanceof ItemArmor) {
 						if (!hasArmor) {
-							GL11.glColor4f(0f, 0f, 0f, 1.0f);
+							GL11.glColor3f(0f, 0f, 0f);
 							GL11.glLineWidth(3f);
 							GL11.glBegin(GL11.GL_LINES);
 
@@ -748,7 +748,7 @@ public class ESP extends Module {
 				}
 			}
 			if (hasArmor) {
-				GL11.glColor4f(0f, 0f, 0f, 1.0f);
+				GL11.glColor3f(0f, 0f, 0f);
 				GL11.glBegin(GL11.GL_POINTS);
 				for (float i = 1; i < 4; i++) {
 					GL11.glVertex2f(minX + 1 + (linhasDiv * i), base);
