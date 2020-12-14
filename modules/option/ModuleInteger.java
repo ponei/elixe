@@ -21,7 +21,6 @@ public class ModuleInteger implements ModuleOption {
 
 		this.min = min;
 		this.max = max;
-		valueChanged();
 	}
 
 	public void setButton(ElixeIntegerButton bt) {

@@ -25,12 +25,11 @@ public class AutoClicker extends Module {
 		moduleOptions.add(breakBlocksOption);
 	}
 
-	int cpsMin;
+	int cpsMin = 6;
 	ModuleInteger cpsMinOption = new ModuleInteger("cps min", 6, 0, 20) {
 		public void valueChanged() {
 			int newCps = (int) this.getValue();
 
-			if (cpsMaxOption != null) {
 			if (newCps > cpsMax) {
 				// fix
 				cpsMax = newCps;
@@ -40,18 +39,16 @@ public class AutoClicker extends Module {
 
 				cpsMaxOption.setValueSilent(newCps);
 			}
-			}
 
 			cpsMin = newCps;
 		}
 	};
 
-	int cpsMax;
+	int cpsMax = 10;
 	ModuleInteger cpsMaxOption = new ModuleInteger("cps max", 10, 0, 20) {
 		public void valueChanged() {
 			int newCps = (int) this.getValue();
 
-			if (cpsMinOption != null) {
 			if (cpsMin > newCps) {
 				// fix
 				cpsMin = newCps;
@@ -60,13 +57,12 @@ public class AutoClicker extends Module {
 				}
 				cpsMinOption.setValueSilent(newCps);
 			}
-			}
 
 			cpsMax = newCps;
 		}
 	};
 
-	boolean breakBlocks;
+	boolean breakBlocks = false;
 	ModuleBoolean breakBlocksOption = new ModuleBoolean("break blocks", false) {
 		public void valueChanged() {
 			breakBlocks = (boolean) this.getValue();

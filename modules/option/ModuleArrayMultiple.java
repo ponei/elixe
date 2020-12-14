@@ -15,7 +15,6 @@ public class ModuleArrayMultiple implements ModuleOption {
 		this.selectedIndexes = selected;
 		this.array = array;
 		this.name = name;
-		valueChanged();
 	}
 
 	public String[] getArray() {

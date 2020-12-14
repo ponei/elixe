@@ -14,7 +14,6 @@ public class ModuleKey implements ModuleOption {
 	public ModuleKey(int key) {
 		super();
 		this.key = key;
-		valueChanged();
 	}
 	
 	public Object getValue() {

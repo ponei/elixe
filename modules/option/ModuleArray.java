@@ -15,7 +15,6 @@ public class ModuleArray implements ModuleOption {
 		this.selectedIndex = index;
 		this.array = array;
 		this.name = name;
-		valueChanged();
 	}
 
 	public String[] getArray() {

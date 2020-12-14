@@ -38,8 +38,6 @@ public class Reach extends Module {
 	public Reach() {
 		super("Reach", ModuleCategory.COMBAT);
 
-		moduleOptions.add(activationChanceOption);
-
 		moduleOptions.add(reachMinOption);
 		moduleOptions.add(reachMaxOption);
 
@@ -53,90 +51,79 @@ public class Reach extends Module {
 		moduleOptions.add(yCheckOption);
 	}
 
-	float activationChance;
-	ModuleFloat activationChanceOption = new ModuleFloat("chance to activate", 80f, 0f, 100f) {
-		public void valueChanged() {
-			activationChance = (float) this.getValue();
-		}
-	};
-
-	float reachMin;
+	float reachMin = 3f;
 	ModuleFloat reachMinOption = new ModuleFloat("reach min", 3f, 3f, 6f) {
 		public void valueChanged() {
 			float newReach = (float) this.getValue();
 
-			if (reachMaxOption != null) {
-				if (newReach > reachMax) {
-					// fix
-					reachMax = newReach;
-					if (reachMaxOption.getButton() != null) {
-						reachMaxOption.getButton().setValue(newReach);
-					}
-
-					reachMaxOption.setValueSilent(newReach);
+			if (newReach > reachMax) {
+				// fix
+				reachMax = newReach;
+				if (reachMaxOption.getButton() != null) {
+					reachMaxOption.getButton().setValue(newReach);
 				}
+
+				reachMaxOption.setValueSilent(newReach);
 			}
 
 			reachMin = newReach;
 		}
 	};
 
-	float reachMax;
+	float reachMax = 3.5f;
 	ModuleFloat reachMaxOption = new ModuleFloat("reach max", 3.5f, 3f, 6f) {
 		public void valueChanged() {
 			float newReach = (float) this.getValue();
 
-			if (reachMinOption != null) {
-				if (reachMin > newReach) {
-					// fix
-					reachMin = newReach;
-					if (reachMinOption.getButton() != null) {
-						reachMinOption.getButton().setValue(newReach);
-					}
-					reachMinOption.setValueSilent(newReach);
+			if (reachMin > newReach) {
+				// fix
+				reachMin = newReach;
+				if (reachMinOption.getButton() != null) {
+					reachMinOption.getButton().setValue(newReach);
 				}
+				reachMinOption.setValueSilent(newReach);
 			}
 
 			reachMax = newReach;
 		}
 	};
 
-	boolean needSprint;
+	boolean needSprint = false;
 	ModuleBoolean needSprintOption = new ModuleBoolean("require sprint", false) {
 		public void valueChanged() {
 			needSprint = (boolean) this.getValue();
 		}
 	};
 
-	boolean needWeapon;
+	boolean needWeapon = false;
 	ModuleBoolean needWeaponOption = new ModuleBoolean("require weapon", false) {
 		public void valueChanged() {
 			needWeapon = (boolean) this.getValue();
 		}
 	};
 
-	boolean ignoreBlocks;
+	boolean ignoreBlocks = false;
 	ModuleBoolean ignoreBlocksOption = new ModuleBoolean("ignore blocks", false) {
 		public void valueChanged() {
 			ignoreBlocks = (boolean) this.getValue();
 		}
 	};
 
-	boolean ignoreNaked;
+	boolean ignoreNaked = false;
 	ModuleBoolean ignoreNakedOption = new ModuleBoolean("ignore naked", false) {
 		public void valueChanged() {
 			ignoreNaked = (boolean) this.getValue();
 		}
 	};
 
-	boolean waterCheck;
+	boolean waterCheck = false;
 	ModuleBoolean waterCheckOption = new ModuleBoolean("water check", false) {
 		public void valueChanged() {
 			waterCheck = (boolean) this.getValue();
 		}
 	};
 
-	boolean yCheck;
+	boolean yCheck = false;
 	ModuleBoolean yCheckOption = new ModuleBoolean("y check", false) {
 		public void valueChanged() {
 			yCheck = (boolean) this.getValue();
@@ -254,21 +241,17 @@ public class Reach extends Module {
 					}
 				}
 			}
-
+			
 			if (entityRenderer.pointedEntity != null) {
-				if (activationChance > r.nextFloat() * 100f) {
-					if (yCheck) {
-						if (isEntityInDifferentY(entityRenderer.pointedEntity, entity)) {
-							customReach = 3f;
-						}
+				if (yCheck) {
+					if (isEntityInDifferentY(entityRenderer.pointedEntity, entity)) {
+						customReach = 3f;
 					}
-					if (ignoreNaked) {
-						if (EntityUtils.isNaked((EntityLivingBase) entityRenderer.pointedEntity)) {
-							customReach = 3f;
-						}
+				}
+				if (ignoreNaked) {
+					if (EntityUtils.isNaked((EntityLivingBase) entityRenderer.pointedEntity)) {
+						customReach = 3f;
 					}
-				} else {
-					customReach = 3f;
 				}
 			}
 

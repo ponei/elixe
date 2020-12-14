@@ -54,7 +54,6 @@ public class ModuleConfig implements FileConfig {
 			Module module = Elixe.INSTANCE.MODULE_MANAGER.getModuleByName(entry.getKey());
 
 			if (module != null) {
-
 				JsonObject jsonModule = (JsonObject) entry.getValue();
 
 				for (ModuleOption moduleOpt : module.getOptions()) {
@@ -63,32 +62,28 @@ public class ModuleConfig implements FileConfig {
 						JsonElement element = jsonModule.get(moduleOpt.getName());
 
 						if (element != null) {
-							try {
-								if (moduleOpt instanceof ModuleBoolean) {
-									moduleOpt.setValue(element.getAsBoolean());
-								} else if (moduleOpt instanceof ModuleFloat) {
-									moduleOpt.setValue(element.getAsFloat());
-								} else if (moduleOpt instanceof ModuleArrayMultiple) {
-									JsonArray indexesArray = element.getAsJsonArray();
+							if (moduleOpt instanceof ModuleBoolean) {
+								moduleOpt.setValue(element.getAsBoolean());
+							} else if (moduleOpt instanceof ModuleFloat) {
+								moduleOpt.setValue(element.getAsFloat());
+							} else if (moduleOpt instanceof ModuleArrayMultiple) {
+								JsonArray indexesArray = element.getAsJsonArray();
+																
+								boolean[] selectedIndexes = (boolean[]) moduleOpt.getValue();
 
-									boolean[] selectedIndexes = (boolean[]) moduleOpt.getValue();
-
-									for (int i = 0; i < selectedIndexes.length; i++) {
-										JsonElement optEle = indexesArray.get(i);
-										boolean optState = false;
-										if (optEle != null) {
-											optState = optEle.getAsBoolean();
-										}
-
-										selectedIndexes[i] = optState;
-									}
-
-									moduleOpt.setValue(selectedIndexes);
-								} else {
-									moduleOpt.setValue(element.getAsInt());
+								for (int i = 0; i < selectedIndexes.length; i++) {
+									JsonElement optEle = indexesArray.get(i);
+									boolean optState = false;
+									if (optEle != null) {
+										optState = optEle.getAsBoolean();
+									} 
+									
+									selectedIndexes[i] = optState;
 								}
-							} catch (NumberFormatException e) {
-								// format errado
+
+								moduleOpt.setValue(selectedIndexes);
+							} else {
+								moduleOpt.setValue(element.getAsInt());
 							}
 						}
 					}

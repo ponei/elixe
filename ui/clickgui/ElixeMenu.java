@@ -14,7 +14,6 @@ import elixe.modules.ModuleOption;
 import elixe.modules.option.ModuleArray;
 import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
-import elixe.modules.option.ModuleColor;
 import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
 import elixe.modules.option.ModuleKey;
@@ -23,7 +22,6 @@ import elixe.ui.base.ElixeButtonBase;
 import elixe.ui.clickgui.options.ElixeArrayButton;
 import elixe.ui.clickgui.options.ElixeArrayMultipleButton;
 import elixe.ui.clickgui.options.ElixeBooleanButton;
-import elixe.ui.clickgui.options.ElixeColorButton;
 import elixe.ui.clickgui.options.ElixeFloatButton;
 import elixe.ui.clickgui.options.ElixeIntegerButton;
 import elixe.ui.clickgui.options.ElixeKeyButton;
@@ -215,8 +213,8 @@ public class ElixeMenu extends GuiScreen {
 				return;
 			}
 		}
-
-		// base
+		
+		//base
 		for (ElixeButtonBase opt : modOptions) {
 			if (opt.mouseClick(mouseX, mouseY, mouseButton)) {
 				return;
@@ -238,12 +236,6 @@ public class ElixeMenu extends GuiScreen {
 			dragging = false;
 			return;
 		}
-		if (modOptionOverlay != null) {
-
-			modOptionOverlay.overlayClickReleased(mouseX, mouseY, state);
-
-		}
-
 		for (ElixeButtonBase opt : modOptions) {
 			opt.mouseReleased(mouseX, mouseY, state);
 		}
@@ -335,12 +327,6 @@ public class ElixeMenu extends GuiScreen {
 						GUI_MODULE_HEIGHT + 14, GUI_MODULE_HEIGHT);
 				optionsSpacing += GUI_MODULE_HEIGHT + 16;
 				modOptions.add(ambt);
-			}
-			if (opt instanceof ModuleColor) {
-				ElixeColorButton cbt = new ElixeColorButton(this, opt.getName(), (ModuleColor) opt, GUI_X + 140,
-						GUI_Y + 5 + optionsSpacing, GUI_WIDTH - 150, GUI_MODULE_HEIGHT);
-				optionsSpacing += GUI_MODULE_HEIGHT;
-				modOptions.add(cbt);
 			}
 		}
 

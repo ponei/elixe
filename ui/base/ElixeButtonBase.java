@@ -73,10 +73,6 @@ public class ElixeButtonBase {
 
 	}
 	
-	public void overlayClickReleased(int mouseX, int mouseY, int state) {
-
-	}
-	
 	public boolean overlayClick(int mouseX, int mouseY,  int mouseButton) {
 		return false;
 	}

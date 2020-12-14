@@ -10,7 +10,6 @@ import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
-import elixe.modules.option.ModuleColor;
 import elixe.modules.option.ModuleKey;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
@@ -26,18 +25,10 @@ public class Chams extends Module {
 	public Chams() {
 		super("Chams", ModuleCategory.RENDER);
 		moduleOptions.add(allowedEntitiesOption);
-
 		moduleOptions.add(lightOption);
-
-		moduleOptions.add(useColorOption);
-		moduleOptions.add(visibleColorOption);
-		moduleOptions.add(invisibleColorOption);
-		moduleOptions.add(flatColorOption);
-		moduleOptions.add(hurtColorOption);
-		
 	}
 
-	boolean[] allowedEntities;
+	boolean[] allowedEntities = { true, false, false, false };
 	ModuleArrayMultiple allowedEntitiesOption = new ModuleArrayMultiple("allowed entities",
 			new boolean[] { true, false, false, false }, new String[] { "player", "animal", "monster", "villager" }) {
 		public void valueChanged() {
@@ -45,49 +36,12 @@ public class Chams extends Module {
 		}
 	};
 
-	boolean addLight;
+	boolean addLight = false;
 	ModuleBoolean lightOption = new ModuleBoolean("add light", false) {
 		public void valueChanged() {
 			addLight = (boolean) this.getValue();
 		}
 	};
-
-	boolean useColor;
-	ModuleBoolean useColorOption = new ModuleBoolean("use color", false) {
-		public void valueChanged() {
-			useColor = (boolean) this.getValue();
-		}
-	};
-	
-	float[] visibleColor;
-	ModuleColor visibleColorOption = new ModuleColor("visible color", 255, 0, 0) {
-		public void valueChanged() {
-			visibleColor = this.getGLRGB();
-		}
-	};
-
-	float[] invisibleColor;
-	ModuleColor invisibleColorOption = new ModuleColor("invisible color", 150, 0, 0) {
-		public void valueChanged() {
-			invisibleColor = this.getGLRGB();
-		}
-	};
-
-	boolean flatColor;
-	ModuleBoolean flatColorOption = new ModuleBoolean("flat color", false) {
-		public void valueChanged() {
-			flatColor = (boolean) this.getValue();
-		}
-	};
-
-	boolean hurtColor;
-	ModuleBoolean hurtColorOption = new ModuleBoolean("hurt color", false) {
-		public void valueChanged() {
-			hurtColor = (boolean) this.getValue();
-		}
-	};
-
-	
 
 	@EventHandler
 	private Listener<OnTickEvent> onTickEvent = new Listener<>(e -> {
@@ -107,10 +61,10 @@ public class Chams extends Module {
 
 		}
 	});
-
+	
 	@EventHandler
 	private Listener<OnBrightnessEntityEvent> onBrightnessEntityEvent = new Listener<>(e -> {
-		if (addLight && e.getEnt().chamsAllowed) {
+		if (addLight && e.getEnt().chamsAllowed) { 
 			e.setLight(13631696);
 		}
 	});
@@ -119,70 +73,11 @@ public class Chams extends Module {
 	private Listener<OnRenderEntityEvent> onRenderEntityEvent = new Listener<>(e -> {
 		if (e.getEntity().chamsAllowed) {
 			switch (e.getState()) {
-			case 0: // pre all
-				// nao da setup quando tem cor, o depth test ja faz esse trabalho
-				// a diferença é que com o polygon fill não tem como fazer o efeito de duas
-				// cores do depth
-				if (!useColor) {
-					preRender();
-				}
+			case 0:
+				preRender();
 				break;
 
-			case 1: // model
-				if (useColor) {
-					e.setAlreadyRendered(true); // ignora na classe
-					boolean hurt = false;
-					if (hurtColor) {
-						hurt = e.setBrightness();
-					}
-
-					GL11.glPushMatrix();
-
-					// teste de profundidade
-					GL11.glDisable(GL11.GL_DEPTH_TEST);
-
-					// setup
-					GL11.glDisable(GL11.GL_TEXTURE_2D);
-
-					if (flatColor) { // ignora luz
-						GL11.glDisable(GL11.GL_LIGHTING);
-					}
-
-					GL11.glColor3f(invisibleColor[0], invisibleColor[1], invisibleColor[2]); // invis color
-
-					e.renderModel();
-
-					GL11.glColor3f(visibleColor[0], visibleColor[1], visibleColor[2]); // vis cor
-
-					// ativa profundidade
-					GL11.glEnable(GL11.GL_DEPTH_TEST);
-
-					e.renderModel();
-
-					// setup reset
-					GL11.glEnable(GL11.GL_TEXTURE_2D);
-					GL11.glColor4f(1, 1, 1, 1);
-
-					if (flatColor) { // reset na luz
-						GL11.glEnable(GL11.GL_LIGHTING);
-					}
-
-					GL11.glPopMatrix();
-					
-					if (hurt) {
-						e.unsetBrightness();
-					}
-
-				}
-				break;
-
-			case 2: // layers
-				if (useColor) { // nao foi usado cor entao o check la de cima falhou
-					preRender();
-				}
-				break;
-
-			case 3: // post all
+			case 2:
 				postRender();
 				break;
 
