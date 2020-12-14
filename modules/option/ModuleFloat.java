@@ -21,6 +21,7 @@ public class ModuleFloat implements ModuleOption {
 
 		this.min = min;
 		this.max = max;
+		valueChanged();
 	}
 	
 	public void setButton(ElixeFloatButton bt) {

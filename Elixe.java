@@ -22,7 +22,7 @@ public class Elixe {
 
 	public Minecraft mc;
 
-	public String build = "betatest4";
+	public String build = "betatest5";
 
 	//startGame() : void - net.minecraft.client.Minecraft
 	//L:552

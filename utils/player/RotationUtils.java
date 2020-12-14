@@ -23,7 +23,7 @@ public class RotationUtils {
 	public static float[] rotationUntilTarget(Entity ent, Entity toEnt) {
         if (ent != null) {
             final double x = ent.posX - toEnt.posX;
-            final double y = ent.posY - toEnt.posY;
+            final double y = (ent.posY + ent.getEyeHeight()) - (toEnt.posY + toEnt.getEyeHeight());
             final double z = ent.posZ - toEnt.posZ;
             double yaw = Math.atan2(x, z) * 57.29577951308232;
             yaw = -yaw;

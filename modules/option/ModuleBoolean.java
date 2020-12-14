@@ -12,6 +12,7 @@ public class ModuleBoolean implements ModuleOption {
 		super();
 		this.state = state;
 		this.name = name;
+		valueChanged();
 	}
 
 	public Object getValue() {

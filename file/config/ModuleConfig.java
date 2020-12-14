@@ -54,6 +54,7 @@ public class ModuleConfig implements FileConfig {
 			Module module = Elixe.INSTANCE.MODULE_MANAGER.getModuleByName(entry.getKey());
 
 			if (module != null) {
+
 				JsonObject jsonModule = (JsonObject) entry.getValue();
 
 				for (ModuleOption moduleOpt : module.getOptions()) {
@@ -62,28 +63,32 @@ public class ModuleConfig implements FileConfig {
 						JsonElement element = jsonModule.get(moduleOpt.getName());
 
 						if (element != null) {
-							if (moduleOpt instanceof ModuleBoolean) {
-								moduleOpt.setValue(element.getAsBoolean());
-							} else if (moduleOpt instanceof ModuleFloat) {
-								moduleOpt.setValue(element.getAsFloat());
-							} else if (moduleOpt instanceof ModuleArrayMultiple) {
-								JsonArray indexesArray = element.getAsJsonArray();
-																
-								boolean[] selectedIndexes = (boolean[]) moduleOpt.getValue();
+							try {
+								if (moduleOpt instanceof ModuleBoolean) {
+									moduleOpt.setValue(element.getAsBoolean());
+								} else if (moduleOpt instanceof ModuleFloat) {
+									moduleOpt.setValue(element.getAsFloat());
+								} else if (moduleOpt instanceof ModuleArrayMultiple) {
+									JsonArray indexesArray = element.getAsJsonArray();
 
-								for (int i = 0; i < selectedIndexes.length; i++) {
-									JsonElement optEle = indexesArray.get(i);
-									boolean optState = false;
-									if (optEle != null) {
-										optState = optEle.getAsBoolean();
-									} 
-									
-									selectedIndexes[i] = optState;
+									boolean[] selectedIndexes = (boolean[]) moduleOpt.getValue();
+
+									for (int i = 0; i < selectedIndexes.length; i++) {
+										JsonElement optEle = indexesArray.get(i);
+										boolean optState = false;
+										if (optEle != null) {
+											optState = optEle.getAsBoolean();
+										}
+
+										selectedIndexes[i] = optState;
+									}
+
+									moduleOpt.setValue(selectedIndexes);
+								} else {
+									moduleOpt.setValue(element.getAsInt());
 								}
-
-								moduleOpt.setValue(selectedIndexes);
-							} else {
-								moduleOpt.setValue(element.getAsInt());
+							} catch (NumberFormatException e) {
+								// format errado
 							}
 						}
 					}
