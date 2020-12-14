@@ -1,5 +1,7 @@
 package elixe.modules.combat;
 
+import java.util.Random;
+
 import elixe.events.OnPacketReceiveEvent;
 import elixe.events.OnRenderNameEvent;
 import elixe.modules.Module;
@@ -15,6 +17,8 @@ public class Velocity extends Module {
 	public Velocity() {
 		super("Velocity", ModuleCategory.COMBAT);
 
+		moduleOptions.add(activationChanceOption);
+
 		moduleOptions.add(horizontalMultiplierOption);
 		moduleOptions.add(verticalMultiplierOption);
 
@@ -23,6 +27,13 @@ public class Velocity extends Module {
 		moduleOptions.add(needWeaponOption);
 		moduleOptions.add(waterCheckOption);
 	}
+
+	float activationChance;
+	ModuleFloat activationChanceOption = new ModuleFloat("chance to reduce", 80f, 0f, 100f) {
+		public void valueChanged() {
+			activationChance = (float) this.getValue();
+		}
+	};
 
 	float horizontalMultiplier;
 	ModuleFloat horizontalMultiplierOption = new ModuleFloat("horizontal multiplier", 0.9f, 0f, 1f) {
@@ -66,18 +77,21 @@ public class Velocity extends Module {
 		}
 	};
 
+	Random r = new Random();
 	@EventHandler
 	private Listener<OnPacketReceiveEvent> onPacketReceiveEvent = new Listener<>(e -> {
 		if (e.getPacket() instanceof S12PacketEntityVelocity) {
 			S12PacketEntityVelocity vel = (S12PacketEntityVelocity) e.getPacket();
 			if (vel.getEntityID() == mc.thePlayer.getEntityId()) {
 				if (shouldModifyVelocity()) {
-					vel.setMotionX((int) (vel.getMotionX() * horizontalMultiplier));
-					vel.setMotionZ((int) (vel.getMotionZ() * horizontalMultiplier));
+					if (activationChance > r.nextFloat() * 100f) {
+						vel.setMotionX((int) (vel.getMotionX() * horizontalMultiplier));
+						vel.setMotionZ((int) (vel.getMotionZ() * horizontalMultiplier));
 
-					vel.setMotionY((int) (vel.getMotionY() * verticalMultiplier));
+						vel.setMotionY((int) (vel.getMotionY() * verticalMultiplier));
 
-					e.setPacket(vel);
+						e.setPacket(vel);
+					}
 				}
 			}
 		}

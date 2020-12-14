@@ -38,6 +38,8 @@ public class Reach extends Module {
 	public Reach() {
 		super("Reach", ModuleCategory.COMBAT);
 
+		moduleOptions.add(activationChanceOption);
+
 		moduleOptions.add(reachMinOption);
 		moduleOptions.add(reachMaxOption);
 
@@ -50,6 +52,13 @@ public class Reach extends Module {
 		moduleOptions.add(waterCheckOption);
 		moduleOptions.add(yCheckOption);
 	}
+
+	float activationChance;
+	ModuleFloat activationChanceOption = new ModuleFloat("chance to activate", 80f, 0f, 100f) {
+		public void valueChanged() {
+			activationChance = (float) this.getValue();
+		}
+	};
 
 	float reachMin;
 	ModuleFloat reachMinOption = new ModuleFloat("reach min", 3f, 3f, 6f) {
@@ -247,15 +256,19 @@ public class Reach extends Module {
 			}
 
 			if (entityRenderer.pointedEntity != null) {
-				if (yCheck) {
-					if (isEntityInDifferentY(entityRenderer.pointedEntity, entity)) {
-						customReach = 3f;
+				if (activationChance > r.nextFloat() * 100f) {
+					if (yCheck) {
+						if (isEntityInDifferentY(entityRenderer.pointedEntity, entity)) {
+							customReach = 3f;
+						}
 					}
-				}
-				if (ignoreNaked) {
-					if (EntityUtils.isNaked((EntityLivingBase) entityRenderer.pointedEntity)) {
-						customReach = 3f;
+					if (ignoreNaked) {
+						if (EntityUtils.isNaked((EntityLivingBase) entityRenderer.pointedEntity)) {
+							customReach = 3f;
+						}
 					}
+				} else {
+					customReach = 3f;
 				}
 			}
 
