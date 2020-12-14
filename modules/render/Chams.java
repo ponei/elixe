@@ -140,7 +140,6 @@ public class Chams extends Module {
 
 					// setup
 					GL11.glDisable(GL11.GL_TEXTURE_2D);
-					GL11.glEnable(GL11.GL_BLEND);
 
 					if (flatColor) { // ignora luz
 						GL11.glDisable(GL11.GL_LIGHTING);
@@ -159,7 +158,6 @@ public class Chams extends Module {
 
 					// setup reset
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
-					GL11.glDisable(GL11.GL_BLEND);
 					GL11.glColor4f(1, 1, 1, 1);
 
 					if (flatColor) { // reset na luz
