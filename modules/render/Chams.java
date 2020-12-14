@@ -30,10 +30,11 @@ public class Chams extends Module {
 		moduleOptions.add(lightOption);
 
 		moduleOptions.add(useColorOption);
-		moduleOptions.add(flatColorOption);
-		moduleOptions.add(hurtColorOption);
 		moduleOptions.add(visibleColorOption);
 		moduleOptions.add(invisibleColorOption);
+		moduleOptions.add(flatColorOption);
+		moduleOptions.add(hurtColorOption);
+		
 	}
 
 	boolean[] allowedEntities;
@@ -57,6 +58,20 @@ public class Chams extends Module {
 			useColor = (boolean) this.getValue();
 		}
 	};
+	
+	float[] visibleColor;
+	ModuleColor visibleColorOption = new ModuleColor("visible color", 255, 0, 0) {
+		public void valueChanged() {
+			visibleColor = this.getGLRGB();
+		}
+	};
+
+	float[] invisibleColor;
+	ModuleColor invisibleColorOption = new ModuleColor("invisible color", 150, 0, 0) {
+		public void valueChanged() {
+			invisibleColor = this.getGLRGB();
+		}
+	};
 
 	boolean flatColor;
 	ModuleBoolean flatColorOption = new ModuleBoolean("flat color", false) {
@@ -72,19 +87,7 @@ public class Chams extends Module {
 		}
 	};
 
-	float[] visibleColor;
-	ModuleColor visibleColorOption = new ModuleColor("visible color", 255, 0, 0) {
-		public void valueChanged() {
-			visibleColor = this.getGLRGB();
-		}
-	};
-
-	float[] invisibleColor;
-	ModuleColor invisibleColorOption = new ModuleColor("invisible color", 150, 0, 0) {
-		public void valueChanged() {
-			invisibleColor = this.getGLRGB();
-		}
-	};
+	
 
 	@EventHandler
 	private Listener<OnTickEvent> onTickEvent = new Listener<>(e -> {
