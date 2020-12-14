@@ -54,7 +54,7 @@ public class AimAssist extends Module {
 		moduleOptions.add(stopOnHitboxOption);
 	}
 
-	boolean[] allowedEntities = { true, false, false, false };
+	boolean[] allowedEntities;
 	ModuleArrayMultiple allowedEntitiesOption = new ModuleArrayMultiple("allowed entities",
 			new boolean[] { true, false, false, false }, new String[] { "player", "animal", "monster", "villager" }) {
 		public void valueChanged() {
@@ -62,7 +62,7 @@ public class AimAssist extends Module {
 		}
 	};
 
-	boolean[] allowedRotations = { true, false };
+	boolean[] allowedRotations;
 	ModuleArrayMultiple allowedRotationsOption = new ModuleArrayMultiple("allowed rotations",
 			new boolean[] { true, false }, new String[] { "yaw", "pitch" }) {
 		public void valueChanged() {
@@ -70,77 +70,77 @@ public class AimAssist extends Module {
 		}
 	};
 
-	float aimSpeed = 0.8f;
+	float aimSpeed;
 	ModuleFloat aimSpeedOption = new ModuleFloat("speed factor", 0.8f, 0f, 1f) {
 		public void valueChanged() {
 			aimSpeed = (float) this.getValue();
 		}
 	};
 
-	float aimMaxSpeed = 5f;
+	float aimMaxSpeed;
 	ModuleFloat aimMaxSpeedOption = new ModuleFloat("max speed", 5f, 1f, 40f) {
 		public void valueChanged() {
 			aimMaxSpeed = (float) this.getValue();
 		}
 	};
 
-	float aimFov = 20f;
+	float aimFov;
 	ModuleFloat aimFovOption = new ModuleFloat("aim fov", 20f, 1f, 90f) {
 		public void valueChanged() {
 			aimFov = (float) this.getValue();
 		}
 	};
 
-	float aimDistance = 5f;
+	float aimDistance;
 	ModuleFloat aimDistanceOption = new ModuleFloat("aim distance", 5f, 0f, 10f) {
 		public void valueChanged() {
 			aimDistance = (float) this.getValue();
 		}
 	};
 
-	boolean afterAttack = false;
+	boolean afterAttack;
 	ModuleBoolean afterAttackOption = new ModuleBoolean("after attack", false) {
 		public void valueChanged() {
 			afterAttack = (boolean) this.getValue();
 		}
 	};
 
-	boolean needVisible = false;
+	boolean needVisible;
 	ModuleBoolean needVisibleOption = new ModuleBoolean("require visibility", false) {
 		public void valueChanged() {
 			needVisible = (boolean) this.getValue();
 		}
 	};
 
-	boolean needSprint = false;
+	boolean needSprint;
 	ModuleBoolean needSprintOption = new ModuleBoolean("require sprint", false) {
 		public void valueChanged() {
 			needSprint = (boolean) this.getValue();
 		}
 	};
 
-	boolean needAttackButton = false;
+	boolean needAttackButton;
 	ModuleBoolean needAttackButtonOption = new ModuleBoolean("require attack button", false) {
 		public void valueChanged() {
 			needAttackButton = (boolean) this.getValue();
 		}
 	};
 
-	boolean needWeapon = false;
+	boolean needWeapon;
 	ModuleBoolean needWeaponOption = new ModuleBoolean("require weapon", false) {
 		public void valueChanged() {
 			needWeapon = (boolean) this.getValue();
 		}
 	};
 
-	boolean ignoreNaked = false;
+	boolean ignoreNaked;
 	ModuleBoolean ignoreNakedOption = new ModuleBoolean("ignore naked", false) {
 		public void valueChanged() {
 			ignoreNaked = (boolean) this.getValue();
 		}
 	};
 	
-	boolean stopOnHitbox = false;
+	boolean stopOnHitbox;
 	ModuleBoolean stopOnHitboxOption = new ModuleBoolean("stop on hitbox", false) {
 		public void valueChanged() {
 			stopOnHitbox = (boolean) this.getValue();

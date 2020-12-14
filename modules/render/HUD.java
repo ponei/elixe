@@ -30,21 +30,21 @@ public class HUD extends Module {
 		moduleOptions.add(sprintingOption);
 	}
 
-	boolean watermark = false;
+	boolean watermark;
 	ModuleBoolean watermarkOption = new ModuleBoolean("watermark", false) {
 		public void valueChanged() {
 			watermark = (boolean) this.getValue();
 		}
 	};
 
-	boolean moduleList = false;
+	boolean moduleList;
 	ModuleBoolean moduleListOption = new ModuleBoolean("module list", false) {
 		public void valueChanged() {
 			moduleList = (boolean) this.getValue();
 		}
 	};
 
-	boolean sprinting = false;
+	boolean sprinting;
 	ModuleBoolean sprintingOption = new ModuleBoolean("sprinting", false) {
 		public void valueChanged() {
 			sprinting = (boolean) this.getValue();
