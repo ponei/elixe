@@ -18,6 +18,7 @@ import elixe.modules.ModuleOption;
 import elixe.modules.option.ModuleArray;
 import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
+import elixe.modules.option.ModuleColor;
 import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
 import elixe.modules.option.ModuleKey;
@@ -68,13 +69,15 @@ public class ESP extends Module {
 		moduleOptions.add(allowedEntitiesOption);
 
 		moduleOptions.add(boxOption);
+		moduleOptions.add(boxColorOption);
 		moduleOptions.add(boxStyleOption);
 
 		moduleOptions.add(healthOption);
+		moduleOptions.add(healthColorOption);
+		moduleOptions.add(healthLevelColorOption);
 		moduleOptions.add(healthLocationOption);
 		moduleOptions.add(healthLinesOption);
-		moduleOptions.add(healthColorOption);
-
+		
 		moduleOptions.add(armorOption);
 		moduleOptions.add(armorLocationOption);
 		moduleOptions.add(armorColorOption);
@@ -105,8 +108,15 @@ public class ESP extends Module {
 		}
 	};
 
+	float[] boxColor;
+	ModuleColor boxColorOption = new ModuleColor("box color", 255, 255, 255) {
+		public void valueChanged() {
+			boxColor = this.getGLRGB();
+		}
+	};
+
 	int boxStyle;
-	ModuleArray boxStyleOption = new ModuleArray("box style", 0, new String[] { "closed" }) {
+	ModuleArray boxStyleOption = new ModuleArray("box style", 0, new String[] { "closed", "up and down" }) {
 		public void valueChanged() {
 			boxStyle = (int) this.getValue();
 		}
@@ -134,10 +144,17 @@ public class ESP extends Module {
 		}
 	};
 
-	boolean healthColor;
-	ModuleBoolean healthColorOption = new ModuleBoolean("health color", false) {
+	float[] healthColor;
+	ModuleColor healthColorOption = new ModuleColor("health color", 255, 255, 255) {
 		public void valueChanged() {
-			healthColor = (boolean) this.getValue();
+			healthColor = this.getGLRGB();
+		}
+	};
+	
+	boolean healthLevelColor;
+	ModuleBoolean healthLevelColorOption = new ModuleBoolean("health level color", false) {
+		public void valueChanged() {
+			healthLevelColor = (boolean) this.getValue();
 		}
 	};
 
@@ -296,30 +313,64 @@ public class ESP extends Module {
 		util.setup2DEnd();
 	});
 
-	private void drawBox(float minX, float maxX, float minY, float maxY) {
-		GL11.glColor4f(1f, 1f, 1f, 1.0f);
-		GL11.glBegin(GL11.GL_LINE_LOOP);
-		GL11.glVertex2f(minX, minY);
-		GL11.glVertex2f(minX, maxY);
-		GL11.glVertex2f(maxX, maxY);
-		GL11.glVertex2f(maxX, minY);
+	private void drawLinePoints(float[][] points) {
+		GL11.glBegin(GL11.GL_LINES);
+		for (float[] p : points) {
+			GL11.glVertex2f(p[0], p[1]);
+			GL11.glVertex2f(p[2], p[3]);
+		}
 		GL11.glEnd();
 	}
 
+	private void drawBox(float minX, float maxX, float minY, float maxY) {
+		minX++;
+		maxX--;
+		minY++;
+		maxY--;
+
+		GL11.glColor3f(0f, 0f, 0f);
+		GL11.glLineWidth(3f);
+		switch (boxStyle) {
+		case 0: //closed
+			drawLinePoints(new float[][] { { minX, minY - 1, minX, maxY + 1 }, { minX - 1, maxY, maxX + 1, maxY },
+				{ maxX, maxY + 1, maxX, minY - 1 }, { maxX + 1, minY, minX - 1, minY } });
+			
+			GL11.glColor3f(boxColor[0], boxColor[1], boxColor[2]);
+			GL11.glLineWidth(1f);
+
+			drawLinePoints(new float[][] { { minX, minY, minX, maxY }, { minX, maxY, maxX, maxY },
+					{ maxX, maxY, maxX, minY }, { maxX, minY, minX, minY } });
+			break;
+
+		case 1: //up and down
+			drawLinePoints(new float[][] { { minX, minY + 6, minX, minY - 1 }, { minX - 1, minY, maxX + 1, minY },
+				{ maxX, minY - 1, maxX, minY + 6 }, { minX, maxY - 6, minX, maxY + 1 }, { minX - 1, maxY, maxX + 1, maxY },
+				{ maxX, maxY + 1, maxX, maxY - 6 } });
+			
+			GL11.glColor3f(boxColor[0], boxColor[1], boxColor[2]);
+			GL11.glLineWidth(1f);
+
+			drawLinePoints(new float[][] { { minX, minY + 5, minX, minY }, { minX, minY, maxX, minY },
+				{ maxX, minY, maxX, minY + 5 }, { minX, maxY - 5, minX, maxY }, { minX, maxY, maxX, maxY },
+				{ maxX, maxY, maxX, maxY - 5 } });
+			break;
+		}
+	}
+
 	private void getHealthColor(float health, float max) {
-		if (healthColor) {
+		if (healthLevelColor) {
 			float perc = health / max;
 			if (0.33f > perc) {
-				GL11.glColor4f(0.95f, 0f, 0f, 1.0f); // vermleho
+				GL11.glColor3f(0.95f, 0f, 0f); // vermleho
 			} else if (0.66f > perc) {
-				GL11.glColor4f(0.96f, 0.8f, 0f, 1.0f); // amarelo
+				GL11.glColor3f(0.96f, 0.8f, 0); // amarelo
 			} else if (1f >= perc) {
-				GL11.glColor4f(0.26f, 0.88f, 0f, 1.0f); // verde
+				GL11.glColor3f(0.26f, 0.88f, 0f); // verde
 			} else {
-				GL11.glColor4f(1f, 1f, 0f, 1.0f); // amarelo forte
+				GL11.glColor3f(1f, 1f, 0f); // amarelo forte
 			}
 		} else {
-			GL11.glColor4f(1f, 1f, 1f, 1.0f);
+			GL11.glColor3f(healthColor[0], healthColor[1], healthColor[2]);
 		}
 	}
 
@@ -433,7 +484,7 @@ public class ESP extends Module {
 					GL11.glEnd();
 				}
 			}
-			spacingYUp += 4;
+			spacingYUp += 5;
 			break;
 		case 3: // down
 			base = maxY + 5;
@@ -466,7 +517,7 @@ public class ESP extends Module {
 					GL11.glEnd();
 				}
 			}
-			spacingYDown += 4;
+			spacingYDown += 5;
 			break;
 		}
 	}
