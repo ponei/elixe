@@ -13,7 +13,7 @@ import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleFloat;
 import elixe.utils.player.EntityUtils;
-import elixe.utils.player.RotationUtils;
+import elixe.utils.player.Rotations;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
 import net.minecraft.entity.Entity;
@@ -199,9 +199,9 @@ public class AimAssist extends Module {
 				angleEvent = 0;
 			}
 
-			float[] requiredAngles = RotationUtils.rotationUntilTarget(filteredEntity, mc.thePlayer);
-			float requiredYaw = RotationUtils.getAngleDifference(mc.thePlayer.rotationYaw, requiredAngles[0]);
-			float requiredPitch = RotationUtils.getAngleDifference(mc.thePlayer.rotationPitch, requiredAngles[1]);
+			float[] requiredAngles = Rotations.rotationUntilTarget(filteredEntity, mc.thePlayer);
+			float requiredYaw = Rotations.getAngleDifference(mc.thePlayer.rotationYaw, requiredAngles[0]);
+			float requiredPitch = Rotations.getAngleDifference(mc.thePlayer.rotationPitch, requiredAngles[1]);
 
 			if (aimFov >= Math.abs(requiredYaw)) {
 				requiredYaw = allowedRotations[0] ? clampFloat(requiredYaw) : 0f;

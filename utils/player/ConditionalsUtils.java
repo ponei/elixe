@@ -3,6 +3,11 @@ package elixe.utils.player;
 import org.lwjgl.input.Mouse;
 
 import elixe.Elixe;
+import elixe.events.OnTickEvent;
+import me.zero.alpine.event.EventPriority;
+import me.zero.alpine.listener.EventHandler;
+import me.zero.alpine.listener.Listenable;
+import me.zero.alpine.listener.Listener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemHoe;
@@ -11,20 +16,13 @@ import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 
-public class ConditionalsUtils {
-	public static ConditionalsUtils INSTANCE;
+public class ConditionalsUtils implements Listenable {
 	Minecraft mc = Elixe.INSTANCE.mc;
-
-	public ConditionalsUtils() {
-		INSTANCE = this;
-	}
 
 	private boolean sprinting, holdingWeapon, holdingAttack, inWater;
 
-	//runTick() : void - net.minecraft.client.Minecraft
-	//L:1579
-	//antes do event de tick
-	public void updateConditionals() {
+	@EventHandler
+	private Listener<OnTickEvent> onTickEvent = new Listener<>(e -> {
 		if (mc.currentScreen == null) {
 			sprinting = mc.thePlayer.isSprinting();
 
@@ -43,7 +41,7 @@ public class ConditionalsUtils {
 				holdingWeapon = false;
 			}
 		}
-	}
+	}, EventPriority.HIGHEST);
 
 	public boolean isSprinting() {
 		return sprinting;

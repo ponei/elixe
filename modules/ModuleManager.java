@@ -19,6 +19,7 @@ public class ModuleManager implements Listenable {
 
     //player    
     public Phase PHASE = new Phase();
+    public Derp DERP = new Derp();
     //render
     public elixe.modules.render.HUD HUD = new elixe.modules.render.HUD();
     public Chams CHAMS = new Chams();
@@ -29,6 +30,7 @@ public class ModuleManager implements Listenable {
     public ClearView CLEARVIEW = new ClearView();
     public HealthLog HEALTHLOG = new HealthLog();
     //combat
+    public KillAura KILLAURA = new KillAura();
     public AimAssist AIMASSIST = new AimAssist();
     public AutoClicker AUTOCLICKER = new AutoClicker();
     public Reach REACH = new Reach();
@@ -46,6 +48,7 @@ public class ModuleManager implements Listenable {
     public ModuleManager() {
     	//player    	
     	modules.add(PHASE);
+    	modules.add(DERP);
         //render
     	modules.add(HUD);
     	modules.add(CHAMS);
