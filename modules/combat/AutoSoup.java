@@ -46,6 +46,8 @@ public class AutoSoup extends Module {
 
 		moduleOptions.add(recraftOption);
 		moduleOptions.add(recraftDelayOption);
+		
+		moduleOptions.add(needAttackButtonOption);
 	}
 
 	float healthToSoup;
@@ -87,6 +89,13 @@ public class AutoSoup extends Module {
 	ModuleInteger recraftDelayOption = new ModuleInteger("recraft delay", 100, 1, 300) {
 		public void valueChanged() {
 			recraftDelay = (int) this.getValue();
+		}
+	};
+	
+	boolean needAttackButton;
+	ModuleBoolean needAttackButtonOption = new ModuleBoolean("require attack button", false) {
+		public void valueChanged() {
+			needAttackButton = (boolean) this.getValue();
 		}
 	};
 
@@ -161,12 +170,17 @@ public class AutoSoup extends Module {
 			}
 
 		} else if (mc.currentScreen == null) { // sem nenhuma gui ativa
+			recrafting = false;
+			if (needAttackButton) {
+				if (!conditionals.isHoldingAttack()) {
+					return;
+				}
+			}
 			if (autoSouping) { // loop do autosoup ativo
 				makeAutoSoupStep();
 			} else { // checa se é possivel iniciar loop do autosoup
 				shouldAutoSoup(true);
-			}
-			recrafting = false;
+			}			
 		}
 	});
 
