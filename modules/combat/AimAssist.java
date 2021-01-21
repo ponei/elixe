@@ -51,6 +51,8 @@ public class AimAssist extends Module {
 		moduleOptions.add(needWeaponOption);
 
 		moduleOptions.add(ignoreNakedOption);
+		moduleOptions.add(ignoreOnRightClickOption);
+		
 		moduleOptions.add(stopOnHitboxOption);
 	}
 
@@ -140,6 +142,13 @@ public class AimAssist extends Module {
 		}
 	};
 	
+	boolean ignoreOnRightClick;
+	ModuleBoolean ignoreOnRightClickOption = new ModuleBoolean("ignore on right click", false) {
+		public void valueChanged() {
+			ignoreNaked = (boolean) this.getValue();
+		}
+	};
+
 	boolean stopOnHitbox;
 	ModuleBoolean stopOnHitboxOption = new ModuleBoolean("stop on hitbox", false) {
 		public void valueChanged() {
@@ -188,27 +197,29 @@ public class AimAssist extends Module {
 
 		Entity filteredEntity = getClosestEntity(filteredEntities);
 		if (filteredEntity != null) {
-			if (ignoreNaked) {
-				if (EntityUtils.isNaked((EntityLivingBase) filteredEntity)) {
-					return;
+			if (!filteredEntity.isDead) {
+				if (ignoreNaked) {
+					if (EntityUtils.isNaked((EntityLivingBase) filteredEntity)) {
+						return;
+					}
 				}
-			}
-			
-			if (angleEvent != 0) {
-				angleChange = 1f / angleEvent;
-				angleEvent = 0;
-			}
 
-			float[] requiredAngles = Rotations.rotationUntilTarget(filteredEntity, mc.thePlayer);
-			float requiredYaw = Rotations.getAngleDifference(mc.thePlayer.rotationYaw, requiredAngles[0]);
-			float requiredPitch = Rotations.getAngleDifference(mc.thePlayer.rotationPitch, requiredAngles[1]);
+				if (angleEvent != 0) {
+					angleChange = 1f / angleEvent;
+					angleEvent = 0;
+				}
 
-			if (aimFov >= Math.abs(requiredYaw)) {
-				requiredYaw = allowedRotations[0] ? clampFloat(requiredYaw) : 0f;
-				requiredPitch = allowedRotations[1] ? clampFloat(requiredPitch) : 0f;
+				float[] requiredAngles = Rotations.rotationUntilTarget(filteredEntity, mc.thePlayer);
+				float requiredYaw = Rotations.getAngleDifference(mc.thePlayer.rotationYaw, requiredAngles[0]);
+				float requiredPitch = Rotations.getAngleDifference(mc.thePlayer.rotationPitch, requiredAngles[1]);
 
-				yawStep = requiredYaw * angleChange;
-				pitchStep = requiredPitch * angleChange;
+				if (aimFov >= Math.abs(requiredYaw)) {
+					requiredYaw = allowedRotations[0] ? clampFloat(requiredYaw) : 0f;
+					requiredPitch = allowedRotations[1] ? clampFloat(requiredPitch) : 0f;
+
+					yawStep = requiredYaw * angleChange;
+					pitchStep = requiredPitch * angleChange;
+				}
 			}
 		}
 
@@ -254,6 +265,10 @@ public class AimAssist extends Module {
 			if (!conditionals.isHoldingWeapon()) {
 				return false;
 			}
+		}
+		
+		if (ignoreOnRightClick) {
+			conditionals.isHoldingUse();
 		}
 
 		return true;
