@@ -23,9 +23,12 @@ public class Velocity extends Module {
 		moduleOptions.add(verticalMultiplierOption);
 
 		moduleOptions.add(needSprintOption);
+		moduleOptions.add(needSpeedOption);
 		moduleOptions.add(needAttackButtonOption);
 		moduleOptions.add(needWeaponOption);
+
 		moduleOptions.add(waterCheckOption);
+		moduleOptions.add(airCheckOption);
 	}
 
 	float activationChance;
@@ -56,6 +59,13 @@ public class Velocity extends Module {
 		}
 	};
 
+	boolean needSpeed;
+	ModuleBoolean needSpeedOption = new ModuleBoolean("require speed", false) {
+		public void valueChanged() {
+			needSpeed = (boolean) this.getValue();
+		}
+	};
+
 	boolean needAttackButton;
 	ModuleBoolean needAttackButtonOption = new ModuleBoolean("require attack button", false) {
 		public void valueChanged() {
@@ -74,6 +84,13 @@ public class Velocity extends Module {
 	ModuleBoolean waterCheckOption = new ModuleBoolean("water check", false) {
 		public void valueChanged() {
 			waterCheck = (boolean) this.getValue();
+		}
+	};
+
+	boolean airCheck;
+	ModuleBoolean airCheckOption = new ModuleBoolean("air check", false) {
+		public void valueChanged() {
+			airCheck = (boolean) this.getValue();
 		}
 	};
 
@@ -105,6 +122,12 @@ public class Velocity extends Module {
 			}
 		}
 
+		if (needSpeed) {
+			if (!conditionals.hasSpeed()) {
+				return false;
+			}
+		}
+
 		if (needAttackButton) {
 			if (!conditionals.isHoldingAttack()) {
 				return false;
@@ -119,6 +142,12 @@ public class Velocity extends Module {
 
 		if (waterCheck) {
 			if (conditionals.isInWater()) {
+				return false;
+			}
+		}
+
+		if (airCheck) {
+			if (conditionals.isOnAir()) {
 				return false;
 			}
 		}
