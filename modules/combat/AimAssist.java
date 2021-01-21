@@ -145,7 +145,7 @@ public class AimAssist extends Module {
 	boolean ignoreOnRightClick;
 	ModuleBoolean ignoreOnRightClickOption = new ModuleBoolean("ignore on right click", false) {
 		public void valueChanged() {
-			ignoreNaked = (boolean) this.getValue();
+			ignoreOnRightClick = (boolean) this.getValue();
 		}
 	};
 
@@ -268,7 +268,10 @@ public class AimAssist extends Module {
 		}
 		
 		if (ignoreOnRightClick) {
-			conditionals.isHoldingUse();
+			
+			if ( conditionals.isHoldingUse()) {
+				return false;
+			}
 		}
 
 		return true;
