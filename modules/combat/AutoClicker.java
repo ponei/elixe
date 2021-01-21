@@ -102,7 +102,7 @@ public class AutoClicker extends Module {
 //			tickreset = 0;
 //		} 
 		if (requireWeapon) {
-			if (conditionals.isHoldingWeapon()) {
+			if (!conditionals.isHoldingWeapon()) {
 				return;
 			}
 		}
