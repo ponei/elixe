@@ -4,6 +4,7 @@ import java.util.Random;
 
 import org.lwjgl.input.Mouse;
 
+import elixe.Elixe;
 import elixe.events.OnTickEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
@@ -22,6 +23,7 @@ public class AutoClicker extends Module {
 
 		moduleOptions.add(cpsMinOption);
 		moduleOptions.add(cpsMaxOption);
+		moduleOptions.add(requireWeaponOption);
 		moduleOptions.add(breakBlocksOption);
 	}
 
@@ -72,6 +74,13 @@ public class AutoClicker extends Module {
 			breakBlocks = (boolean) this.getValue();
 		}
 	};
+	
+	boolean requireWeapon;
+	ModuleBoolean requireWeaponOption = new ModuleBoolean("require weapon", false) {
+		public void valueChanged() {
+			requireWeapon = (boolean) this.getValue();
+		}
+	};
 
 	// randomizacao
 	TimerUtils.MilisecondTimer clickTimer = new TimerUtils().new MilisecondTimer();
@@ -92,6 +101,12 @@ public class AutoClicker extends Module {
 //			cps = 0;
 //			tickreset = 0;
 //		} 
+		if (requireWeapon) {
+			if (conditionals.isHoldingWeapon()) {
+				return;
+			}
+		}
+		
 
 		int attack = mc.gameSettings.keyBindAttack.getKeyCode();
 		int attackN = attack + 100;
