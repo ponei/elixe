@@ -17,7 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.potion.Potion;
 
-public class ConditionalsUtils implements Listenable {
+public class PlayerConditionals implements Listenable {
 	Minecraft mc = Elixe.INSTANCE.mc;
 
 	private boolean sprinting, holdingWeapon, holdingAttack, holdingUse, inWater, onAir, speed;

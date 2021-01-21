@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
 
 import elixe.file.FileManager;
 import elixe.modules.ModuleManager;
-import elixe.utils.player.ConditionalsUtils;
+import elixe.utils.player.PlayerConditionals;
 import elixe.utils.player.Rotations;
 import me.zero.alpine.bus.EventBus;
 import me.zero.alpine.bus.EventManager;
@@ -21,7 +21,7 @@ public class Elixe {
 	public final FileManager FILE_MANAGER;
 	
 	public final Rotations ROTATIONS;
-	public final ConditionalsUtils CONDITIONALS;
+	public final PlayerConditionals CONDITIONALS;
 
 	public Minecraft mc;
 
@@ -35,7 +35,7 @@ public class Elixe {
 		this.mc = mc;
 		
 		this.ROTATIONS = new Rotations();
-		this.CONDITIONALS = new ConditionalsUtils();
+		this.CONDITIONALS = new PlayerConditionals();
 		
 		this.MODULE_MANAGER = new ModuleManager();
 		this.FILE_MANAGER = new FileManager();
