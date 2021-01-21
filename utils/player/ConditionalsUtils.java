@@ -15,19 +15,25 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.potion.Potion;
 
 public class ConditionalsUtils implements Listenable {
 	Minecraft mc = Elixe.INSTANCE.mc;
 
-	private boolean sprinting, holdingWeapon, holdingAttack, inWater;
+	private boolean sprinting, holdingWeapon, holdingAttack, holdingUse, inWater, onAir, speed;
 
 	@EventHandler
 	private Listener<OnTickEvent> onTickEvent = new Listener<>(e -> {
 		if (mc.currentScreen == null) {
+			onAir = !mc.thePlayer.onGround;
+			
+			speed = this.mc.thePlayer.isPotionActive(Potion.moveSpeed);
+			
 			sprinting = mc.thePlayer.isSprinting();
 
-			int attack = mc.gameSettings.keyBindAttack.getKeyCode() + 100;
-			holdingAttack = Mouse.isButtonDown(attack);
+			holdingAttack = Mouse.isButtonDown(mc.gameSettings.keyBindAttack.getKeyCode() + 100);
+			
+			holdingUse = Mouse.isButtonDown(mc.gameSettings.keyBindUseItem.getKeyCode() + 100);
 
 			inWater = mc.thePlayer.isInWater();
 
@@ -43,6 +49,14 @@ public class ConditionalsUtils implements Listenable {
 		}
 	}, EventPriority.HIGHEST);
 
+	public boolean hasSpeed() {
+		return speed;
+	}
+	
+	public boolean isOnAir() {
+		return onAir;
+	}
+	
 	public boolean isSprinting() {
 		return sprinting;
 	}
@@ -53,6 +67,10 @@ public class ConditionalsUtils implements Listenable {
 
 	public boolean isHoldingAttack() {
 		return holdingAttack;
+	}
+	
+	public boolean isHoldingUse() {
+		return holdingUse;
 	}
 
 	public boolean isInWater() {
