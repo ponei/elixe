@@ -34,6 +34,7 @@ public class ModuleManager implements Listenable {
     public AimAssist AIMASSIST = new AimAssist();
     public AutoClicker AUTOCLICKER = new AutoClicker();
     public Reach REACH = new Reach();
+    public Hitbox HITBOX = new Hitbox();
     public Velocity VELOCITY = new Velocity();
     public AutoSoup AUTOSOUP = new AutoSoup(); 
     public Misplace MISPLACE = new Misplace();
@@ -61,6 +62,7 @@ public class ModuleManager implements Listenable {
     	//combat
     	modules.add(AIMASSIST);
     	modules.add(AUTOCLICKER);
+    	modules.add(HITBOX);
     	//modules.add(MISPLACE);
     	modules.add(REACH);
     	modules.add(VELOCITY);
