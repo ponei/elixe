@@ -52,7 +52,7 @@ public class AimAssist extends Module {
 
 		moduleOptions.add(ignoreNakedOption);
 		moduleOptions.add(ignoreOnRightClickOption);
-		
+
 		moduleOptions.add(stopOnHitboxOption);
 	}
 
@@ -141,7 +141,7 @@ public class AimAssist extends Module {
 			ignoreNaked = (boolean) this.getValue();
 		}
 	};
-	
+
 	boolean ignoreOnRightClick;
 	ModuleBoolean ignoreOnRightClickOption = new ModuleBoolean("ignore on right click", false) {
 		public void valueChanged() {
@@ -251,8 +251,10 @@ public class AimAssist extends Module {
 		}
 
 		if (stopOnHitbox) {
-			if (mc.objectMouseOver.typeOfHit == MovingObjectType.ENTITY) {
-				return false;
+			if (mc.objectMouseOver != null) {
+				if (mc.objectMouseOver.typeOfHit == MovingObjectType.ENTITY) {
+					return false;
+				}
 			}
 		}
 
@@ -266,10 +268,9 @@ public class AimAssist extends Module {
 				return false;
 			}
 		}
-		
+
 		if (ignoreOnRightClick) {
-			
-			if ( conditionals.isHoldingUse()) {
+			if (conditionals.isHoldingUse()) {
 				return false;
 			}
 		}
