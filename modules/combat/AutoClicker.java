@@ -23,6 +23,7 @@ public class AutoClicker extends Module {
 
 		moduleOptions.add(cpsMinOption);
 		moduleOptions.add(cpsMaxOption);
+		
 		moduleOptions.add(requireWeaponOption);
 		moduleOptions.add(breakBlocksOption);
 	}

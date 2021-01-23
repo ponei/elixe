@@ -96,7 +96,7 @@ public class HUD extends Module {
 		}
 	});
 	
-	//channelActive(ChannelHandlerContext) : void - net.minecraft.network.NetworkManager
+	//handleLoginSuccess(S02PacketLoginSuccess) : void - net.minecraft.client.network.NetHandlerLoginClient
 	//L:111
 	public void setRemoteAddress(String addr) {
 		
