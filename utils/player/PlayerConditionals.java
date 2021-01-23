@@ -38,6 +38,7 @@ public class PlayerConditionals implements Listenable {
 			inWater = mc.thePlayer.isInWater();
 
 			ItemStack item = mc.thePlayer.getCurrentEquippedItem();
+			
 			if (item != null) {
 				holdingWeapon = (item.getItem() instanceof ItemSword || item.getItem() instanceof ItemAxe
 						|| item.getItem() instanceof ItemPickaxe || item.getItem() instanceof ItemSpade

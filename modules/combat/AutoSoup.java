@@ -1,6 +1,8 @@
 package elixe.modules.combat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 import elixe.events.OnKeybindActionEvent;
@@ -8,6 +10,7 @@ import elixe.events.OnPacketSendEvent;
 import elixe.events.OnTickEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
+import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
@@ -45,8 +48,9 @@ public class AutoSoup extends Module {
 		moduleOptions.add(refillDelayOption);
 
 		moduleOptions.add(recraftOption);
+		moduleOptions.add(recraftableItemsOption);
 		moduleOptions.add(recraftDelayOption);
-		
+
 		moduleOptions.add(needAttackButtonOption);
 	}
 
@@ -85,19 +89,30 @@ public class AutoSoup extends Module {
 		}
 	};
 
+	boolean[] recraftableItems;
+	ModuleArrayMultiple recraftableItemsOption = new ModuleArrayMultiple("recraftable items",
+			new boolean[] { true, false, false }, new String[] { "mushroom", "cocoa", "cactus" }) {
+		public void valueChanged() {
+			recraftableItems = (boolean[]) this.getValue();
+		}
+	};
+
 	int recraftDelay;
 	ModuleInteger recraftDelayOption = new ModuleInteger("recraft delay", 100, 1, 300) {
 		public void valueChanged() {
 			recraftDelay = (int) this.getValue();
 		}
 	};
-	
+
 	boolean needAttackButton;
 	ModuleBoolean needAttackButtonOption = new ModuleBoolean("require attack button", false) {
 		public void valueChanged() {
 			needAttackButton = (boolean) this.getValue();
 		}
 	};
+
+	// vars
+	Object[][] possibleItems = { { Blocks.red_mushroom, Blocks.brown_mushroom }, { Items.dye }, { Blocks.cactus } };
 
 	Random r = new Random();
 
@@ -107,10 +122,12 @@ public class AutoSoup extends Module {
 	TimerUtils.MilisecondTimer refillTimer = new TimerUtils().new MilisecondTimer();
 
 	TimerUtils.MilisecondTimer recraftTimer = new TimerUtils().new MilisecondTimer();
-	
+
 	boolean recrafting = false;
 	int recraftStep = 0;
-	InventoryItem bowlRecraft, redMushRecraft, brownMushRecraft;
+
+	InventoryItem bowlRecraft;
+	InventoryItem[] itemsToUse = new InventoryItem[2];
 
 	int lastItem;
 	int soupInHotbar;
@@ -156,14 +173,75 @@ public class AutoSoup extends Module {
 					int trySoup = findItem(9, 45, Items.mushroom_stew);
 					if (trySoup == -1) {
 
-						bowlRecraft = findItemHighest(9, 45, Items.bowl);
-						redMushRecraft = findBlockHighest(9, 45, Blocks.red_mushroom);
-						brownMushRecraft = findBlockHighest(9, 45, Blocks.brown_mushroom);
+						bowlRecraft = findItemHighest(9, 45, Items.bowl, 0);
 
-						if (bowlRecraft.getSlot() != -1 && redMushRecraft.getSlot() != -1
-								&& brownMushRecraft.getSlot() != -1) {
-							recraftStep = 1;
-							recrafting = true;
+						// tem pote
+						if (bowlRecraft.getSlot() != -1) {
+							ArrayList<InventoryItem> itemsToSort = new ArrayList<InventoryItem>();
+
+							// a array 'possibleItems' contem todos as combinações de recraft aceitaveis
+							// tendo alguns crafts possuindo 2 itens e outros somente 1
+							// isso tem que ser dinamico
+							//
+							// pra isso, checamos se cada item em cada combinação existe
+							// se existe, guarda na array 'itemsToSort'
+							for (int i = 0; i < possibleItems.length; i++) {
+								if (recraftableItems[i]) {
+									for (int j = 0; j < possibleItems[i].length; j++) {
+										if (possibleItems[i][j] instanceof Block) { // block
+											itemsToSort.add(findBlockHighest(9, 45, (Block) possibleItems[i][j]));
+										} else { // item
+											// eu queria fazer a lista de itens totalmente dinamico
+											// problema é, cocoa beans são "corantes" mas com metadata de dano 3
+											// como nao tem outro item na lista de recraft (os outros sao blocos)
+											// eu nao fiz uma classe especifica pra isso, entao assumo que só pode ser
+											// cocoa bean
+											// no futuro, se precisar, refatoro
+											itemsToSort.add(findItemHighest(9, 45, (Item) possibleItems[i][j], 3));
+										}
+									}
+								}
+							}
+
+							Collections.sort(itemsToSort);
+
+							// em cada item filtrado
+							boolean shouldStop = false;
+							for (int i = 0; i < itemsToSort.size(); i++) {
+								if (shouldStop) {
+									break;
+								}
+
+								// se tem a porra do item
+								if (itemsToSort.get(i).getSize() > 0) {
+									// loop pra cada combinacao
+									for (int j = 0; j < possibleItems.length; j++) {
+										boolean canCraft = true;
+										// todos os items da combinacao atual
+										for (int k = 0; k < possibleItems[j].length; k++) {
+											// se for um craft de 2 itens, vai checar o index atual e o proximo
+											// com os itens correspondentes do craft
+											if (i + k < itemsToSort.size()) {
+												if (itemsToSort.get(i + k).getObject() != possibleItems[j][k]) {
+													canCraft = false;
+												}
+											} else { // fora dos bounds
+												canCraft = false;
+											}
+										}
+										if (canCraft) {
+											shouldStop = true;
+											for (int k = 0; k < possibleItems[j].length; k++) {
+												itemsToUse[k] = itemsToSort.get(i + k);
+											}
+											recraftStep = 1;
+											recrafting = true;
+											break;
+										}
+									}
+								}
+							}
+
 						}
 					}
 				}
@@ -180,7 +258,7 @@ public class AutoSoup extends Module {
 				makeAutoSoupStep();
 			} else { // checa se é possivel iniciar loop do autosoup
 				shouldAutoSoup(true);
-			}			
+			}
 		}
 	});
 
@@ -188,30 +266,34 @@ public class AutoSoup extends Module {
 		if (recraftTimer.hasTimePassed(recraftDelay)) {
 
 			switch (recraftStep) {
-			case 1: // pega cogumelo
-				mc.playerController.windowClick(0, redMushRecraft.getSlot(), 0, 0, mc.thePlayer);
-				if (redMushRecraft.getSize() == 1) { // se for só 1 cogu, pula step de botao direito
+			case 1: // pega primeiro item do recraft
+				mc.playerController.windowClick(0, itemsToUse[0].getSlot(), 0, 0, mc.thePlayer);
+				if (itemsToUse[0].getSize() == 1) { // se for só 1 item, pula step de botao direito
 					recraftStep++;
 				}
 				break;
 
-			case 2: // clica uma vez com o direito pra colocar um cogu no slot
-				mc.playerController.windowClick(0, redMushRecraft.getSlot(), 1, 0, mc.thePlayer);
+			case 2: // clica uma vez com o direito pra colocar um item no slot
+				mc.playerController.windowClick(0, itemsToUse[0].getSlot(), 1, 0, mc.thePlayer);
 				break;
 
-			case 3: // coloca os cogu na crafting
+			case 3: // coloca o item na crafting
 				mc.playerController.windowClick(0, 3, 0, 0, mc.thePlayer);
+				// checa se craft é 1 item só
+				if (itemsToUse[1] == null) {
+					recraftStep += 3; //pula pro step 7
+				}
 				break;
 
-			case 4: // msm coisa mas
-				mc.playerController.windowClick(0, brownMushRecraft.getSlot(), 0, 0, mc.thePlayer);
-				if (brownMushRecraft.getSize() == 1) {
+			case 4: 
+				mc.playerController.windowClick(0, itemsToUse[1].getSlot(), 0, 0, mc.thePlayer);
+				if (itemsToUse[1].getSize() == 1) {
 					recraftStep++;
 				}
 				break;
 
 			case 5:
-				mc.playerController.windowClick(0, brownMushRecraft.getSlot(), 1, 0, mc.thePlayer);
+				mc.playerController.windowClick(0, itemsToUse[1].getSlot(), 1, 0, mc.thePlayer);
 				break;
 
 			case 6:
@@ -244,16 +326,17 @@ public class AutoSoup extends Module {
 				break;
 
 			case 12:
-				if (mc.thePlayer.inventoryContainer.getSlot(4).getStack() != null) {
-					mc.playerController.windowClick(0, 4, 0, 1, mc.thePlayer);
+				if (mc.thePlayer.inventoryContainer.getSlot(3).getStack() != null) {
+					mc.playerController.windowClick(0, 3, 0, 1, mc.thePlayer);
 				}
 				break;
 
 			case 13:
-				if (mc.thePlayer.inventoryContainer.getSlot(3).getStack() != null) {
-					mc.playerController.windowClick(0, 3, 0, 1, mc.thePlayer);
+				if (mc.thePlayer.inventoryContainer.getSlot(4).getStack() != null) {
+					mc.playerController.windowClick(0, 4, 0, 1, mc.thePlayer);
 				}
 				recrafting = false;
+				itemsToUse = new InventoryItem[2];
 				break;
 			}
 			recraftStep++;
@@ -268,10 +351,10 @@ public class AutoSoup extends Module {
 		if (waitForUseItem) {
 			int useItem = mc.gameSettings.keyBindUseItem.getKeyCode();
 			if (e.getKey() == useItem) {
-				if (!mc.playerController.func_181040_m()) {
+				if (!mc.playerController.isHittingABlock()) {
 					waitForUseItem = false;
 					if (!e.isPressed()) {
-						KeyBinding.onTick(useItem);						
+						KeyBinding.onTick(useItem);
 					}
 					if (!dropBowl) {
 						autoSoupStep++;
@@ -386,17 +469,17 @@ public class AutoSoup extends Module {
 				}
 			}
 		}
-		return new InventoryItem(slot, size);
+		return new InventoryItem(slot, size, block);
 	}
 
-	private InventoryItem findItemHighest(int startSlot, int endSlot, Item item) {
+	private InventoryItem findItemHighest(int startSlot, int endSlot, Item item, int meta) {
 		int slot = -1;
 		int size = 0;
 
 		for (int i = startSlot; i < endSlot; i++) {
 			ItemStack itemStack = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
 			if (itemStack != null) {
-				if (itemStack.getItem() == item) {
+				if (itemStack.getItem() == item && itemStack.getItemDamage() == meta) {
 					if (itemStack.stackSize > size) {
 						size = itemStack.stackSize;
 						slot = i;
@@ -405,20 +488,24 @@ public class AutoSoup extends Module {
 				}
 			}
 		}
-		return new InventoryItem(slot, size);
+		return new InventoryItem(slot, size, item);
 	}
 
-	private void useItemPress() {
-		useItem = mc.gameSettings.keyBindUseItem.getKeyCode();
-		KeyBinding.onTick(useItem);
-	}
-
-	public class InventoryItem {
+	public class InventoryItem implements Comparable<InventoryItem> {
 		private int slot, size;
+		private Block invBlock;
+		private Item invItem;
 
-		public InventoryItem(int slot, int size) {
+		public InventoryItem(int slot, int size, Block invBlock) {
 			this.slot = slot;
 			this.size = size;
+			this.invBlock = invBlock;
+		}
+
+		public InventoryItem(int slot, int size, Item invItem) {
+			this.slot = slot;
+			this.size = size;
+			this.invItem = invItem;
 		}
 
 		public int getSlot() {
@@ -427,6 +514,20 @@ public class AutoSoup extends Module {
 
 		public int getSize() {
 			return size;
+		}
+
+		public Object getObject() {
+			if (invBlock != null) {
+				return invBlock;
+			} else {
+				return invItem;
+			}
+		}
+
+		// maior fica na frente
+		@Override
+		public int compareTo(InventoryItem item) {
+			return item.getSize() - size;
 		}
 
 	}
