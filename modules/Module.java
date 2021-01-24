@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import elixe.Elixe;
 import elixe.modules.option.ModuleKey;
-import elixe.utils.player.ConditionalsUtils;
+import elixe.utils.player.PlayerConditionals;
 import me.zero.alpine.listener.Listenable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
@@ -25,7 +25,7 @@ public class Module implements Listenable, Comparable<Module> {
 		}
     };
    
-    protected ConditionalsUtils conditionals = Elixe.INSTANCE.CONDITIONALS;
+    protected PlayerConditionals conditionals = Elixe.INSTANCE.CONDITIONALS;
     protected Minecraft mc = Elixe.INSTANCE.mc;
     protected RenderManager renderManager = mc.getRenderManager();
     protected RenderItem renderItem = mc.getRenderItem();

@@ -140,7 +140,7 @@ public class OldAnimations extends Module {
 		 
 		for (LayerRenderer<EntityLivingBase> layerrenderer : rendererLiving.layerRenderers) {
 			boolean flag;
-			if (layerrenderer instanceof LayerBipedArmor) {
+			if (layerrenderer instanceof LayerBipedArmor) { //layer de armadura
 				flag = setBrightness(rendererLiving, entitylivingbaseIn, partialTicks, oldArmorAnimation ? true : layerrenderer.shouldCombineTextures());
 			} else {
 				flag = setBrightness(rendererLiving, entitylivingbaseIn, partialTicks, layerrenderer.shouldCombineTextures());

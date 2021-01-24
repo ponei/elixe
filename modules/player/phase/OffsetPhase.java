@@ -4,7 +4,7 @@ import elixe.Elixe;
 import elixe.events.OnLivingUpdateEvent;
 import elixe.events.OnMoveEvent;
 import elixe.events.OnPacketSendEvent;
-import elixe.utils.player.RotationUtils;
+import elixe.utils.player.Rotations;
 import net.minecraft.client.Minecraft;
 
 public class OffsetPhase implements IPhaseType {
@@ -34,7 +34,7 @@ public class OffsetPhase implements IPhaseType {
 
 		switch (step) {
 		case 1:
-			direction = RotationUtils.getDirection(mc.thePlayer);
+			direction = Rotations.getDirection(mc.thePlayer);
 			clipOffset(0.0625D);
 			break;
 		case 2:

@@ -13,7 +13,7 @@ import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleFloat;
 import elixe.utils.player.EntityUtils;
-import elixe.utils.player.RotationUtils;
+import elixe.utils.player.Rotations;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
 import net.minecraft.entity.Entity;
@@ -51,6 +51,8 @@ public class AimAssist extends Module {
 		moduleOptions.add(needWeaponOption);
 
 		moduleOptions.add(ignoreNakedOption);
+		moduleOptions.add(ignoreOnRightClickOption);
+
 		moduleOptions.add(stopOnHitboxOption);
 	}
 
@@ -139,7 +141,14 @@ public class AimAssist extends Module {
 			ignoreNaked = (boolean) this.getValue();
 		}
 	};
-	
+
+	boolean ignoreOnRightClick;
+	ModuleBoolean ignoreOnRightClickOption = new ModuleBoolean("ignore on right click", false) {
+		public void valueChanged() {
+			ignoreOnRightClick = (boolean) this.getValue();
+		}
+	};
+
 	boolean stopOnHitbox;
 	ModuleBoolean stopOnHitboxOption = new ModuleBoolean("stop on hitbox", false) {
 		public void valueChanged() {
@@ -188,27 +197,29 @@ public class AimAssist extends Module {
 
 		Entity filteredEntity = getClosestEntity(filteredEntities);
 		if (filteredEntity != null) {
-			if (ignoreNaked) {
-				if (EntityUtils.isNaked((EntityLivingBase) filteredEntity)) {
-					return;
+			if (!filteredEntity.isDead) {
+				if (ignoreNaked) {
+					if (EntityUtils.isNaked((EntityLivingBase) filteredEntity)) {
+						return;
+					}
 				}
-			}
-			
-			if (angleEvent != 0) {
-				angleChange = 1f / angleEvent;
-				angleEvent = 0;
-			}
 
-			float[] requiredAngles = RotationUtils.rotationUntilTarget(filteredEntity, mc.thePlayer);
-			float requiredYaw = RotationUtils.getAngleDifference(mc.thePlayer.rotationYaw, requiredAngles[0]);
-			float requiredPitch = RotationUtils.getAngleDifference(mc.thePlayer.rotationPitch, requiredAngles[1]);
+				if (angleEvent != 0) {
+					angleChange = 1f / angleEvent;
+					angleEvent = 0;
+				}
 
-			if (aimFov >= Math.abs(requiredYaw)) {
-				requiredYaw = allowedRotations[0] ? clampFloat(requiredYaw) : 0f;
-				requiredPitch = allowedRotations[1] ? clampFloat(requiredPitch) : 0f;
+				float[] requiredAngles = Rotations.rotationUntilTarget(filteredEntity, mc.thePlayer);
+				float requiredYaw = Rotations.getAngleDifference(mc.thePlayer.rotationYaw, requiredAngles[0]);
+				float requiredPitch = Rotations.getAngleDifference(mc.thePlayer.rotationPitch, requiredAngles[1]);
 
-				yawStep = requiredYaw * angleChange;
-				pitchStep = requiredPitch * angleChange;
+				if (aimFov >= Math.abs(requiredYaw)) {
+					requiredYaw = allowedRotations[0] ? clampFloat(requiredYaw) : 0f;
+					requiredPitch = allowedRotations[1] ? clampFloat(requiredPitch) : 0f;
+
+					yawStep = requiredYaw * angleChange;
+					pitchStep = requiredPitch * angleChange;
+				}
 			}
 		}
 
@@ -240,8 +251,10 @@ public class AimAssist extends Module {
 		}
 
 		if (stopOnHitbox) {
-			if (mc.objectMouseOver.typeOfHit == MovingObjectType.ENTITY) {
-				return false;
+			if (mc.objectMouseOver != null) {
+				if (mc.objectMouseOver.typeOfHit == MovingObjectType.ENTITY) {
+					return false;
+				}
 			}
 		}
 
@@ -252,6 +265,12 @@ public class AimAssist extends Module {
 		}
 		if (needWeapon) {
 			if (!conditionals.isHoldingWeapon()) {
+				return false;
+			}
+		}
+
+		if (ignoreOnRightClick) {
+			if (conditionals.isHoldingUse()) {
 				return false;
 			}
 		}

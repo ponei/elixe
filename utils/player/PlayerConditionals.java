@@ -3,6 +3,11 @@ package elixe.utils.player;
 import org.lwjgl.input.Mouse;
 
 import elixe.Elixe;
+import elixe.events.OnTickEvent;
+import me.zero.alpine.event.EventPriority;
+import me.zero.alpine.listener.EventHandler;
+import me.zero.alpine.listener.Listenable;
+import me.zero.alpine.listener.Listener;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemHoe;
@@ -10,30 +15,30 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraft.potion.Potion;
 
-public class ConditionalsUtils {
-	public static ConditionalsUtils INSTANCE;
+public class PlayerConditionals implements Listenable {
 	Minecraft mc = Elixe.INSTANCE.mc;
 
-	public ConditionalsUtils() {
-		INSTANCE = this;
-	}
+	private boolean sprinting, holdingWeapon, holdingAttack, holdingUse, inWater, onAir, speed;
 
-	private boolean sprinting, holdingWeapon, holdingAttack, inWater;
-
-	//runTick() : void - net.minecraft.client.Minecraft
-	//L:1579
-	//antes do event de tick
-	public void updateConditionals() {
+	@EventHandler
+	private Listener<OnTickEvent> onTickEvent = new Listener<>(e -> {
 		if (mc.currentScreen == null) {
+			onAir = !mc.thePlayer.onGround;
+			
+			speed = this.mc.thePlayer.isPotionActive(Potion.moveSpeed);
+			
 			sprinting = mc.thePlayer.isSprinting();
 
-			int attack = mc.gameSettings.keyBindAttack.getKeyCode() + 100;
-			holdingAttack = Mouse.isButtonDown(attack);
+			holdingAttack = Mouse.isButtonDown(mc.gameSettings.keyBindAttack.getKeyCode() + 100);
+			
+			holdingUse = Mouse.isButtonDown(mc.gameSettings.keyBindUseItem.getKeyCode() + 100);
 
 			inWater = mc.thePlayer.isInWater();
 
 			ItemStack item = mc.thePlayer.getCurrentEquippedItem();
+			
 			if (item != null) {
 				holdingWeapon = (item.getItem() instanceof ItemSword || item.getItem() instanceof ItemAxe
 						|| item.getItem() instanceof ItemPickaxe || item.getItem() instanceof ItemSpade
@@ -43,8 +48,16 @@ public class ConditionalsUtils {
 				holdingWeapon = false;
 			}
 		}
-	}
+	}, EventPriority.HIGHEST);
 
+	public boolean hasSpeed() {
+		return speed;
+	}
+	
+	public boolean isOnAir() {
+		return onAir;
+	}
+	
 	public boolean isSprinting() {
 		return sprinting;
 	}
@@ -55,6 +68,10 @@ public class ConditionalsUtils {
 
 	public boolean isHoldingAttack() {
 		return holdingAttack;
+	}
+	
+	public boolean isHoldingUse() {
+		return holdingUse;
 	}
 
 	public boolean isInWater() {

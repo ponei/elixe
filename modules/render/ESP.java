@@ -51,6 +51,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.item.ItemAxe;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemSpade;
@@ -814,7 +815,7 @@ public class ESP extends Module {
 
 			boolean shouldRotate = rotateWeaponIcon && (item.getItem() instanceof ItemSword
 					|| item.getItem() instanceof ItemAxe || item.getItem() instanceof ItemPickaxe
-					|| item.getItem() instanceof ItemSpade || item.getItem() instanceof ItemHoe);
+					|| item.getItem() instanceof ItemSpade || item.getItem() instanceof ItemHoe || item.getItem() instanceof ItemBow);
 
 			switch (itemIconLocation) {
 			case 0: // up

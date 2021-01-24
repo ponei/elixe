@@ -44,6 +44,7 @@ public class Reach extends Module {
 		moduleOptions.add(reachMaxOption);
 
 		moduleOptions.add(needSprintOption);
+		moduleOptions.add(needSpeedOption);
 		moduleOptions.add(needWeaponOption);
 
 		moduleOptions.add(ignoreBlocksOption);
@@ -51,6 +52,7 @@ public class Reach extends Module {
 
 		moduleOptions.add(waterCheckOption);
 		moduleOptions.add(yCheckOption);
+		moduleOptions.add(airCheckOption);
 	}
 
 	float activationChance;
@@ -107,6 +109,13 @@ public class Reach extends Module {
 			needSprint = (boolean) this.getValue();
 		}
 	};
+	
+	boolean needSpeed;
+	ModuleBoolean needSpeedOption = new ModuleBoolean("require speed", false) {
+		public void valueChanged() {
+			needSpeed = (boolean) this.getValue();
+		}
+	};
 
 	boolean needWeapon;
 	ModuleBoolean needWeaponOption = new ModuleBoolean("require weapon", false) {
@@ -142,6 +151,13 @@ public class Reach extends Module {
 			yCheck = (boolean) this.getValue();
 		}
 	};
+	
+	boolean airCheck;
+	ModuleBoolean airCheckOption = new ModuleBoolean("air check", false) {
+		public void valueChanged() {
+			airCheck = (boolean) this.getValue();
+		}
+	};
 
 	Random r = new Random();
 	@EventHandler
@@ -154,18 +170,32 @@ public class Reach extends Module {
 				return;
 			}
 		}
+		
+		if (needSpeed) {
+			if (!conditionals.hasSpeed()) {
+				return;
+			}
+		}
+		
+		if (needWeapon) {
+			if (!conditionals.isHoldingWeapon()) {
+				return;
+			}
+		}
 
 		if (waterCheck) {
 			if (conditionals.isInWater()) {
 				return;
 			}
 		}
-
-		if (needWeapon) {
-			if (!conditionals.isHoldingWeapon()) {
+		
+		if (airCheck) {
+			if (conditionals.isOnAir()) {
 				return;
 			}
 		}
+
+		
 
 		e.cancel();
 		EntityRenderer entityRenderer = e.getEntityRenderer();
