@@ -29,18 +29,16 @@ public final class ElixeAltManager extends GuiScreen {
 	protected void actionPerformed(GuiButton button) {
 		switch (button.id) {
 		case 1:
-			this.thread = new ElixeLoginThread(this.username.getText(), this.password.getText());
+			this.thread = new ElixeLoginThread(this.username.getText(), this.password.getText(), currentService);
 			this.thread.start();
 			break;
 		case 2:
 			if (currentService.equals("Mojang")) {
 				currentService = "TheAltening";
 				authServer.updateService(AlteningServiceType.THEALTENING);
-				thread.shouldIgnorePass(true);
 			} else {
 				currentService = "Mojang";
 				authServer.updateService(AlteningServiceType.MOJANG);
-				thread.shouldIgnorePass(false);
 			}
 			break;
 		case 3:
