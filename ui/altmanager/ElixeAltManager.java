@@ -36,9 +36,11 @@ public final class ElixeAltManager extends GuiScreen {
 			if (currentService.equals("Mojang")) {
 				currentService = "TheAltening";
 				authServer.updateService(AlteningServiceType.THEALTENING);
+				thread.shouldIgnorePass(true);
 			} else {
 				currentService = "Mojang";
 				authServer.updateService(AlteningServiceType.MOJANG);
+				thread.shouldIgnorePass(false);
 			}
 			break;
 		case 3:

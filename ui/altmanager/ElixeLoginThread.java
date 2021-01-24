@@ -44,9 +44,15 @@ extends Thread {
         return this.status;
     }
 
+    public void shouldIgnorePass(boolean pass) {
+    	ignorePass = pass;
+    }
+    
+    boolean ignorePass = false;
+    
     @Override
     public void run() {
-        if (this.password.equals("")) {
+        if (this.password.equals("") && !ignorePass) {
             this.mc.session = new Session(this.username, "", "", "mojang");
             this.status = (Object)((Object)EnumChatFormatting.GREEN) + "Logged in. (" + this.username + " - offline name)";
             return;
