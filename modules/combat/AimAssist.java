@@ -1,6 +1,7 @@
 package elixe.modules.combat;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.lwjgl.input.Mouse;
 
@@ -38,12 +39,17 @@ public class AimAssist extends Module {
 		super("Aim Assist", ModuleCategory.COMBAT);
 
 		moduleOptions.add(allowedEntitiesOption);
+		
 		moduleOptions.add(allowedRotationsOption);
-
 		moduleOptions.add(aimSpeedOption);
 		moduleOptions.add(aimMaxSpeedOption);
 		moduleOptions.add(aimFovOption);
 		moduleOptions.add(aimDistanceOption);
+		
+		moduleOptions.add(allowedRandomRotationsOption);
+		moduleOptions.add(aimRandomSpeedOption);
+		moduleOptions.add(randomDecreaseOption);
+		moduleOptions.add(randomDecreaseFovOption);
 
 		moduleOptions.add(needVisibleOption);
 		moduleOptions.add(needSprintOption);
@@ -97,6 +103,35 @@ public class AimAssist extends Module {
 	ModuleFloat aimDistanceOption = new ModuleFloat("aim distance", 5f, 0f, 10f) {
 		public void valueChanged() {
 			aimDistance = (float) this.getValue();
+		}
+	};
+	
+	boolean[] allowedRandomRotations;
+	ModuleArrayMultiple allowedRandomRotationsOption = new ModuleArrayMultiple("allowed random rotations",
+			new boolean[] { true, false }, new String[] { "yaw", "pitch" }) {
+		public void valueChanged() {
+			allowedRandomRotations = (boolean[]) this.getValue();
+		}
+	};
+	
+	float aimRandomSpeed;
+	ModuleFloat aimRandomSpeedOption = new ModuleFloat("random speed", 5f, 1f, 40f) {
+		public void valueChanged() {
+			aimRandomSpeed = (float) this.getValue();
+		}
+	};
+	
+	boolean randomDecrease;
+	ModuleBoolean randomDecreaseOption = new ModuleBoolean("random decrease", false) {
+		public void valueChanged() {
+			randomDecrease = (boolean) this.getValue();
+		}
+	};
+	
+	float randomDecreaseFov;
+	ModuleFloat randomDecreaseFovOption = new ModuleFloat("random decrease fov", 5f, 1f, 90f) {
+		public void valueChanged() {
+			randomDecreaseFov = (float) this.getValue();
 		}
 	};
 
@@ -162,6 +197,8 @@ public class AimAssist extends Module {
 
 	int angleEvent = 0;
 
+	Random r = new Random();
+	
 	// 0 = player, 1 = animal, 2 = monster, 3 = villager
 
 	@EventHandler
@@ -173,7 +210,7 @@ public class AimAssist extends Module {
 		if (!shouldAim())
 			return;
 
-		ArrayList<Entity> filteredEntities = new ArrayList<Entity>();
+		ArrayList<EntityLivingBase> filteredEntities = new ArrayList<EntityLivingBase>();
 		for (Entity ent : mc.theWorld.loadedEntityList) {
 			if (!ent.rendered) {
 				continue;
@@ -191,15 +228,15 @@ public class AimAssist extends Module {
 					|| (ent instanceof EntityAnimal && allowedEntities[1])
 					|| ((ent instanceof EntityMob || ent instanceof EntitySlime) && allowedEntities[2])
 					|| (ent instanceof EntityVillager && allowedEntities[3])) {
-				filteredEntities.add(ent);
+				filteredEntities.add((EntityLivingBase) ent);
 			}
 		}
 
-		Entity filteredEntity = getClosestEntity(filteredEntities);
+		EntityLivingBase filteredEntity = getClosestEntity(filteredEntities);
 		if (filteredEntity != null) {
-			if (!filteredEntity.isDead) {
+			if (filteredEntity.deathTime == 0) {
 				if (ignoreNaked) {
-					if (EntityUtils.isNaked((EntityLivingBase) filteredEntity)) {
+					if (EntityUtils.isNaked(filteredEntity)) {
 						return;
 					}
 				}
@@ -214,11 +251,36 @@ public class AimAssist extends Module {
 				float requiredPitch = Rotations.getAngleDifference(mc.thePlayer.rotationPitch, requiredAngles[1]);
 
 				if (aimFov >= Math.abs(requiredYaw)) {
+					float randomYaw = 0f;
+					if (allowedRandomRotations[0]) {
+						if (r.nextBoolean()) {
+							randomYaw = r.nextFloat() * aimRandomSpeed;
+						} else {
+							randomYaw = r.nextFloat() * -aimRandomSpeed;
+						}
+						if (randomDecrease && randomDecreaseFov >= requiredYaw) {
+							randomYaw *= requiredYaw / randomDecreaseFov;
+						}
+					}
+					
+					float randomPitch = 0f;
+					if (allowedRandomRotations[1]) {
+						if (r.nextBoolean()) {
+							randomPitch = r.nextFloat() * aimRandomSpeed;
+						} else {
+							randomPitch = r.nextFloat() * -aimRandomSpeed;
+						}
+						
+						if (randomDecrease && randomDecreaseFov >= requiredYaw) {
+							randomPitch *= requiredYaw / randomDecreaseFov;
+						}
+					}
+					
 					requiredYaw = allowedRotations[0] ? clampFloat(requiredYaw) : 0f;
 					requiredPitch = allowedRotations[1] ? clampFloat(requiredPitch) : 0f;
 
-					yawStep = requiredYaw * angleChange;
-					pitchStep = requiredPitch * angleChange;
+					yawStep = (requiredYaw + randomYaw) * angleChange;
+					pitchStep = (requiredPitch + randomPitch) * angleChange;
 				}
 			}
 		}
@@ -301,10 +363,10 @@ public class AimAssist extends Module {
 		mc.thePlayer.prevRotationYaw += mc.thePlayer.rotationYaw - f1;
 	}
 
-	private Entity getClosestEntity(ArrayList<Entity> filteredEntities) {
+	private EntityLivingBase getClosestEntity(ArrayList<EntityLivingBase> filteredEntities) {
 		float distance = aimDistance;
-		Entity closestEntity = null;
-		for (Entity entity : filteredEntities) {
+		EntityLivingBase closestEntity = null;
+		for (EntityLivingBase entity : filteredEntities) {
 			float toEnt = mc.thePlayer.getDistanceToEntity(entity);
 			if (distance > toEnt) {
 				distance = toEnt;
