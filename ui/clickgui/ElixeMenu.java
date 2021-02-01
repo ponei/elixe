@@ -10,7 +10,7 @@ import org.lwjgl.opengl.GL11;
 import elixe.Elixe;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
-import elixe.modules.ModuleOption;
+import elixe.modules.IModuleOption;
 import elixe.modules.option.ModuleArray;
 import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
@@ -298,7 +298,7 @@ public class ElixeMenu extends GuiScreen {
 		modOptionOverlay = null;
 
 		optionsSpacing = GUI_MODULE_HEIGHT;
-		for (ModuleOption opt : mod.getOptions()) {
+		for (IModuleOption opt : mod.getOptions()) {
 			if (opt instanceof ModuleKey) {
 				ElixeKeyButton kbt = new ElixeKeyButton(opt.getName(), (ModuleKey) opt, GUI_X + 140,
 						GUI_Y + 5 + optionsSpacing, GUI_WIDTH - 150, GUI_MODULE_HEIGHT);

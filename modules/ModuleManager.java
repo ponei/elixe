@@ -43,6 +43,7 @@ public class ModuleManager implements Listenable {
     public Sprint SPRINT = new Sprint();
     public InventoryMove INVENTORYMOVE = new InventoryMove();
     //misc
+    public Commands COMMANDS = new Commands();
     public OldAnimations OLDANIMATIONS = new OldAnimations();
     public MushExploit MUSHEXPLOIT = new MushExploit();
     
@@ -72,8 +73,9 @@ public class ModuleManager implements Listenable {
     	modules.add(SPRINT);
     	modules.add(INVENTORYMOVE);
         //misc
+    	modules.add(COMMANDS);
     	modules.add(OLDANIMATIONS);
-    	modules.add(MUSHEXPLOIT);
+    	modules.add(MUSHEXPLOIT);  	
     	
     	//post
     	HUD.setModuleManager(this);
