@@ -23,7 +23,7 @@ public class AutoClicker extends Module {
 
 		moduleOptions.add(cpsMinOption);
 		moduleOptions.add(cpsMaxOption);
-		
+
 		moduleOptions.add(requireWeaponOption);
 		moduleOptions.add(breakBlocksOption);
 	}
@@ -34,15 +34,15 @@ public class AutoClicker extends Module {
 			int newCps = (int) this.getValue();
 
 			if (cpsMaxOption != null) {
-			if (newCps > cpsMax) {
-				// fix
-				cpsMax = newCps;
-				if (cpsMaxOption.getButton() != null) {
-					cpsMaxOption.getButton().setValue(newCps);
-				}
+				if (newCps > cpsMax) {
+					// fix
+					cpsMax = newCps;
+					if (cpsMaxOption.getButton() != null) {
+						cpsMaxOption.getButton().setValue(newCps);
+					}
 
-				cpsMaxOption.setValueSilent(newCps);
-			}
+					cpsMaxOption.setValueSilent(newCps);
+				}
 			}
 
 			cpsMin = newCps;
@@ -55,14 +55,14 @@ public class AutoClicker extends Module {
 			int newCps = (int) this.getValue();
 
 			if (cpsMinOption != null) {
-			if (cpsMin > newCps) {
-				// fix
-				cpsMin = newCps;
-				if (cpsMinOption.getButton() != null) {
-					cpsMinOption.getButton().setValue(newCps);
+				if (cpsMin > newCps) {
+					// fix
+					cpsMin = newCps;
+					if (cpsMinOption.getButton() != null) {
+						cpsMinOption.getButton().setValue(newCps);
+					}
+					cpsMinOption.setValueSilent(newCps);
 				}
-				cpsMinOption.setValueSilent(newCps);
-			}
 			}
 
 			cpsMax = newCps;
@@ -75,7 +75,7 @@ public class AutoClicker extends Module {
 			breakBlocks = (boolean) this.getValue();
 		}
 	};
-	
+
 	boolean requireWeapon;
 	ModuleBoolean requireWeaponOption = new ModuleBoolean("require weapon", false) {
 		public void valueChanged() {
@@ -107,7 +107,6 @@ public class AutoClicker extends Module {
 				return;
 			}
 		}
-		
 
 		int attack = mc.gameSettings.keyBindAttack.getKeyCode();
 		int attackN = attack + 100;
