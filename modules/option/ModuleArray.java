@@ -2,13 +2,17 @@ package elixe.modules.option;
 
 import java.lang.reflect.Type;
 
-import elixe.modules.ModuleOption;
+import elixe.modules.IModuleOption;
+import elixe.ui.base.ElixeButtonBase;
 
-public class ModuleArray implements ModuleOption {
+public class ModuleArray implements IModuleOption {
 	private String[] array;
 	private int selectedIndex;
 	
 	private String name;
+	
+	private ElixeButtonBase bt;
+	
 
 	public ModuleArray(String name, int index, String[] array) {
 		super();
@@ -16,6 +20,14 @@ public class ModuleArray implements ModuleOption {
 		this.array = array;
 		this.name = name;
 		valueChanged();
+	}
+	
+	public void setButton(ElixeButtonBase bt) {
+		this.bt = bt;
+	}
+	
+	public ElixeButtonBase getButton() {
+		return bt;
 	}
 
 	public String[] getArray() {

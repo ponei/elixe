@@ -1,11 +1,15 @@
 package elixe.modules.option;
 
-import elixe.modules.ModuleOption;
+import elixe.modules.IModuleOption;
+import elixe.ui.base.ElixeButtonBase;
 
-public class ModuleColor implements ModuleOption {
+public class ModuleColor implements IModuleOption {
 	private String name;
 	private int color;
 
+	private ElixeButtonBase bt;
+	
+	
 	public ModuleColor(String name, int r, int g, int b) {
 		super();
 		this.name = name;
@@ -13,6 +17,14 @@ public class ModuleColor implements ModuleOption {
 		valueChanged();
 	}
 
+	public void setButton(ElixeButtonBase bt) {
+		this.bt = bt;
+	}
+	
+	public ElixeButtonBase getButton() {
+		return bt;
+	}
+	
 	public ModuleColor(String name, int color) {
 		super();
 		this.name = name;

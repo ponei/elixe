@@ -52,8 +52,8 @@ public class ElixeFloatButton extends ElixeButtonNumberBase {
 		cacheSliderBackground();
 	}
 	
-	public void setValue(float v) {
-		value = v;
+	public void setValue(Object v) {
+		value = (float) v;
 		valueRealX = Math.round((difX * (value - min)) / (max - min));
 		valueX = startX + valueRealX;
 		cacheSlider();

@@ -42,6 +42,8 @@ public class ElixeArrayMultipleButton extends ElixeButtonBase {
 			int hei, int def) {
 		this.menu = menu;
 
+		opt.setButton(this);
+		
 		// button base
 		this.x = x;
 		this.y = y;

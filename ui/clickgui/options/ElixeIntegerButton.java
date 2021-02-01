@@ -47,8 +47,8 @@ public class ElixeIntegerButton extends ElixeButtonNumberBase {
 		cacheSliderBackground();
 	}
 	
-	public void setValue(int v) {
-		value = v;
+	public void setValue(Object v) {
+		value = (int) v;
 		valueRealX = (int) ((difX * (value - min)) / (max - min));
 		valueX = startX + valueRealX;
 		cacheSlider();

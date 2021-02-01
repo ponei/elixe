@@ -45,6 +45,8 @@ public class ElixeColorButton extends ElixeButtonBase {
 
 		this.text = text;
 
+		opt.setButton(this);
+		
 		this.colorOption = opt;
 		colorOptionGL = colorOption.getGLRGB();
 		colorOptionRGB = colorOption.getRGB();

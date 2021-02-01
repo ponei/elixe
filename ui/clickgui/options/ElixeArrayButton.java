@@ -37,6 +37,8 @@ public class ElixeArrayButton extends ElixeButtonBase {
 	public ElixeArrayButton(ElixeMenu menu, String text, ModuleArray opt, int x, int y, int wid, int hei, int def) {
 		this.menu = menu;
 
+		opt.setButton(this);
+		
 		// button base
 		this.x = x;
 		this.y = y;

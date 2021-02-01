@@ -10,10 +10,16 @@ public class ElixeBooleanButton extends ElixeButtonCheckboxBase {
 
 	public ElixeBooleanButton(String text, ModuleBoolean opt, int x, int y, int wid, int hei) {
 		super(text, x, y, wid, hei);
+		opt.setButton(this);
 		this.option = opt;
+		
 		setEnabled((boolean) option.getValue());
 	}
 
+	public void setValue(Object v) {
+		setEnabled((boolean) v);
+	}
+	
 	public boolean mouseClick(int mouseX, int mouseY,  int mouseButton) {
 		if (!checkMouseClick(mouseX, mouseY)) {
 			return false;
