@@ -42,6 +42,7 @@ public class ModuleManager implements Listenable {
     //movement
     public Sprint SPRINT = new Sprint();
     public InventoryMove INVENTORYMOVE = new InventoryMove();
+    public SafeWalk SAFEWALK = new SafeWalk();
     //misc
     public Commands COMMANDS = new Commands();
     public OldAnimations OLDANIMATIONS = new OldAnimations();
@@ -72,6 +73,7 @@ public class ModuleManager implements Listenable {
         //movement
     	modules.add(SPRINT);
     	modules.add(INVENTORYMOVE);
+    	modules.add(SAFEWALK);
         //misc
     	modules.add(COMMANDS);
     	modules.add(OLDANIMATIONS);
