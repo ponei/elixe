@@ -22,8 +22,9 @@ public class SafeWalk extends Module {
 		moduleOptions.add(onAirOption);
 		moduleOptions.add(sneakAtEdgeOption);
 		moduleOptions.add(sneakCooldownOption);
-		moduleOptions.add(pitchRequirementOption);
+		moduleOptions.add(needPitchOption);
 		moduleOptions.add(minimumPitchOption);
+		moduleOptions.add(needBackwardsOption);
 	}
 
 	boolean onAir = false;
@@ -47,10 +48,10 @@ public class SafeWalk extends Module {
 		}
 	};
 	
-	boolean pitchRequirement = false;
-	ModuleBoolean pitchRequirementOption = new ModuleBoolean("require pitch", false) {
+	boolean needPitch = false;
+	ModuleBoolean needPitchOption = new ModuleBoolean("require pitch", false) {
 		public void valueChanged() {
-			pitchRequirement = (boolean) this.getValue();
+			needPitch = (boolean) this.getValue();
 		}
 	};
 
@@ -58,6 +59,13 @@ public class SafeWalk extends Module {
 	ModuleFloat minimumPitchOption = new ModuleFloat("minimum pitch", 40f, 0f, 90f) {
 		public void valueChanged() {
 			minimumPitch = (float) this.getValue();
+		}
+	};
+	
+	boolean needBackwards = false;
+	ModuleBoolean needBackwardsOption = new ModuleBoolean("holding backwards", false) {
+		public void valueChanged() {
+			needBackwards = (boolean) this.getValue();
 		}
 	};
 
@@ -79,8 +87,14 @@ public class SafeWalk extends Module {
 				}
 			}
 
-			if (pitchRequirement) {
+			if (needPitch) {
 				if (minimumPitch > mc.thePlayer.rotationPitch) {
+					return;
+				}
+			}
+			
+			if (needBackwards) {
+				if (!Keyboard.isKeyDown(mc.gameSettings.keyBindBack.getKeyCode())) {
 					return;
 				}
 			}
