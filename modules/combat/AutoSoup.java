@@ -90,8 +90,8 @@ public class AutoSoup extends Module {
 	};
 
 	boolean[] recraftableItems;
-	ModuleArrayMultiple recraftableItemsOption = new ModuleArrayMultiple("recraftable items",
-			new boolean[] { true, false, false }, new String[] { "mushroom", "cocoa", "cactus" }) {
+	ModuleArrayMultiple recraftableItemsOption = new ModuleArrayMultiple("recraftable items", new boolean[] { true, false, false },
+			new String[] { "mushroom", "cocoa", "cactus" }) {
 		public void valueChanged() {
 			recraftableItems = (boolean[]) this.getValue();
 		}
@@ -111,8 +111,9 @@ public class AutoSoup extends Module {
 		}
 	};
 
-	// vars
-	Object[][] possibleItems = { { Blocks.red_mushroom, Blocks.brown_mushroom }, { Items.dye }, { Blocks.cactus } };
+	// crafts
+	Object[][] combinationItems = { { Blocks.red_mushroom, Blocks.brown_mushroom }, { Items.dye }, { Blocks.cactus } };
+	Object[][] bakedCombinations = { { Blocks.red_mushroom, Blocks.brown_mushroom }, { Blocks.brown_mushroom, Blocks.red_mushroom }, { Items.dye }, { Blocks.cactus } };
 
 	Random r = new Random();
 
@@ -177,7 +178,7 @@ public class AutoSoup extends Module {
 
 						// tem pote
 						if (bowlRecraft.getSlot() != -1) {
-							ArrayList<InventoryItem> itemsToSort = new ArrayList<InventoryItem>();
+							ArrayList<InventoryItem> sortedItems = new ArrayList<InventoryItem>();
 
 							// a array 'possibleItems' contem todos as combinações de recraft aceitaveis
 							// tendo alguns crafts possuindo 2 itens e outros somente 1
@@ -185,11 +186,15 @@ public class AutoSoup extends Module {
 							//
 							// pra isso, checamos se cada item em cada combinação existe
 							// se existe, guarda na array 'itemsToSort'
-							for (int i = 0; i < possibleItems.length; i++) {
+							for (int i = 0; i < combinationItems.length; i++) {
 								if (recraftableItems[i]) {
-									for (int j = 0; j < possibleItems[i].length; j++) {
-										if (possibleItems[i][j] instanceof Block) { // block
-											itemsToSort.add(findBlockHighest(9, 45, (Block) possibleItems[i][j]));
+									for (int j = 0; j < combinationItems[i].length; j++) {
+										if (combinationItems[i][j] instanceof Block) { // block
+											InventoryItem block = findBlockHighest(9, 45, (Block) combinationItems[i][j]);
+											if (block.getSlot() != -1) {
+												sortedItems.add(block);
+											}
+
 										} else { // item
 											// eu queria fazer a lista de itens totalmente dinamico
 											// problema é, cocoa beans são "corantes" mas com metadata de dano 3
@@ -197,47 +202,49 @@ public class AutoSoup extends Module {
 											// eu nao fiz uma classe especifica pra isso, entao assumo que só pode ser
 											// cocoa bean
 											// no futuro, se precisar, refatoro
-											itemsToSort.add(findItemHighest(9, 45, (Item) possibleItems[i][j], 3));
+											InventoryItem item = findItemHighest(9, 45, (Item) combinationItems[i][j], 3);
+											if (item.getSlot() != -1) {
+												sortedItems.add(item);
+											}
 										}
 									}
 								}
 							}
 
-							Collections.sort(itemsToSort);
+							Collections.sort(sortedItems);
 
 							// em cada item filtrado
 							boolean shouldStop = false;
-							for (int i = 0; i < itemsToSort.size(); i++) {
+							for (int i = 0; i < sortedItems.size(); i++) {
 								if (shouldStop) {
 									break;
 								}
 
-								// se tem a porra do item
-								if (itemsToSort.get(i).getSize() > 0) {
-									// loop pra cada combinacao
-									for (int j = 0; j < possibleItems.length; j++) {
-										boolean canCraft = true;
-										// todos os items da combinacao atual
-										for (int k = 0; k < possibleItems[j].length; k++) {
-											// se for um craft de 2 itens, vai checar o index atual e o proximo
-											// com os itens correspondentes do craft
-											if (i + k < itemsToSort.size()) {
-												if (itemsToSort.get(i + k).getObject() != possibleItems[j][k]) {
-													canCraft = false;
-												}
-											} else { // fora dos bounds
+								// loop pra cada combinacao
+								for (int j = 0; j < bakedCombinations.length; j++) {
+									boolean canCraft = true;
+									// todos os items da combinacao atual
+									for (int k = 0; k < bakedCombinations[j].length; k++) {
+										//combinacao len + index do loop for maior que itens
+										if (bakedCombinations[j].length + i > sortedItems.size()) {
+											canCraft = false;
+										} else {
+											//se index atual do loop de itens + index do loop da combinacao nao sao da combinacao
+											if (sortedItems.get(i + k).getObject() != bakedCombinations[j][k]) {
 												canCraft = false;
 											}
 										}
-										if (canCraft) {
-											shouldStop = true;
-											for (int k = 0; k < possibleItems[j].length; k++) {
-												itemsToUse[k] = itemsToSort.get(i + k);
-											}
-											recraftStep = 1;
-											recrafting = true;
-											break;
+									}
+									// nenhum falso
+									if (canCraft) {
+										shouldStop = true;
+										for (int k = 0; k < bakedCombinations[j].length; k++) {
+											// como ja estamos checando em ordem ja dado sort, pegamos na ordem
+											itemsToUse[k] = sortedItems.get(i + k);
 										}
+										recraftStep = 1;
+										recrafting = true;
+										break;
 									}
 								}
 							}
@@ -281,11 +288,11 @@ public class AutoSoup extends Module {
 				mc.playerController.windowClick(0, 3, 0, 0, mc.thePlayer);
 				// checa se craft é 1 item só
 				if (itemsToUse[1] == null) {
-					recraftStep += 3; //pula pro step 7
+					recraftStep += 3; // pula pro step 7
 				}
 				break;
 
-			case 4: 
+			case 4:
 				mc.playerController.windowClick(0, itemsToUse[1].getSlot(), 0, 0, mc.thePlayer);
 				if (itemsToUse[1].getSize() == 1) {
 					recraftStep++;
@@ -375,8 +382,7 @@ public class AutoSoup extends Module {
 		case 2: // dropa o pote
 			// se o direito conseguir clicar
 			if (!waitForUseItem) {
-				mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(
-						C07PacketPlayerDigging.Action.DROP_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+				mc.thePlayer.sendQueue.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.DROP_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
 				autoSoupStep++;
 			}
 			break;
