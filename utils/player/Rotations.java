@@ -123,6 +123,17 @@ public class Rotations implements Listenable {
 		return Math.toRadians(rotationYaw);
 	}
 
+	public static float[] rotationUntilXYZ(double toX, double toY, double toZ, Entity toEnt) {
+		final double x = toX - toEnt.posX;
+		final double y = toY - (toEnt.posY + toEnt.getEyeHeight());
+		final double z = toZ - toEnt.posZ;
+		double yaw = Math.atan2(x, z) * 57.29577951308232;
+		yaw = -yaw;
+		double pitch = Math.asin(y / Math.sqrt(x * x + y * y + z * z)) * 57.29577951308232;
+		pitch = -pitch;
+		return new float[] { (float) yaw, (float) pitch };
+	}
+
 	public static float[] rotationUntilTarget(Entity ent, Entity toEnt) {
 		if (ent != null) {
 			final double x = ent.posX - toEnt.posX;
