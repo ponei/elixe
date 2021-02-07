@@ -39,13 +39,13 @@ public class AimAssist extends Module {
 		super("Aim Assist", ModuleCategory.COMBAT);
 
 		moduleOptions.add(allowedEntitiesOption);
-		
+
 		moduleOptions.add(allowedRotationsOption);
 		moduleOptions.add(aimSpeedOption);
 		moduleOptions.add(aimMaxSpeedOption);
 		moduleOptions.add(aimFovOption);
 		moduleOptions.add(aimDistanceOption);
-		
+
 		moduleOptions.add(allowedRandomRotationsOption);
 		moduleOptions.add(aimRandomSpeedOption);
 		moduleOptions.add(randomDecreaseOption);
@@ -63,16 +63,15 @@ public class AimAssist extends Module {
 	}
 
 	boolean[] allowedEntities;
-	ModuleArrayMultiple allowedEntitiesOption = new ModuleArrayMultiple("allowed entities",
-			new boolean[] { true, false, false, false }, new String[] { "player", "animal", "monster", "villager" }) {
+	ModuleArrayMultiple allowedEntitiesOption = new ModuleArrayMultiple("allowed entities", new boolean[] { true, false, false, false },
+			new String[] { "player", "animal", "monster", "villager" }) {
 		public void valueChanged() {
 			allowedEntities = (boolean[]) this.getValue();
 		}
 	};
 
 	boolean[] allowedRotations;
-	ModuleArrayMultiple allowedRotationsOption = new ModuleArrayMultiple("allowed rotations",
-			new boolean[] { true, false }, new String[] { "yaw", "pitch" }) {
+	ModuleArrayMultiple allowedRotationsOption = new ModuleArrayMultiple("allowed rotations", new boolean[] { true, false }, new String[] { "yaw", "pitch" }) {
 		public void valueChanged() {
 			allowedRotations = (boolean[]) this.getValue();
 		}
@@ -105,29 +104,29 @@ public class AimAssist extends Module {
 			aimDistance = (float) this.getValue();
 		}
 	};
-	
+
 	boolean[] allowedRandomRotations;
-	ModuleArrayMultiple allowedRandomRotationsOption = new ModuleArrayMultiple("allowed random rotations",
-			new boolean[] { true, false }, new String[] { "yaw", "pitch" }) {
+	ModuleArrayMultiple allowedRandomRotationsOption = new ModuleArrayMultiple("allowed random rotations", new boolean[] { true, false },
+			new String[] { "yaw", "pitch" }) {
 		public void valueChanged() {
 			allowedRandomRotations = (boolean[]) this.getValue();
 		}
 	};
-	
+
 	float aimRandomSpeed;
 	ModuleFloat aimRandomSpeedOption = new ModuleFloat("random speed", 5f, 1f, 40f) {
 		public void valueChanged() {
 			aimRandomSpeed = (float) this.getValue();
 		}
 	};
-	
+
 	boolean randomDecrease;
 	ModuleBoolean randomDecreaseOption = new ModuleBoolean("random decrease", false) {
 		public void valueChanged() {
 			randomDecrease = (boolean) this.getValue();
 		}
 	};
-	
+
 	float randomDecreaseFov;
 	ModuleFloat randomDecreaseFovOption = new ModuleFloat("random decrease fov", 5f, 1f, 90f) {
 		public void valueChanged() {
@@ -198,7 +197,7 @@ public class AimAssist extends Module {
 	int angleEvent = 0;
 
 	Random r = new Random();
-	
+
 	// 0 = player, 1 = animal, 2 = monster, 3 = villager
 
 	@EventHandler
@@ -224,8 +223,7 @@ public class AimAssist extends Module {
 				}
 			}
 
-			if ((ent instanceof EntityPlayer && allowedEntities[0])
-					|| (ent instanceof EntityAnimal && allowedEntities[1])
+			if ((ent instanceof EntityPlayer && allowedEntities[0]) || (ent instanceof EntityAnimal && allowedEntities[1])
 					|| ((ent instanceof EntityMob || ent instanceof EntitySlime) && allowedEntities[2])
 					|| (ent instanceof EntityVillager && allowedEntities[3])) {
 				filteredEntities.add((EntityLivingBase) ent);
@@ -262,7 +260,7 @@ public class AimAssist extends Module {
 							randomYaw *= requiredYaw / randomDecreaseFov;
 						}
 					}
-					
+
 					float randomPitch = 0f;
 					if (allowedRandomRotations[1]) {
 						if (r.nextBoolean()) {
@@ -270,12 +268,12 @@ public class AimAssist extends Module {
 						} else {
 							randomPitch = r.nextFloat() * -aimRandomSpeed;
 						}
-						
+
 						if (randomDecrease && randomDecreaseFov >= requiredYaw) {
 							randomPitch *= requiredYaw / randomDecreaseFov;
 						}
 					}
-					
+
 					requiredYaw = allowedRotations[0] ? clampFloat(requiredYaw) : 0f;
 					requiredPitch = allowedRotations[1] ? clampFloat(requiredPitch) : 0f;
 
@@ -354,10 +352,8 @@ public class AimAssist extends Module {
 	public void setAngles(float yaw, float pitch) {
 		float f = mc.thePlayer.rotationPitch;
 		float f1 = mc.thePlayer.rotationYaw;
-		mc.thePlayer.rotationYaw = (float) ((double) mc.thePlayer.rotationYaw + (double) yaw * 0.15D
-				+ (-yawStep * aimSpeed));
-		mc.thePlayer.rotationPitch = (float) ((double) mc.thePlayer.rotationPitch - (double) pitch * 0.15D
-				- (pitchStep * aimSpeed));
+		mc.thePlayer.rotationYaw = (float) ((double) mc.thePlayer.rotationYaw + (double) yaw * 0.15D + (-yawStep * aimSpeed));
+		mc.thePlayer.rotationPitch = (float) ((double) mc.thePlayer.rotationPitch - (double) pitch * 0.15D - (pitchStep * aimSpeed));
 		mc.thePlayer.rotationPitch = MathHelper.clamp_float(mc.thePlayer.rotationPitch, -90.0F, 90.0F);
 		mc.thePlayer.prevRotationPitch += mc.thePlayer.rotationPitch - f;
 		mc.thePlayer.prevRotationYaw += mc.thePlayer.rotationYaw - f1;

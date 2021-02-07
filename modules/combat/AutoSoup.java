@@ -15,6 +15,7 @@ import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
 import elixe.utils.misc.TimerUtils;
+import elixe.utils.player.InventoryItem;
 import me.zero.alpine.event.EventPriority;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
@@ -161,8 +162,8 @@ public class AutoSoup extends Module {
 
 				if (refill) { // opcao de refill ativada e nao ta fazendo recraft
 					if (refillTimer.hasTimePassed(refillDelay)) { // timer passou
-						soupInInventory = findItemRandomized(9, 36, Items.mushroom_stew); // tenta pegar sopa no inv
-						if (soupInInventory != -1 && hasSpaceHotbar()) { // tem sopa e espaço na hotbar
+						soupInInventory = InventoryItem.findItemRandomized(9, 36, Items.mushroom_stew, mc); // tenta pegar sopa no inv
+						if (soupInInventory != -1 && InventoryItem.hasSpaceHotbar(mc)) { // tem sopa e espaço na hotbar
 							mc.playerController.windowClick(0, soupInInventory, 0, 1, mc.thePlayer);
 							refillTimer.reset();
 							return;
@@ -171,10 +172,10 @@ public class AutoSoup extends Module {
 				}
 
 				if (recraft) {
-					int trySoup = findItem(9, 45, Items.mushroom_stew);
+					int trySoup = InventoryItem.findItem(9, 45, Items.mushroom_stew, mc);
 					if (trySoup == -1) {
 
-						bowlRecraft = findItemHighest(9, 45, Items.bowl, 0);
+						bowlRecraft = InventoryItem.findItemHighest(9, 45, Items.bowl, 0, mc);
 
 						// tem pote
 						if (bowlRecraft.getSlot() != -1) {
@@ -190,7 +191,7 @@ public class AutoSoup extends Module {
 								if (recraftableItems[i]) {
 									for (int j = 0; j < combinationItems[i].length; j++) {
 										if (combinationItems[i][j] instanceof Block) { // block
-											InventoryItem block = findBlockHighest(9, 45, (Block) combinationItems[i][j]);
+											InventoryItem block = InventoryItem.findBlockHighest(9, 45, (Block) combinationItems[i][j], mc);
 											if (block.getSlot() != -1) {
 												sortedItems.add(block);
 											}
@@ -202,7 +203,7 @@ public class AutoSoup extends Module {
 											// eu nao fiz uma classe especifica pra isso, entao assumo que só pode ser
 											// cocoa bean
 											// no futuro, se precisar, refatoro
-											InventoryItem item = findItemHighest(9, 45, (Item) combinationItems[i][j], 3);
+											InventoryItem item = InventoryItem.findItemHighest(9, 45, (Item) combinationItems[i][j], 3, mc);
 											if (item.getSlot() != -1) {
 												sortedItems.add(item);
 											}
@@ -354,7 +355,7 @@ public class AutoSoup extends Module {
 
 	boolean waitForUseItem = false;
 	@EventHandler
-	private Listener<OnKeybindActionEvent> onMouseActionEvent = new Listener<>(e -> {
+	private Listener<OnKeybindActionEvent> onKeybindActionEvent = new Listener<>(e -> {
 		if (waitForUseItem) {
 			int useItem = mc.gameSettings.keyBindUseItem.getKeyCode();
 			if (e.getKey() == useItem) {
@@ -403,7 +404,7 @@ public class AutoSoup extends Module {
 	// retorna true se loop estiver iniciando/continuando
 	private boolean shouldAutoSoup(boolean first) {
 		if (healthToSoup > mc.thePlayer.getHealth()) { // health menor do que setado
-			soupInHotbar = findItem(36, 45, Items.mushroom_stew); // acha alguma sopa na hotbar
+			soupInHotbar = InventoryItem.findItem(36, 45, Items.mushroom_stew, mc); // acha alguma sopa na hotbar
 			if (soupInHotbar != -1) { // se tiver
 				if (first) { // se for primeira vez dessa seção
 					autoSouping = true; // ativa loop
@@ -419,122 +420,7 @@ public class AutoSoup extends Module {
 		return false;
 	}
 
-	private int findItem(int startSlot, int endSlot, Item item) {
-		for (int i = startSlot; i < endSlot; i++) {
-			ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
+	
 
-			if (stack != null && stack.getItem() == item)
-				return i;
-		}
-		return -1;
-	}
-
-	private int findItemRandomized(int startSlot, int endSlot, Item item) {
-		ArrayList<Integer> itemList = new ArrayList<Integer>();
-		for (int i = startSlot; i < endSlot; i++) {
-			ItemStack stack = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
-
-			if (stack != null && stack.getItem() == item) {
-				itemList.add(i);
-			}
-		}
-
-		if (itemList.size() > 0) {
-			return itemList.get(r.nextInt(itemList.size()));
-		} else {
-			return -1;
-		}
-	}
-
-	private boolean hasSpaceHotbar() {
-		for (int i = 36; i < 45; i++) {
-			ItemStack itemStack = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
-
-			if (itemStack == null)
-				return true;
-		}
-		return false;
-	}
-
-	int useItem;
-
-	private InventoryItem findBlockHighest(int startSlot, int endSlot, Block block) {
-		int slot = -1;
-		int size = 0;
-
-		Item blockItem = Item.getItemFromBlock(block);
-		for (int i = startSlot; i < endSlot; i++) {
-			ItemStack itemStack = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
-			if (itemStack != null) {
-				if (itemStack.getItem() == blockItem) {
-					if (itemStack.stackSize > size) {
-						size = itemStack.stackSize;
-						slot = i;
-					}
-
-				}
-			}
-		}
-		return new InventoryItem(slot, size, block);
-	}
-
-	private InventoryItem findItemHighest(int startSlot, int endSlot, Item item, int meta) {
-		int slot = -1;
-		int size = 0;
-
-		for (int i = startSlot; i < endSlot; i++) {
-			ItemStack itemStack = mc.thePlayer.inventoryContainer.getSlot(i).getStack();
-			if (itemStack != null) {
-				if (itemStack.getItem() == item && itemStack.getItemDamage() == meta) {
-					if (itemStack.stackSize > size) {
-						size = itemStack.stackSize;
-						slot = i;
-					}
-
-				}
-			}
-		}
-		return new InventoryItem(slot, size, item);
-	}
-
-	public class InventoryItem implements Comparable<InventoryItem> {
-		private int slot, size;
-		private Block invBlock;
-		private Item invItem;
-
-		public InventoryItem(int slot, int size, Block invBlock) {
-			this.slot = slot;
-			this.size = size;
-			this.invBlock = invBlock;
-		}
-
-		public InventoryItem(int slot, int size, Item invItem) {
-			this.slot = slot;
-			this.size = size;
-			this.invItem = invItem;
-		}
-
-		public int getSlot() {
-			return slot;
-		}
-
-		public int getSize() {
-			return size;
-		}
-
-		public Object getObject() {
-			if (invBlock != null) {
-				return invBlock;
-			} else {
-				return invItem;
-			}
-		}
-
-		// maior fica na frente
-		@Override
-		public int compareTo(InventoryItem item) {
-			return item.getSize() - size;
-		}
-
-	}
+	
 }
