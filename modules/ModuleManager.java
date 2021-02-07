@@ -8,6 +8,7 @@ import elixe.modules.combat.*;
 import elixe.modules.misc.*;
 import elixe.modules.movement.*;
 import elixe.modules.render.*;
+import elixe.modules.world.*;
 import elixe.modules.player.*;
 
 import me.zero.alpine.listener.EventHandler;
@@ -21,9 +22,9 @@ public class ModuleManager implements Listenable {
     public Phase PHASE = new Phase();
     public Derp DERP = new Derp();
     //render
-    public elixe.modules.render.HUD HUD = new elixe.modules.render.HUD();
+    public HUD HUD = new elixe.modules.render.HUD();
     public Chams CHAMS = new Chams();
-    public elixe.modules.render.ESP ESP = new elixe.modules.render.ESP();
+    public ESP ESP = new elixe.modules.render.ESP();
     public ClickGUI CLICKGUI = new ClickGUI();
     public NameProtect NAMEPROTECT = new NameProtect();
     public Camera CAMERA = new Camera();
@@ -39,6 +40,7 @@ public class ModuleManager implements Listenable {
     public AutoSoup AUTOSOUP = new AutoSoup(); 
     public Misplace MISPLACE = new Misplace();
     //world
+    public MLG MLG = new MLG();
     //movement
     public Sprint SPRINT = new Sprint();
     public InventoryMove INVENTORYMOVE = new InventoryMove();
@@ -70,6 +72,7 @@ public class ModuleManager implements Listenable {
     	modules.add(VELOCITY);
     	modules.add(AUTOSOUP);  	
         //world
+    	modules.add(MLG);  
         //movement
     	modules.add(SPRINT);
     	modules.add(INVENTORYMOVE);
