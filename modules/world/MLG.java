@@ -48,6 +48,8 @@ public class MLG extends Module {
 			return;
 		}
 
+		//honestamente eu poderia refatorar esse module mas to com preguiça
+		
 		Entity player = mc.getRenderViewEntity();
 		double headY = player.getEntityBoundingBox().minY + player.getEyeHeight();
 
@@ -98,9 +100,11 @@ public class MLG extends Module {
 				//se tiver vec, muda mira e coloca pra esperar a distancia vanilla
 				if (lowestBlockVec != null) {
 					refreshedFall = false;
+					
 					float[] requiredAngles = Rotations.rotationUntilXYZ(lowestBlockVec.xCoord, lowestBlockVec.yCoord, lowestBlockVec.zCoord, mc.thePlayer);
 					float requiredYaw = Rotations.getAngleDifference(mc.thePlayer.rotationYaw, requiredAngles[0]);
 					float requiredPitch = Rotations.getAngleDifference(mc.thePlayer.rotationPitch, requiredAngles[1]);
+					
 					mc.thePlayer.rotationYaw -= requiredYaw;
 					mc.thePlayer.rotationPitch -= requiredPitch;
 					waitForVanillaRange = true;

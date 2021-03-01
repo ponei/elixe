@@ -14,7 +14,7 @@ import elixe.events.OnRenderNameEvent;
 import elixe.events.OnTickEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
-import elixe.modules.IModuleOption;
+import elixe.modules.AModuleOption;
 import elixe.modules.option.ModuleArray;
 import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;

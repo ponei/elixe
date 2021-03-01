@@ -46,6 +46,7 @@ public class ModuleManager implements Listenable {
     public InventoryMove INVENTORYMOVE = new InventoryMove();
     public SafeWalk SAFEWALK = new SafeWalk();
     //misc
+    public AntiBot ANTIBOT = new AntiBot();
     public Commands COMMANDS = new Commands();
     public OldAnimations OLDANIMATIONS = new OldAnimations();
     public MushExploit MUSHEXPLOIT = new MushExploit();
@@ -81,6 +82,7 @@ public class ModuleManager implements Listenable {
     	modules.add(COMMANDS);
     	modules.add(OLDANIMATIONS);
     	modules.add(MUSHEXPLOIT);  	
+    	modules.add(ANTIBOT);
     	
     	//post
     	HUD.setModuleManager(this);

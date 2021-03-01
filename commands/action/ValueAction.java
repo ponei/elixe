@@ -1,7 +1,7 @@
 package elixe.commands.action;
 
 import elixe.commands.CommandManager;
-import elixe.modules.IModuleOption;
+import elixe.modules.AModuleOption;
 import elixe.modules.Module;
 import elixe.modules.option.*;
 import elixe.utils.misc.ChatUtils;
@@ -38,7 +38,7 @@ public class ValueAction implements IAction {
 		Module module = commandManager.getModule(args[1]);
 		if (module != null) {
 			boolean foundOption = false;
-			for (IModuleOption option : module.getOptions()) {
+			for (AModuleOption option : module.getOptions()) {
 				if (option.getName().replace(" ", "").equalsIgnoreCase(args[2])) {
 					foundOption = true;
 					try {

@@ -16,7 +16,7 @@ import com.google.gson.JsonParser;
 import elixe.Elixe;
 import elixe.file.FileConfig;
 import elixe.modules.Module;
-import elixe.modules.IModuleOption;
+import elixe.modules.AModuleOption;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleKey;
@@ -65,7 +65,7 @@ public class ModulePersonal implements FileConfig {
 				}
 
 				// keys
-				for (IModuleOption moduleOpt : module.getOptions()) {
+				for (AModuleOption moduleOpt : module.getOptions()) {
 					if (moduleOpt instanceof ModuleKey) {
 
 						JsonElement element = jsonModule.get(moduleOpt.getName());
@@ -86,7 +86,7 @@ public class ModulePersonal implements FileConfig {
 			// state
 			jsonMod.addProperty("state", (Boolean) module.isToggled());
 			// keys
-			for (IModuleOption moduleOpt : module.getOptions()) {
+			for (AModuleOption moduleOpt : module.getOptions()) {
 				if (moduleOpt instanceof ModuleKey) {
 					jsonMod.addProperty(moduleOpt.getName(), (Number) moduleOpt.getValue());
 				}

@@ -1,5 +1,6 @@
 package elixe.utils.player;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 

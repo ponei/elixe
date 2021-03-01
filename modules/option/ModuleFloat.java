@@ -2,19 +2,13 @@ package elixe.modules.option;
 
 import java.lang.reflect.Type;
 
-import elixe.modules.IModuleOption;
+import elixe.modules.AModuleOption;
 import elixe.ui.base.ElixeButtonBase;
 import elixe.ui.clickgui.options.ElixeFloatButton;
 
-public class ModuleFloat implements IModuleOption {
-
-	private String name;
+public class ModuleFloat extends AModuleOption {
 	private float value;
-
 	private float min, max;
-	
-	private ElixeButtonBase bt;
-	
 
 	public ModuleFloat(String name, float value, float min, float max) {
 		super();
@@ -24,14 +18,6 @@ public class ModuleFloat implements IModuleOption {
 		this.min = min;
 		this.max = max;
 		valueChanged();
-	}
-	
-	public void setButton(ElixeButtonBase bt) {
-		this.bt = bt;
-	}
-	
-	public ElixeButtonBase getButton() {
-		return bt;
 	}
 
 	public float getMin() {
@@ -45,10 +31,7 @@ public class ModuleFloat implements IModuleOption {
 	public void setValueSilent(float f) {
 		this.value = f;
 	}
-	
-	public void valueChanged() {
 
-	}
 
 	public Object getValue() {
 		return value;
@@ -58,10 +41,4 @@ public class ModuleFloat implements IModuleOption {
 		this.value = (float) v;
 		valueChanged();
 	}
-
-	public String getName() {
-		return name;
-	}
-
-
 }

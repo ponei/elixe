@@ -30,7 +30,7 @@ public class Module implements Listenable, Comparable<Module> {
     protected RenderManager renderManager = mc.getRenderManager();
     protected RenderItem renderItem = mc.getRenderItem();
     protected TextureManager textureManager = mc.getTextureManager();
-    protected ArrayList<IModuleOption> moduleOptions = new ArrayList<IModuleOption>();
+    protected ArrayList<AModuleOption> moduleOptions = new ArrayList<AModuleOption>();
     
     protected void onEnable() {
 		Elixe.INSTANCE.EVENT_BUS.subscribe(this);
@@ -76,7 +76,7 @@ public class Module implements Listenable, Comparable<Module> {
     	return category;
     }
 
-    public ArrayList<IModuleOption> getOptions() {
+    public ArrayList<AModuleOption> getOptions() {
     	return moduleOptions;
     }
     
