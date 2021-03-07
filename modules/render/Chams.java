@@ -179,6 +179,7 @@ public class Chams extends Module {
 					case 0:
 						// setup
 						GL11.glDisable(GL11.GL_TEXTURE_2D);
+						
 						if (hurtColor) {
 							hurt = e.setBrightness();
 						}
@@ -191,6 +192,8 @@ public class Chams extends Module {
 						e.renderModel();
 						
 						// setup reset
+						
+
 						GL11.glEnable(GL11.GL_TEXTURE_2D);
 						GL11.glColor4f(1, 1, 1, 1);
 						
@@ -203,7 +206,7 @@ public class Chams extends Module {
 						setColor(e.getRenderer(), invisibleColor[0], invisibleColor[1], invisibleColor[2]); // invis color
 						
 						e.renderModel();
-						unsetColor();
+						unsetColor();		
 						
 						setColor(e.getRenderer(), visibleColor[0], visibleColor[1], visibleColor[2]); // vis cor	
 						

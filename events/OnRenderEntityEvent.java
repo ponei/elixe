@@ -107,6 +107,34 @@ public class OnRenderEntityEvent {
 		this.renderScaleFactor = renderScaleFactor;
 		this.partialTicks = partialTicks;
 	}
+
+	public boolean isAlreadyRendered() {
+		return alreadyRendered;
+	}
+
+	public float getRenderLimbSwing() {
+		return renderLimbSwing;
+	}
+
+	public float getRenderLimbSwingAmount() {
+		return renderLimbSwingAmount;
+	}
+
+	public float getRenderAgeInTicks() {
+		return renderAgeInTicks;
+	}
+
+	public float getRenderHeadYaw() {
+		return renderHeadYaw;
+	}
+
+	public float getRenderHeadPitch() {
+		return renderHeadPitch;
+	}
+
+	public float getRenderScaleFactor() {
+		return renderScaleFactor;
+	}
 	
 	
 

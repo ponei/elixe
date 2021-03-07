@@ -211,7 +211,7 @@ public class ElixeMenu extends GuiScreen {
 			}
 
 			if (bt.containsArrow(mouseX, mouseY)) {
-				addOptions(bt.getModule());
+				addOptions(bt.getModule(), false);
 				return;
 			}
 		}
@@ -241,7 +241,6 @@ public class ElixeMenu extends GuiScreen {
 		if (modOptionOverlay != null) {
 
 			modOptionOverlay.overlayClickReleased(mouseX, mouseY, state);
-
 		}
 
 		for (ElixeButtonBase opt : modOptions) {
@@ -293,7 +292,7 @@ public class ElixeMenu extends GuiScreen {
 		}
 	}
 
-	public void addOptions(Module mod) {
+	public void addOptions(Module mod, boolean keepScroll) {
 		modOptions.clear();
 		modOptionOverlay = null;
 
@@ -347,19 +346,28 @@ public class ElixeMenu extends GuiScreen {
 			}
 		}
 
-		refreshScrollLogic();
-
+		refreshScrollLogic(keepScroll);
 	}
 
 	int optionsSpacing;
 
 	int optionsScroll, optionsScrollMax;
 
-	private void refreshScrollLogic() {
-		optionsScroll = 0;
+	private void refreshScrollLogic(boolean keepScroll) {	
 		optionsScrollMax = (GUI_HEIGHT - GUI_CATEGORY_HEIGHT) - optionsSpacing;
 		if (optionsScrollMax > 0) {
 			optionsScrollMax = 0;
+		}
+		
+		if (keepScroll) {
+			if (optionsScrollMax > optionsScroll) {
+				optionsScroll = optionsScrollMax;
+			}
+			for (ElixeButtonBase bti : modOptions) {
+				bti.setPositionDifference(0, optionsScroll);
+			}
+		} else {
+			optionsScroll = 0;
 		}
 	}
 

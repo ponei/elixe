@@ -30,6 +30,7 @@ public class ModuleManager implements Listenable {
     public Camera CAMERA = new Camera();
     public ClearView CLEARVIEW = new ClearView();
     public HealthLog HEALTHLOG = new HealthLog();
+    public Skeletal SKELETAL = new Skeletal();
     //combat
     public KillAura KILLAURA = new KillAura();
     public AimAssist AIMASSIST = new AimAssist();
@@ -63,6 +64,7 @@ public class ModuleManager implements Listenable {
     	modules.add(NAMEPROTECT);
     	modules.add(CAMERA);
     	modules.add(CLEARVIEW);
+    	modules.add(SKELETAL);
     	//modules.add(HEALTHLOG);
     	//combat
     	modules.add(AIMASSIST);

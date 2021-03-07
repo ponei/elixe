@@ -205,7 +205,7 @@ public class ElixeArrayButton extends ElixeButtonBase {
 			selectedTextWid = fontrenderer.getStringWidth(selectedText);
 			arrayOpt.setValue(overIndex);
 			if (arrayOpt.shouldUpdate()) {
-				menu.addOptions(menu.CURRENT_MODULE);
+				menu.addOptions(menu.CURRENT_MODULE, true);
 			}
 			return true;
 		}		
