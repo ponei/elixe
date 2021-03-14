@@ -17,6 +17,7 @@ import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleColor;
 import elixe.modules.option.ModuleFloat;
+import elixe.modules.option.ModuleInteger;
 import elixe.utils.render.Interpolation;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
@@ -41,6 +42,7 @@ public class Skeletal extends Module {
 		super("Skeletal", ModuleCategory.RENDER);
 
 		moduleOptions.add(allowedEntitiesOption);
+		moduleOptions.add(workOnSelfOption);
 		moduleOptions.add(connectBonesOption);
 		moduleOptions.add(lineWidthOption);
 		moduleOptions.add(lineColorOption);
@@ -51,6 +53,13 @@ public class Skeletal extends Module {
 			new String[] { "player", "animal", "monster", "villager" }) {
 		public void valueChanged() {
 			allowedEntities = (boolean[]) this.getValue();
+		}
+	};
+	
+	boolean workOnSelf;
+	ModuleBoolean workOnSelfOption = new ModuleBoolean("work on self", false) {
+		public void valueChanged() {
+			workOnSelf = (boolean) this.getValue();			
 		}
 	};
 	
@@ -68,9 +77,9 @@ public class Skeletal extends Module {
 	};
 
 	float lineWidth;
-	ModuleFloat lineWidthOption = new ModuleFloat("line width", 1f, 0f, 5f) {
+	ModuleInteger lineWidthOption = new ModuleInteger("line width", 1, 1, 5) {
 		public void valueChanged() {
-			lineWidth = (float) this.getValue();
+			lineWidth = (int) this.getValue();
 		}
 	};
 
@@ -92,6 +101,9 @@ public class Skeletal extends Module {
 			return;
 		for (Entity ent : mc.theWorld.loadedEntityList) {
 			if (!ent.rendered) {
+				continue;
+			}
+			if (ent == mc.thePlayer && !workOnSelf) {
 				continue;
 			}
 
