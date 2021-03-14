@@ -55,6 +55,8 @@ public class ElixeColorButton extends ElixeButtonBase {
 		colorOptionGL = colorOption.getGLRGB();
 		colorOptionRGB = colorOption.getRGB();
 
+		alpha = colorOptionGL[3];
+		
 		float[] colorOptionHSV;
 		colorOptionHSV = Color.RGBtoHSB(colorOptionRGB[0], colorOptionRGB[1], colorOptionRGB[2], null);
 
@@ -84,6 +86,7 @@ public class ElixeColorButton extends ElixeButtonBase {
 		hueXStart = pickerXEnd + pickerSpacing;
 		hueXEnd = pickerXEnd + pickerSpacing + realHueSize;
 
+		updatePositionAlphaPoint();
 		updatePositionPickerPoints();
 		updatePositionHuePoint();
 
