@@ -3,6 +3,9 @@ package elixe.modules.render;
 import elixe.events.OnDrawChatLineEvent;
 import elixe.events.OnRender2DEvent;
 import elixe.events.OnScoreboardPlayerNameEvent;
+import elixe.events.OnSetSessionEvent;
+import elixe.events.OnTabPlayerNameEvent;
+import elixe.events.OnTickEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleBoolean;
@@ -15,6 +18,7 @@ public class NameProtect extends Module {
 		super("Name Protect", ModuleCategory.RENDER);
 
 		moduleOptions.add(chatOption);
+		moduleOptions.add(tabOption);
 		moduleOptions.add(scoreboardOption);
 	}
 
@@ -25,6 +29,13 @@ public class NameProtect extends Module {
 		}
 	};
 
+	boolean tab;
+	ModuleBoolean tabOption = new ModuleBoolean("tab", false) {
+		public void valueChanged() {
+			tab = (boolean) this.getValue();
+		}
+	};
+
 	boolean scoreboard;
 	ModuleBoolean scoreboardOption = new ModuleBoolean("scoreboard", false) {
 		public void valueChanged() {
@@ -32,24 +43,44 @@ public class NameProtect extends Module {
 		}
 	};
 
+	String sessionUsername;
+
+	public void onEnable() {
+		super.onEnable();
+		sessionUsername = mc.getSession().getUsername();
+	}
+
+	@EventHandler
+	private Listener<OnSetSessionEvent> onSetSessionEvent = new Listener<>(e -> {
+		sessionUsername = mc.getSession().getUsername();
+	});
+
 	@EventHandler
 	private Listener<OnScoreboardPlayerNameEvent> onScoreboardPlayerNameEvent = new Listener<>(e -> {
 		if (scoreboard) {
-			String line = e.getName();
-			String user = mc.session.getUsername();
-			if (line.contains(mc.session.getUsername())) {
-				e.setName(line.replace(user, "§k" + user + "§r"));
+			String line = e.getLine();
+			if (line.contains(sessionUsername)) {
+				e.setLine(line.replace(sessionUsername, "§k" + sessionUsername + "§r"));
 			}
 		}
 	});
-	
+
+	@EventHandler
+	private Listener<OnTabPlayerNameEvent> onTabPlayerNameEvent = new Listener<>(e -> {
+		if (tab) {
+			String line = e.getName();
+			if (line.contains(sessionUsername)) {
+				e.setName(line.replace(sessionUsername, "§k" + sessionUsername + "§r"));
+			}
+		}
+	});
+
 	@EventHandler
 	private Listener<OnDrawChatLineEvent> onDrawChatLineEvent = new Listener<>(e -> {
 		if (chat) {
 			String line = e.getChatLine();
-			String user = mc.session.getUsername();
-			if (line.contains(mc.session.getUsername())) {
-				e.setChatLine(line.replace(user, "§k" + user + "§r"));
+			if (line.contains(sessionUsername)) {
+				e.setChatLine(line.replace(sessionUsername, "§k" + sessionUsername + "§r"));
 			}
 		}
 	});
