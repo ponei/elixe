@@ -149,8 +149,33 @@ public class Skeletal extends Module {
 			GL11.glTranslated(interpRender[0], interpRender[1], interpRender[2]);
 
 			// rotacao do corpo
-			float bodyYawOffset = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset) * e.getTickDelta();
-			GL11.glRotatef((-bodyYawOffset), 0.0F, 1.0F, 0.0F);
+			float f = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset) * e.getTickDelta();
+			
+			if (entity.isRiding() && entity.ridingEntity instanceof EntityLivingBase) {
+				EntityLivingBase entityRide = (EntityLivingBase) entity.ridingEntity;
+				//rotacao da entidade sendo usada
+				f = entityRide.prevRenderYawOffset + (entityRide.renderYawOffset - entityRide.prevRenderYawOffset) * e.getTickDelta();
+				
+				float f1 = entity.prevRotationYawHead + (entity.rotationYawHead - entity.prevRotationYawHead) * e.getTickDelta();
+				
+				float f2 = MathHelper.wrapAngleTo180_float(f1 - f);
+
+				if (f2 < -85.0F) {
+					f2 = -85.0F;
+				}
+
+				if (f2 >= 85.0F) {
+					f2 = 85.0F;
+				}
+
+				f = f1 - f2;
+
+				if (f2 * f2 > 2500.0F) {
+					f += f2 * 0.2F;
+				}
+			}
+			
+			GL11.glRotatef((-f), 0.0F, 1.0F, 0.0F);
 			GL11.glScalef(-1.0F, -1.0F, 1.0F);
 			GL11.glTranslatef(0.0F, -1.5078125F, 0.0F); // tava no RendererLivingEntity, nao sei porque assim exatamente
 
@@ -257,16 +282,25 @@ public class Skeletal extends Module {
 
 		ModelRotations[] modelsRot = new ModelRotations[bipedLength];
 
-		// perna direita
-		modelsRot[0] = new ModelRotations(scale, model.bipedRightLeg.height, model.bipedRightLeg.rotateAngleX, model.bipedRightLeg.rotateAngleY,
-				model.bipedRightLeg.rotateAngleZ, model.bipedRightLeg.rotationPointX, model.bipedRightLeg.rotationPointY, model.bipedRightLeg.rotationPointZ);
-		// perna esquerda
-		modelsRot[1] = new ModelRotations(scale, model.bipedLeftLeg.height, model.bipedLeftLeg.rotateAngleX, model.bipedLeftLeg.rotateAngleY,
-				model.bipedLeftLeg.rotateAngleZ, model.bipedLeftLeg.rotationPointX, model.bipedLeftLeg.rotationPointY, model.bipedLeftLeg.rotationPointZ);
-		// corpo
-		
+		if (model.isRiding) {
+			// perna direita
+			modelsRot[0] = new ModelRotations(scale, model.bipedRightLeg.height, -model.bipedLeftLeg.rotateAngleX, model.bipedLeftLeg.rotateAngleY,
+					model.bipedLeftLeg.rotateAngleZ, model.bipedRightLeg.rotationPointX, model.bipedRightLeg.rotationPointY, model.bipedRightLeg.rotationPointZ);
+			// perna esquerda
+			modelsRot[1] = new ModelRotations(scale, model.bipedLeftLeg.height, -model.bipedRightLeg.rotateAngleX, model.bipedRightLeg.rotateAngleY,
+					model.bipedRightLeg.rotateAngleZ, model.bipedLeftLeg.rotationPointX, model.bipedLeftLeg.rotationPointY, model.bipedLeftLeg.rotationPointZ);
+		} else {
+			// perna direita
+			modelsRot[0] = new ModelRotations(scale, model.bipedRightLeg.height, model.bipedRightLeg.rotateAngleX, model.bipedRightLeg.rotateAngleY,
+					model.bipedRightLeg.rotateAngleZ, model.bipedRightLeg.rotationPointX, model.bipedRightLeg.rotationPointY, model.bipedRightLeg.rotationPointZ);
+			// perna esquerda
+			modelsRot[1] = new ModelRotations(scale, model.bipedLeftLeg.height, model.bipedLeftLeg.rotateAngleX, model.bipedLeftLeg.rotateAngleY,
+					model.bipedLeftLeg.rotateAngleZ, model.bipedLeftLeg.rotationPointX, model.bipedLeftLeg.rotationPointY, model.bipedLeftLeg.rotationPointZ);
+		}
+			
 
 		if (sneak) {
+			// corpo
 			modelsRot[2] = new ModelRotations(scale, model.bipedBody.height, model.bipedBody.rotateAngleX, model.bipedBody.rotateAngleY,
 					model.bipedBody.rotateAngleZ, model.bipedBody.rotationPointX, model.bipedBody.rotationPointY, model.bipedBody.rotationPointZ);
 			// braço direito
@@ -278,6 +312,7 @@ public class Skeletal extends Module {
 					model.bipedLeftArm.rotateAngleZ, model.bipedLeftArm.rotationPointX, model.bipedLeftArm.rotationPointY, model.bipedLeftArm.rotationPointZ);
 			
 		} else {
+			// corpo
 			modelsRot[2] = new ModelRotations(scale, model.bipedBody.height, model.bipedBody.rotateAngleX, model.bipedBody.rotateAngleY,
 					-model.bipedBody.rotateAngleZ, model.bipedBody.rotationPointX, model.bipedBody.rotationPointY, model.bipedBody.rotationPointZ);
 			// braço direito
