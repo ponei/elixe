@@ -11,9 +11,12 @@ import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
 import elixe.ui.clickgui.ElixeMenu;
+import elixe.utils.misc.BlockUtils;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 
 public class SafeWalk extends Module {
 	public SafeWalk() {
@@ -24,6 +27,7 @@ public class SafeWalk extends Module {
 		moduleOptions.add(sneakCooldownOption);
 		moduleOptions.add(needPitchOption);
 		moduleOptions.add(minimumPitchOption);
+		moduleOptions.add(needBlockOption);
 		moduleOptions.add(needBackwardsOption);
 	}
 
@@ -47,7 +51,7 @@ public class SafeWalk extends Module {
 			sneakCooldown = (int) this.getValue();
 		}
 	};
-	
+
 	boolean needPitch = false;
 	ModuleBoolean needPitchOption = new ModuleBoolean("require pitch", false) {
 		public void valueChanged() {
@@ -61,7 +65,14 @@ public class SafeWalk extends Module {
 			minimumPitch = (float) this.getValue();
 		}
 	};
-	
+
+	boolean needBlock = false;
+	ModuleBoolean needBlockOption = new ModuleBoolean("holding block", false) {
+		public void valueChanged() {
+			needBlock = (boolean) this.getValue();
+		}
+	};
+
 	boolean needBackwards = false;
 	ModuleBoolean needBackwardsOption = new ModuleBoolean("holding backwards", false) {
 		public void valueChanged() {
@@ -74,6 +85,11 @@ public class SafeWalk extends Module {
 		sneakCool = 0;
 		shouldSneak = false;
 	}
+
+	BlockUtils util = new BlockUtils();
+	
+	Item heldItem;
+	boolean heldItemPlaceable;
 	
 	boolean shouldSneak = false;
 	int sneakCool = 0;
@@ -92,27 +108,41 @@ public class SafeWalk extends Module {
 					return;
 				}
 			}
-			
+
+			if (needBlock) {
+				ItemStack heldStack = mc.thePlayer.inventory.getCurrentItem();
+				if (heldStack == null) {
+					return;
+				}
+				if (heldStack.getItem() != heldItem) {
+					heldItem = heldStack.getItem();
+					heldItemPlaceable = util.isBlockPlaceable(heldItem);
+				}
+				if (!heldItemPlaceable) {
+					return;
+				}
+			}
+
 			if (needBackwards) {
 				if (!Keyboard.isKeyDown(mc.gameSettings.keyBindBack.getKeyCode())) {
 					return;
 				}
 			}
-			
+
 			e.setShouldBlock(true);
 			break;
 
 		case 1:
-			sneakCool--;
-			if (e.isGoingToFall()) {
+			sneakCool--; 
+			if (e.isGoingToFall() && e.shouldBlockFall()) {
 				shouldSneak = true;
 				sneakCool = sneakCooldown;
 			} else {
 				if (0 >= sneakCool) {
 					shouldSneak = false;
-				} 
+				}
 			}
-			
+
 			break;
 		}
 
