@@ -8,7 +8,7 @@ import elixe.ui.base.ElixeButtonBase;
 public class ModuleArray extends AModuleOption {
 	private String[] array;
 	private int selectedIndex;
-	private boolean updateOnChange;
+	
 
 	public ModuleArray(String name, int index, String[] array) {
 		this(name, index, array, false);
@@ -16,7 +16,7 @@ public class ModuleArray extends AModuleOption {
 
 	public ModuleArray(String name, int index, String[] array, boolean b) {
 		super();
-		this.updateOnChange = b;
+		setShouldUpdate(b);
 		this.selectedIndex = index;
 		this.array = array;
 		this.name = name;
@@ -31,9 +31,6 @@ public class ModuleArray extends AModuleOption {
 		return array[selectedIndex];
 	}
 
-	public boolean shouldUpdate() {
-		return updateOnChange;
-	}
 
 	public Object getValue() {
 		return selectedIndex;

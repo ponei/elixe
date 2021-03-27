@@ -102,13 +102,8 @@ public class ESP extends Module {
 		}
 	};
 
-	boolean drawBox;
-	ModuleBoolean boxOption = new ModuleBoolean("draw box", false) {
-		public void valueChanged() {
-			drawBox = (boolean) this.getValue();
-		}
-	};
-
+	//box
+	
 	float[] boxColor;
 	ModuleColor boxColorOption = new ModuleColor("box color", 255, 255, 255) {
 		public void valueChanged() {
@@ -122,13 +117,16 @@ public class ESP extends Module {
 			boxStyle = (int) this.getValue();
 		}
 	};
-
-	boolean drawHealth;
-	ModuleBoolean healthOption = new ModuleBoolean("draw health", false) {
+	
+	boolean drawBox;
+	ModuleBoolean boxOption = new ModuleBoolean("draw box", false, true) {
 		public void valueChanged() {
-			drawHealth = (boolean) this.getValue();
+			drawBox = (boolean) this.getValue();
+			updateVisibilityOfOptions(new AModuleOption[] {boxColorOption, boxStyleOption}, drawBox);
 		}
 	};
+
+	//health
 
 	int healthLocation;
 	ModuleArray healthLocationOption = new ModuleArray("health location", 0,
@@ -158,13 +156,16 @@ public class ESP extends Module {
 			healthLevelColor = (boolean) this.getValue();
 		}
 	};
-
-	boolean drawArmor;
-	ModuleBoolean armorOption = new ModuleBoolean("draw armor", false) {
+	
+	boolean drawHealth;
+	ModuleBoolean healthOption = new ModuleBoolean("draw health", false, true) {
 		public void valueChanged() {
-			drawArmor = (boolean) this.getValue();
+			drawHealth = (boolean) this.getValue();
+			updateVisibilityOfOptions(new AModuleOption[] {healthLocationOption, healthLinesOption, healthColorOption, healthLevelColorOption}, drawHealth);
 		}
 	};
+
+	//armor
 
 	int armorLocation;
 	ModuleArray armorLocationOption = new ModuleArray("armor location", 0,
@@ -180,28 +181,34 @@ public class ESP extends Module {
 			armorColor = (boolean) this.getValue();
 		}
 	};
-
-	boolean drawName;
-	ModuleBoolean nameOption = new ModuleBoolean("draw name", false) {
+	
+	boolean drawArmor;
+	ModuleBoolean armorOption = new ModuleBoolean("draw armor", false, true) {
 		public void valueChanged() {
-			drawName = (boolean) this.getValue();
+			drawArmor = (boolean) this.getValue();
+			updateVisibilityOfOptions(new AModuleOption[] {armorLocationOption, armorColorOption}, drawArmor);
 		}
 	};
 
+	//name
+	
 	int nameLocation;
 	ModuleArray nameLocationOption = new ModuleArray("name location", 0, new String[] { "up", "down" }) {
 		public void valueChanged() {
 			nameLocation = (int) this.getValue();
 		}
 	};
-
-	boolean drawItemName;
-	ModuleBoolean itemNameOption = new ModuleBoolean("draw item name", false) {
+	
+	boolean drawName;
+	ModuleBoolean nameOption = new ModuleBoolean("draw name", false, true) {
 		public void valueChanged() {
-			drawItemName = (boolean) this.getValue();
+			drawName = (boolean) this.getValue();
+			updateVisibilityOfOptions(new AModuleOption[] {nameLocationOption}, drawName);
 		}
 	};
 
+	//item name
+	
 	int itemNameLocation;
 	ModuleArray itemNameLocationOption = new ModuleArray("item name location", 0, new String[] { "up", "down" }) {
 		public void valueChanged() {
@@ -209,13 +216,15 @@ public class ESP extends Module {
 		}
 	};
 
-	boolean drawItemIcon;
-	ModuleBoolean itemIconOption = new ModuleBoolean("draw item icon", false) {
+	boolean drawItemName;
+	ModuleBoolean itemNameOption = new ModuleBoolean("draw item name", false, true) {
 		public void valueChanged() {
-			drawItemIcon = (boolean) this.getValue();
+			drawItemName = (boolean) this.getValue();
+			updateVisibilityOfOptions(new AModuleOption[] {itemNameLocationOption}, drawItemName);
 		}
 	};
 
+	//item icon
 	int itemIconLocation;
 	ModuleArray itemIconLocationOption = new ModuleArray("item icon location", 0, new String[] { "up", "down" }) {
 		public void valueChanged() {
@@ -229,6 +238,16 @@ public class ESP extends Module {
 			rotateWeaponIcon = (boolean) this.getValue();
 		}
 	};
+
+	boolean drawItemIcon;
+	ModuleBoolean itemIconOption = new ModuleBoolean("draw item icon", false, true) {
+		public void valueChanged() {
+			drawItemIcon = (boolean) this.getValue();
+			updateVisibilityOfOptions(new AModuleOption[] {itemIconLocationOption, rotateWeaponIconOption}, drawItemIcon);
+		}
+	};
+
+	
 
 	@EventHandler
 	private Listener<OnRenderNameEvent> onRenderNameEvent = new Listener<>(e -> {

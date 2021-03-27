@@ -309,7 +309,7 @@ public class ElixeMenu extends GuiScreen {
 				modOptions.add(kbt);
 			}
 			if (opt instanceof ModuleBoolean) {
-				ElixeBooleanButton bbt = new ElixeBooleanButton(opt.getName(), (ModuleBoolean) opt, GUI_X + 140, GUI_Y + 5 + optionsSpacing, GUI_WIDTH - 150,
+				ElixeBooleanButton bbt = new ElixeBooleanButton(this, opt.getName(), (ModuleBoolean) opt, GUI_X + 140, GUI_Y + 5 + optionsSpacing, GUI_WIDTH - 150,
 						GUI_MODULE_HEIGHT);
 				optionsSpacing += GUI_MODULE_HEIGHT;
 				modOptions.add(bbt);

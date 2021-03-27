@@ -101,22 +101,13 @@ public class Chams extends Module {
 	};
 	
 	//color, buffer
-	AModuleOption[][] coloringModuleOptions = new AModuleOption[][] { {flatColorOption, hurtColorOption}, {} };
+	AModuleOption[] coloringModuleOptions = new AModuleOption[]  {flatColorOption, hurtColorOption} ;
 	
 	int coloringMode;
 	ModuleArray coloringModeOption = new ModuleArray("coloring mode", 0, new String[] { "color", "buffer" }, true) {
 		public void valueChanged() {
 			coloringMode = (int) this.getValue();
-			for (int i = 0; i < coloringModuleOptions.length; i++) {			
-				for (int j = 0; j < coloringModuleOptions[i].length; j++) {
-					if (i == coloringMode) {
-						coloringModuleOptions[i][j].setShow(true);
-					} else {
-						coloringModuleOptions[i][j].setShow(false);
-					}
-					
-				}
-			}
+			updateVisibilityOfOptions(coloringModuleOptions, coloringMode == 0);
 		}
 	};
 

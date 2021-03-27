@@ -10,7 +10,12 @@ public class ModuleBoolean extends AModuleOption {
 
 
 	public ModuleBoolean(String name, boolean state) {
+		this(name, state, false);
+	}
+	
+	public ModuleBoolean(String name, boolean state, boolean update) {
 		super();
+		setShouldUpdate(update);
 		this.state = state;
 		this.name = name;
 		valueChanged();

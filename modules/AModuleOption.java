@@ -17,6 +17,16 @@ public abstract class AModuleOption {
 		show = b;
 	}
 	
+	private boolean updateOnChange = false;
+	
+	public boolean shouldUpdate() {
+		return updateOnChange;
+	}
+	
+	public void setShouldUpdate(boolean b) {
+		updateOnChange = b;
+	}
+	
 	public void valueChanged() {
 		
 	}
