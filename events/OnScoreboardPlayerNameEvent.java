@@ -1,19 +1,18 @@
 package elixe.events;
 
 public class OnScoreboardPlayerNameEvent {
-	private String name;
+	private String line;
 
-	public OnScoreboardPlayerNameEvent(String name) {
+	public OnScoreboardPlayerNameEvent(String line) {
 		super();
-		this.name = name;
+		this.line = line;
 	}
 
-	public String getName() {
-		return name;
+	public String getLine() {
+		return line;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setLine(String line) {
+		this.line = line;
 	}
-
 }
