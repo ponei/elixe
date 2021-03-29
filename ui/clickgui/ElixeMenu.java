@@ -99,7 +99,7 @@ public class ElixeMenu extends GuiScreen {
 		changeCategory(SELECTED_CATEGORY);
 	}
 
-	private boolean isInOptionsArea(int btY) {
+	private boolean isInGuiYArea(int btY) {
 		return btY >= GUI_Y - 40 && GUI_Y + GUI_HEIGHT >= btY;
 	}
 
@@ -113,6 +113,10 @@ public class ElixeMenu extends GuiScreen {
 
 	private boolean isInOptionsArea(int mouseX, int mouseY) {
 		return (mouseX >= GUI_X + 140 && mouseX <= GUI_X + GUI_WIDTH && mouseY >= GUI_Y + GUI_CATEGORY_HEIGHT && mouseY <= GUI_Y + GUI_HEIGHT);
+	}
+	
+	private boolean isInModulesArea(int mouseX, int mouseY) {
+		return (mouseX >= GUI_X && mouseX <= GUI_X + 140 && mouseY >= GUI_Y + GUI_CATEGORY_HEIGHT && mouseY <= GUI_Y + GUI_HEIGHT);
 	}
 
 	private ElixeButtonBase modOptionOverlay;
@@ -137,8 +141,13 @@ public class ElixeMenu extends GuiScreen {
 		GUIUtils.pre2D();
 
 		int mWheel = Mouse.getDWheel() / 8;
-		if (mWheel != 0 && isInOptionsArea(mouseX, mouseY)) {
-			updateOptionsPosition(mWheel);
+		if (mWheel != 0) {
+			if (isInOptionsArea(mouseX, mouseY)) {
+				updateOptionsPosition(mWheel);
+			}
+			if (isInModulesArea(mouseX, mouseY)) {
+				updateModulesPosition(mWheel);
+			}
 		}
 
 		GUIUtils.drawRect(GUI_X, GUI_Y, GUI_X + GUI_WIDTH, GUI_Y + GUI_HEIGHT, 0.078f, 1f); // 20
@@ -172,7 +181,7 @@ public class ElixeMenu extends GuiScreen {
 	}
 
 	private void scissorButtons() {
-		glScissor(GUI_X + 140, GUI_Y + GUI_CATEGORY_HEIGHT, GUI_X + GUI_WIDTH, GUI_Y + GUI_HEIGHT);
+		glScissor(GUI_X, GUI_Y + GUI_CATEGORY_HEIGHT, GUI_X + GUI_WIDTH, GUI_Y + GUI_HEIGHT);
 	}
 
 	private void glScissor(int x1, int y1, int x2, int y2) {
@@ -398,11 +407,42 @@ public class ElixeMenu extends GuiScreen {
 		modOptions.clear();
 		modOptionOverlay = null;
 
+		modulesSpacing = GUI_MODULE_HEIGHT;
 		int i = 1;
 		for (Module m : Elixe.INSTANCE.MODULE_MANAGER.getModulesByCategory(SELECTED_CATEGORY)) {
 			ElixeModuleButton bt = new ElixeModuleButton(m.getName().toLowerCase(), m, GUI_X + 10, GUI_Y + GUI_CATEGORY_HEIGHT * i, 110, 30);
 			modButtons.add(bt);
+			modulesSpacing += GUI_MODULE_HEIGHT;
 			i++;
+		}	
+		
+		modulesScrollMax = (GUI_HEIGHT - GUI_CATEGORY_HEIGHT) - modulesSpacing;
+		if (modulesScrollMax > 0) {
+			modulesScrollMax = 0;
+		}
+		modulesScroll = 0;
+	}
+	
+	int modulesSpacing;
+	int modulesScroll, modulesScrollMax;
+	
+	private void updateModulesPosition(int yDif) {
+		int newScroll = modulesScroll + yDif;
+
+		if (newScroll > 0) {
+			yDif = -modulesScroll;
+			modulesScroll = 0;
+		} else {
+			if (modulesScrollMax > newScroll) {
+				yDif = modulesScrollMax - modulesScroll;
+				modulesScroll = modulesScrollMax;
+			} else {
+				modulesScroll += yDif;
+			}
+		}
+
+		for (ElixeButtonBase btm : modButtons) {
+			btm.setPositionDifference(0, yDif);
 		}
 	}
 
@@ -411,8 +451,8 @@ public class ElixeMenu extends GuiScreen {
 			catButtons[i].setPositionDifference(xDif, yDif);
 		}
 
-		for (ElixeModuleButton bt : modButtons) {
-			bt.setPositionDifference(xDif, yDif);
+		for (ElixeModuleButton btm : modButtons) {
+			btm.setPositionDifference(xDif, yDif);
 		}
 
 		for (ElixeButtonBase bti : modOptions) {
@@ -425,14 +465,15 @@ public class ElixeMenu extends GuiScreen {
 			catButtons[i].drawButton(mouseX, mouseY);
 		}
 
-		for (ElixeModuleButton bt : modButtons) {
-			bt.drawButton(mouseX, mouseY);
-		}
-
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		scissorButtons();
+		for (ElixeModuleButton btm : modButtons) {
+			if (isInGuiYArea(btm.y))
+				btm.drawButton(mouseX, mouseY);
+		}
+		
 		for (ElixeButtonBase bti : modOptions) {
-			if (isInOptionsArea(bti.y))
+			if (isInGuiYArea(bti.y))
 				bti.drawButton(mouseX, mouseY);
 		}
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
@@ -442,15 +483,16 @@ public class ElixeMenu extends GuiScreen {
 		for (int i = 0; catButtons.length > i; i++) {
 			catButtons[i].drawText(mouseX, mouseY);
 		}
-
-		for (ElixeModuleButton bt : modButtons) {
-			bt.drawText(mouseX, mouseY);
-		}
-
+		
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		scissorButtons();
+		for (ElixeModuleButton btm : modButtons) {
+			if (isInGuiYArea(btm.y))
+				btm.drawText(mouseX, mouseY);
+		}
+
 		for (ElixeButtonBase bti : modOptions) {
-			if (isInOptionsArea(bti.y))
+			if (isInGuiYArea(bti.y))
 				bti.drawText(mouseX, mouseY);
 		}
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
