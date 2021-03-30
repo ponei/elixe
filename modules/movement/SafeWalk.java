@@ -86,13 +86,8 @@ public class SafeWalk extends Module {
 		shouldSneak = false;
 	}
 
-	BlockUtils util = new BlockUtils();
-	
-	Item heldItem;
-	boolean heldItemPlaceable;
-	
 	boolean shouldSneak = false;
-	int sneakCool = 0;
+	int sneakCool = 0, failsafe = 4;
 	@EventHandler
 	private Listener<OnGoingToFallEvent> onGoingToFallEvent = new Listener<>(e -> {
 		switch (e.getState()) {
@@ -110,15 +105,7 @@ public class SafeWalk extends Module {
 			}
 
 			if (needBlock) {
-				ItemStack heldStack = mc.thePlayer.inventory.getCurrentItem();
-				if (heldStack == null) {
-					return;
-				}
-				if (heldStack.getItem() != heldItem) {
-					heldItem = heldStack.getItem();
-					heldItemPlaceable = util.isBlockPlaceable(heldItem);
-				}
-				if (!heldItemPlaceable) {
+				if (!conditionals.isHoldingBlock()) {
 					return;
 				}
 			}
@@ -133,16 +120,32 @@ public class SafeWalk extends Module {
 			break;
 
 		case 1:
-			sneakCool--; 
-			if (e.isGoingToFall() && e.shouldBlockFall()) {
-				shouldSneak = true;
-				sneakCool = sneakCooldown;
+			sneakCool--;
+			
+			//vai cair
+			if (e.isGoingToFall()) {
+				//devemos bloquear
+				if (e.shouldBlockFall()) {
+					shouldSneak = true;
+					sneakCool = sneakCooldown;
+					failsafe = 4;
+				} else {
+					//nao devemos bloquear, mas vai cair ainda
+					//se o ultimo estado ainda for sneak, continua por mais 4 ticks
+					//failsafe caso delay de sneak for mt baixo
+					if (shouldSneak) {
+						failsafe--;
+						if (0 >= failsafe) {
+							shouldSneak = false;
+						}
+					}
+				}				
 			} else {
 				if (0 >= sneakCool) {
 					shouldSneak = false;
 				}
 			}
-
+			
 			break;
 		}
 

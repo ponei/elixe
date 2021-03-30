@@ -43,6 +43,7 @@ public class ModuleManager implements Listenable {
     public Misplace MISPLACE = new Misplace();
     //world
     public MLG MLG = new MLG();
+    public FastPlace FASTPLACE = new FastPlace();
     //movement
     public Sprint SPRINT = new Sprint();
     public InventoryMove INVENTORYMOVE = new InventoryMove();
@@ -78,6 +79,7 @@ public class ModuleManager implements Listenable {
     	modules.add(AUTOSOUP);  	
         //world
     	modules.add(MLG);  
+    	modules.add(FASTPLACE);  
         //movement
     	modules.add(SPRINT);
     	modules.add(INVENTORYMOVE);
