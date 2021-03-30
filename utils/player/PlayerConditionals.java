@@ -56,6 +56,8 @@ public class PlayerConditionals implements Listenable {
 				}
 
 			} else {
+				holdingBlock = false;
+				heldItem = null;
 				holdingWeapon = false;
 			}
 		}
