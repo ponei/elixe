@@ -28,10 +28,9 @@ public class ModuleManager implements Listenable {
     public ClickGUI CLICKGUI = new ClickGUI();
     public NameProtect NAMEPROTECT = new NameProtect();
     public Camera CAMERA = new Camera();
-    public ClearView CLEARVIEW = new ClearView();
+    public Aesthetics AESTHETICS = new Aesthetics();
     public HealthLog HEALTHLOG = new HealthLog();
     public Skeletal SKELETAL = new Skeletal();
-    public Weather WEATHER = new Weather();
     //combat
     public KillAura KILLAURA = new KillAura();
     public AimAssist AIMASSIST = new AimAssist();
@@ -65,9 +64,8 @@ public class ModuleManager implements Listenable {
     	modules.add(CLICKGUI);
     	modules.add(NAMEPROTECT);
     	modules.add(CAMERA);
-    	modules.add(CLEARVIEW);
+    	modules.add(AESTHETICS);
     	modules.add(SKELETAL);
-    	modules.add(WEATHER);
     	//modules.add(HEALTHLOG);
     	//combat
     	modules.add(AIMASSIST);
@@ -88,7 +86,7 @@ public class ModuleManager implements Listenable {
     	modules.add(COMMANDS);
     	modules.add(OLDANIMATIONS);
     	modules.add(MUSHEXPLOIT);  	
-    	modules.add(ANTIBOT);
+    	//modules.add(ANTIBOT);
     	
     	//post
     	HUD.setModuleManager(this);
