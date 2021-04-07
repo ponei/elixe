@@ -116,8 +116,6 @@ public class AutoSoup extends Module {
 	Object[][] combinationItems = { { Blocks.red_mushroom, Blocks.brown_mushroom }, { Items.dye }, { Blocks.cactus } };
 	Object[][] bakedCombinations = { { Blocks.red_mushroom, Blocks.brown_mushroom }, { Blocks.brown_mushroom, Blocks.red_mushroom }, { Items.dye }, { Blocks.cactus } };
 
-	Random r = new Random();
-
 	boolean autoSouping = false;
 	int autoSoupStep = 0;
 
