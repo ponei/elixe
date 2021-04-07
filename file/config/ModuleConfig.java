@@ -18,7 +18,7 @@ import com.google.gson.JsonPrimitive;
 import elixe.Elixe;
 import elixe.file.FileConfig;
 import elixe.modules.Module;
-import elixe.modules.ModuleOption;
+import elixe.modules.AModuleOption;
 import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleFloat;
@@ -57,7 +57,7 @@ public class ModuleConfig implements FileConfig {
 
 				JsonObject jsonModule = (JsonObject) entry.getValue();
 
-				for (ModuleOption moduleOpt : module.getOptions()) {
+				for (AModuleOption moduleOpt : module.getOptions()) {
 					if (!(moduleOpt instanceof ModuleKey)) {
 
 						JsonElement element = jsonModule.get(moduleOpt.getName());
@@ -103,7 +103,7 @@ public class ModuleConfig implements FileConfig {
 		for (Module module : Elixe.INSTANCE.MODULE_MANAGER.getModules()) {
 			JsonObject jsonMod = new JsonObject();
 
-			for (ModuleOption moduleOpt : module.getOptions()) { // todos as opcoes
+			for (AModuleOption moduleOpt : module.getOptions()) { // todos as opcoes
 				if (!(moduleOpt instanceof ModuleKey)) { // nao é key. key vai no pessoal
 
 					if (moduleOpt instanceof ModuleBoolean) {

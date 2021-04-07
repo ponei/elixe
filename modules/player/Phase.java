@@ -4,6 +4,7 @@ import elixe.events.OnLivingUpdateEvent;
 import elixe.events.OnMoveEvent;
 import elixe.events.OnPacketSendEvent;
 import elixe.events.OnPushOutBlocksEvent;
+import elixe.modules.AModuleOption;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleArray;
@@ -33,7 +34,7 @@ public class Phase extends Module {
 		};
 		moduleOptions.add(phaseTypeIndexOption);
 		
-		updatePhaseType();
+		updatePhaseType();	
 	}
 	
 	int phaseTypeIndex;

@@ -4,19 +4,20 @@ import java.lang.reflect.Type;
 
 import org.lwjgl.input.Keyboard;
 
-import elixe.modules.ModuleOption;
+import elixe.modules.AModuleOption;
+import elixe.ui.base.ElixeButtonBase;
 
-public class ModuleKey implements ModuleOption {
+public class ModuleKey extends AModuleOption {
 
 	private int key;
-	private String name = "key";
 
 	public ModuleKey(int key) {
 		super();
+		this.name = "key";
 		this.key = key;
 		valueChanged();
 	}
-	
+
 	public Object getValue() {
 		return key;
 	}
@@ -25,14 +26,4 @@ public class ModuleKey implements ModuleOption {
 		this.key = (int) v;
 		valueChanged();
 	}
-
-	public String getName() {
-		return name;
-	}
-
-
-	public void valueChanged() {
-		
-	}
-
 }

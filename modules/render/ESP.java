@@ -14,7 +14,7 @@ import elixe.events.OnRenderNameEvent;
 import elixe.events.OnTickEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
-import elixe.modules.ModuleOption;
+import elixe.modules.AModuleOption;
 import elixe.modules.option.ModuleArray;
 import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
@@ -78,7 +78,7 @@ public class ESP extends Module {
 		moduleOptions.add(healthLevelColorOption);
 		moduleOptions.add(healthLocationOption);
 		moduleOptions.add(healthLinesOption);
-		
+
 		moduleOptions.add(armorOption);
 		moduleOptions.add(armorLocationOption);
 		moduleOptions.add(armorColorOption);
@@ -102,13 +102,8 @@ public class ESP extends Module {
 		}
 	};
 
-	boolean drawBox;
-	ModuleBoolean boxOption = new ModuleBoolean("draw box", false) {
-		public void valueChanged() {
-			drawBox = (boolean) this.getValue();
-		}
-	};
-
+	//box
+	
 	float[] boxColor;
 	ModuleColor boxColorOption = new ModuleColor("box color", 255, 255, 255) {
 		public void valueChanged() {
@@ -122,13 +117,16 @@ public class ESP extends Module {
 			boxStyle = (int) this.getValue();
 		}
 	};
-
-	boolean drawHealth;
-	ModuleBoolean healthOption = new ModuleBoolean("draw health", false) {
+	
+	boolean drawBox;
+	ModuleBoolean boxOption = new ModuleBoolean("draw box", false, true) {
 		public void valueChanged() {
-			drawHealth = (boolean) this.getValue();
+			drawBox = (boolean) this.getValue();
+			updateVisibilityOfOptions(new AModuleOption[] {boxColorOption, boxStyleOption}, drawBox);
 		}
 	};
+
+	//health
 
 	int healthLocation;
 	ModuleArray healthLocationOption = new ModuleArray("health location", 0,
@@ -151,20 +149,23 @@ public class ESP extends Module {
 			healthColor = this.getGLRGB();
 		}
 	};
-	
+
 	boolean healthLevelColor;
 	ModuleBoolean healthLevelColorOption = new ModuleBoolean("health level color", false) {
 		public void valueChanged() {
 			healthLevelColor = (boolean) this.getValue();
 		}
 	};
-
-	boolean drawArmor;
-	ModuleBoolean armorOption = new ModuleBoolean("draw armor", false) {
+	
+	boolean drawHealth;
+	ModuleBoolean healthOption = new ModuleBoolean("draw health", false, true) {
 		public void valueChanged() {
-			drawArmor = (boolean) this.getValue();
+			drawHealth = (boolean) this.getValue();
+			updateVisibilityOfOptions(new AModuleOption[] {healthLocationOption, healthLinesOption, healthColorOption, healthLevelColorOption}, drawHealth);
 		}
 	};
+
+	//armor
 
 	int armorLocation;
 	ModuleArray armorLocationOption = new ModuleArray("armor location", 0,
@@ -180,28 +181,34 @@ public class ESP extends Module {
 			armorColor = (boolean) this.getValue();
 		}
 	};
-
-	boolean drawName;
-	ModuleBoolean nameOption = new ModuleBoolean("draw name", false) {
+	
+	boolean drawArmor;
+	ModuleBoolean armorOption = new ModuleBoolean("draw armor", false, true) {
 		public void valueChanged() {
-			drawName = (boolean) this.getValue();
+			drawArmor = (boolean) this.getValue();
+			updateVisibilityOfOptions(new AModuleOption[] {armorLocationOption, armorColorOption}, drawArmor);
 		}
 	};
 
+	//name
+	
 	int nameLocation;
 	ModuleArray nameLocationOption = new ModuleArray("name location", 0, new String[] { "up", "down" }) {
 		public void valueChanged() {
 			nameLocation = (int) this.getValue();
 		}
 	};
-
-	boolean drawItemName;
-	ModuleBoolean itemNameOption = new ModuleBoolean("draw item name", false) {
+	
+	boolean drawName;
+	ModuleBoolean nameOption = new ModuleBoolean("draw name", false, true) {
 		public void valueChanged() {
-			drawItemName = (boolean) this.getValue();
+			drawName = (boolean) this.getValue();
+			updateVisibilityOfOptions(new AModuleOption[] {nameLocationOption}, drawName);
 		}
 	};
 
+	//item name
+	
 	int itemNameLocation;
 	ModuleArray itemNameLocationOption = new ModuleArray("item name location", 0, new String[] { "up", "down" }) {
 		public void valueChanged() {
@@ -209,13 +216,15 @@ public class ESP extends Module {
 		}
 	};
 
-	boolean drawItemIcon;
-	ModuleBoolean itemIconOption = new ModuleBoolean("draw item icon", false) {
+	boolean drawItemName;
+	ModuleBoolean itemNameOption = new ModuleBoolean("draw item name", false, true) {
 		public void valueChanged() {
-			drawItemIcon = (boolean) this.getValue();
+			drawItemName = (boolean) this.getValue();
+			updateVisibilityOfOptions(new AModuleOption[] {itemNameLocationOption}, drawItemName);
 		}
 	};
 
+	//item icon
 	int itemIconLocation;
 	ModuleArray itemIconLocationOption = new ModuleArray("item icon location", 0, new String[] { "up", "down" }) {
 		public void valueChanged() {
@@ -230,9 +239,21 @@ public class ESP extends Module {
 		}
 	};
 
+	boolean drawItemIcon;
+	ModuleBoolean itemIconOption = new ModuleBoolean("draw item icon", false, true) {
+		public void valueChanged() {
+			drawItemIcon = (boolean) this.getValue();
+			updateVisibilityOfOptions(new AModuleOption[] {itemIconLocationOption, rotateWeaponIconOption}, drawItemIcon);
+		}
+	};
+
+	
+
 	@EventHandler
 	private Listener<OnRenderNameEvent> onRenderNameEvent = new Listener<>(e -> {
-		e.cancel();
+		if (e.getEntity().espAllowed) {
+			e.cancel();
+		}
 	});
 
 	// 0 = player, 1 = animal, 2 = monster, 3 = villager
@@ -253,8 +274,10 @@ public class ESP extends Module {
 					|| (ent instanceof EntityAnimal && allowedEntities[1])
 					|| ((ent instanceof EntityMob || ent instanceof EntitySlime) && allowedEntities[2])
 					|| (ent instanceof EntityVillager && allowedEntities[3])) {
+				ent.espAllowed = true;
 				filteredEntities.add(ent);
-				continue;
+			} else {
+				ent.espAllowed = false;
 			}
 
 		}
@@ -332,10 +355,10 @@ public class ESP extends Module {
 		GL11.glColor3f(0f, 0f, 0f);
 		GL11.glLineWidth(3f);
 		switch (boxStyle) {
-		case 0: //closed
+		case 0: // closed
 			drawLinePoints(new float[][] { { minX, minY - 1, minX, maxY + 1 }, { minX - 1, maxY, maxX + 1, maxY },
-				{ maxX, maxY + 1, maxX, minY - 1 }, { maxX + 1, minY, minX - 1, minY } });
-			
+					{ maxX, maxY + 1, maxX, minY - 1 }, { maxX + 1, minY, minX - 1, minY } });
+
 			GL11.glColor3f(boxColor[0], boxColor[1], boxColor[2]);
 			GL11.glLineWidth(1f);
 
@@ -343,17 +366,17 @@ public class ESP extends Module {
 					{ maxX, maxY, maxX, minY }, { maxX, minY, minX, minY } });
 			break;
 
-		case 1: //up and down
+		case 1: // up and down
 			drawLinePoints(new float[][] { { minX, minY + 6, minX, minY - 1 }, { minX - 1, minY, maxX + 1, minY },
-				{ maxX, minY - 1, maxX, minY + 6 }, { minX, maxY - 6, minX, maxY + 1 }, { minX - 1, maxY, maxX + 1, maxY },
-				{ maxX, maxY + 1, maxX, maxY - 6 } });
-			
+					{ maxX, minY - 1, maxX, minY + 6 }, { minX, maxY - 6, minX, maxY + 1 },
+					{ minX - 1, maxY, maxX + 1, maxY }, { maxX, maxY + 1, maxX, maxY - 6 } });
+
 			GL11.glColor3f(boxColor[0], boxColor[1], boxColor[2]);
 			GL11.glLineWidth(1f);
 
 			drawLinePoints(new float[][] { { minX, minY + 5, minX, minY }, { minX, minY, maxX, minY },
-				{ maxX, minY, maxX, minY + 5 }, { minX, maxY - 5, minX, maxY }, { minX, maxY, maxX, maxY },
-				{ maxX, maxY, maxX, maxY - 5 } });
+					{ maxX, minY, maxX, minY + 5 }, { minX, maxY - 5, minX, maxY }, { minX, maxY, maxX, maxY },
+					{ maxX, maxY, maxX, maxY - 5 } });
 			break;
 		}
 	}
@@ -813,9 +836,10 @@ public class ESP extends Module {
 
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-			boolean shouldRotate = rotateWeaponIcon && (item.getItem() instanceof ItemSword
-					|| item.getItem() instanceof ItemAxe || item.getItem() instanceof ItemPickaxe
-					|| item.getItem() instanceof ItemSpade || item.getItem() instanceof ItemHoe || item.getItem() instanceof ItemBow);
+			boolean shouldRotate = rotateWeaponIcon
+					&& (item.getItem() instanceof ItemSword || item.getItem() instanceof ItemAxe
+							|| item.getItem() instanceof ItemPickaxe || item.getItem() instanceof ItemSpade
+							|| item.getItem() instanceof ItemHoe || item.getItem() instanceof ItemBow);
 
 			switch (itemIconLocation) {
 			case 0: // up

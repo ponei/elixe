@@ -2,16 +2,12 @@ package elixe.modules.option;
 
 import java.lang.reflect.Type;
 
-import elixe.modules.ModuleOption;
+import elixe.modules.AModuleOption;
+import elixe.ui.base.ElixeButtonBase;
 import elixe.ui.clickgui.options.ElixeIntegerButton;
 
-public class ModuleInteger implements ModuleOption {
-
-	private String name;
+public class ModuleInteger extends AModuleOption {
 	private int value;
-
-	private ElixeIntegerButton bt;
-	
 	private int min, max;
 
 	public ModuleInteger(String name, int value, int min, int max) {
@@ -24,13 +20,6 @@ public class ModuleInteger implements ModuleOption {
 		valueChanged();
 	}
 
-	public void setButton(ElixeIntegerButton bt) {
-		this.bt = bt;
-	}
-	
-	public ElixeIntegerButton getButton() {
-		return bt;
-	}
 	
 	public int getMin() {
 		return min;
@@ -44,10 +33,7 @@ public class ModuleInteger implements ModuleOption {
 		this.value = i;
 	}
 
-	public void valueChanged() {
-
-	}
-
+	
 	public Object getValue() {
 		return value;
 	}
@@ -56,10 +42,4 @@ public class ModuleInteger implements ModuleOption {
 		this.value = (int) v;
 		valueChanged();
 	}
-
-	public String getName() {
-		return name;
-	}
-
-
 }

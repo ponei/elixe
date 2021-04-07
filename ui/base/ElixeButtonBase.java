@@ -77,6 +77,10 @@ public class ElixeButtonBase {
 
 	}
 	
+	public void setValue(Object value) {
+		
+	}
+	
 	public boolean overlayClick(int mouseX, int mouseY,  int mouseButton) {
 		return false;
 	}

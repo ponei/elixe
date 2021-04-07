@@ -58,7 +58,7 @@ public final class ElixeLoginThread extends Thread {
 			return;
 		} else {
 			if (this.password.equals("") && !ignorePass) {
-				this.mc.session = new Session(this.username, "", "", "mojang");
+				this.mc.setSession(new Session(this.username, "", "", "mojang"));
 				this.status = (Object) ((Object) EnumChatFormatting.GREEN) + "Logged in. (" + this.username
 						+ " - offline name)";
 				return;
@@ -69,7 +69,7 @@ public final class ElixeLoginThread extends Thread {
 				this.status = (Object) ((Object) EnumChatFormatting.RED) + "Login failed!";
 			} else {
 				this.status = (Object) ((Object) EnumChatFormatting.GREEN) + "Logged in. (" + auth.getUsername() + ")";
-				this.mc.session = auth;
+				this.mc.setSession(auth);
 			}
 		}
 	}

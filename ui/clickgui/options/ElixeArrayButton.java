@@ -37,6 +37,8 @@ public class ElixeArrayButton extends ElixeButtonBase {
 	public ElixeArrayButton(ElixeMenu menu, String text, ModuleArray opt, int x, int y, int wid, int hei, int def) {
 		this.menu = menu;
 
+		opt.setButton(this);
+		
 		// button base
 		this.x = x;
 		this.y = y;
@@ -202,6 +204,9 @@ public class ElixeArrayButton extends ElixeButtonBase {
 			selectedText = listOptions[overIndex];
 			selectedTextWid = fontrenderer.getStringWidth(selectedText);
 			arrayOpt.setValue(overIndex);
+			if (arrayOpt.shouldUpdate()) {
+				menu.addOptions(menu.CURRENT_MODULE, true);
+			}
 			return true;
 		}		
 		return false;

@@ -1,17 +1,21 @@
 package elixe.modules.combat;
 
+import java.io.IOException;
 import java.util.Random;
 
 import org.lwjgl.input.Mouse;
 
 import elixe.Elixe;
+import elixe.events.OnMouseInputGUIEvent;
 import elixe.events.OnTickEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
+import elixe.ui.clickgui.ElixeMenu;
 import elixe.utils.misc.TimerUtils;
+import jdk.nashorn.internal.ir.CatchNode;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
 import net.minecraft.client.settings.KeyBinding;
@@ -23,7 +27,8 @@ public class AutoClicker extends Module {
 
 		moduleOptions.add(cpsMinOption);
 		moduleOptions.add(cpsMaxOption);
-		
+
+		moduleOptions.add(workOnGuiOption);
 		moduleOptions.add(requireWeaponOption);
 		moduleOptions.add(breakBlocksOption);
 	}
@@ -34,15 +39,15 @@ public class AutoClicker extends Module {
 			int newCps = (int) this.getValue();
 
 			if (cpsMaxOption != null) {
-			if (newCps > cpsMax) {
-				// fix
-				cpsMax = newCps;
-				if (cpsMaxOption.getButton() != null) {
-					cpsMaxOption.getButton().setValue(newCps);
-				}
+				if (newCps > cpsMax) {
+					// fix
+					cpsMax = newCps;
+					if (cpsMaxOption.getButton() != null) {
+						cpsMaxOption.getButton().setValue(newCps);
+					}
 
-				cpsMaxOption.setValueSilent(newCps);
-			}
+					cpsMaxOption.setValueSilent(newCps);
+				}
 			}
 
 			cpsMin = newCps;
@@ -55,17 +60,24 @@ public class AutoClicker extends Module {
 			int newCps = (int) this.getValue();
 
 			if (cpsMinOption != null) {
-			if (cpsMin > newCps) {
-				// fix
-				cpsMin = newCps;
-				if (cpsMinOption.getButton() != null) {
-					cpsMinOption.getButton().setValue(newCps);
+				if (cpsMin > newCps) {
+					// fix
+					cpsMin = newCps;
+					if (cpsMinOption.getButton() != null) {
+						cpsMinOption.getButton().setValue(newCps);
+					}
+					cpsMinOption.setValueSilent(newCps);
 				}
-				cpsMinOption.setValueSilent(newCps);
-			}
 			}
 
 			cpsMax = newCps;
+		}
+	};
+
+	boolean workOnGui;
+	ModuleBoolean workOnGuiOption = new ModuleBoolean("work on gui", false) {
+		public void valueChanged() {
+			workOnGui = (boolean) this.getValue();
 		}
 	};
 
@@ -75,7 +87,7 @@ public class AutoClicker extends Module {
 			breakBlocks = (boolean) this.getValue();
 		}
 	};
-	
+
 	boolean requireWeapon;
 	ModuleBoolean requireWeaponOption = new ModuleBoolean("require weapon", false) {
 		public void valueChanged() {
@@ -94,31 +106,30 @@ public class AutoClicker extends Module {
 	boolean breaking = false; // se ta quebrando bloco
 	boolean attacking = false; // se ta atacando
 	boolean firstClick = true; // identificar se é primeiro click depois de segurar
+
+	int attackCode, useCode;
+
+	boolean handleGuiMouse = false;
 	@EventHandler
 	private Listener<OnTickEvent> onTickEvent = new Listener<>(e -> {
-//		tickreset++;
-//		if (tickreset == 20) {
-//			System.out.println("cps: " + cps);
-//			cps = 0;
-//			tickreset = 0;
-//		} 
-		if (requireWeapon) {
+
+		boolean nullScreen = mc.currentScreen == null;
+		boolean elixeScreen = mc.currentScreen instanceof ElixeMenu;
+		
+		if (requireWeapon && nullScreen) {
 			if (!conditionals.isHoldingWeapon()) {
 				return;
 			}
 		}
-		
 
 		int attack = mc.gameSettings.keyBindAttack.getKeyCode();
-		int attackN = attack + 100;
+		int attackCode = attack + 100;
 
-		int use = mc.gameSettings.keyBindUseItem.getKeyCode();
-		int useN = use + 100;
-
-		if (mc.currentScreen == null) {
+		// logica pra quebrar bloco
+		if (nullScreen) {
 			if (mc.objectMouseOver != null) {
 				if (breakBlocks && mc.objectMouseOver.typeOfHit == MovingObjectType.BLOCK) {
-					if (Mouse.isButtonDown(attackN) && !breaking) { // botao ta pra baixo mas com bloco na frente
+					if (Mouse.isButtonDown(attackCode) && !breaking) { // botao ta pra baixo mas com bloco na frente
 						if (!attacking) { // ta estado em abaixado
 							breaking = true;
 							KeyBinding.setKeyBindState(attack, true);
@@ -130,39 +141,70 @@ public class AutoClicker extends Module {
 					return;
 				}
 			}
+		}
 
-			// botao esquerdo ta segurado e nao ta quebrando bloco
-			// se vier do check ali em cima, vai estar false
-			if (Mouse.isButtonDown(attackN) && !breaking) {
-				// check de botao direito aqui em baixo pra nao fazer o firstclick mudar
+		// botao esquerdo ta segurado e nao ta quebrando bloco
+		// se vier do check ali em cima, vai estar false
+		if (Mouse.isButtonDown(attackCode) && !breaking) {
+			// check de botao direito aqui em baixo pra nao fazer o firstclick mudar
 
-				if (firstClick) { // primeiro click pra nao ter chande de dar double click
-					firstClick = false;
-					clickTimer.reset();
-					setNewClickDelay();
-				} else {
-					// tempo passou, dá click
+			if (firstClick) { // primeiro click pra nao ter chande de dar double click
+				firstClick = false;
+				clickTimer.reset();
+				setNewClickDelay();
+			} else {
+				// tempo passou, dá click
+				try {
 					if (clickTimer.hasTimePassed(clickDelay)) {
-//							cps++;
-
 						attacking = true;
-						KeyBinding.setKeyBindState(attack, true);
-						KeyBinding.onTick(attack);
+						if (nullScreen) {
+							KeyBinding.setKeyBindState(attack, true);
+							KeyBinding.onTick(attack);
+						} else {
+							if (workOnGui && !elixeScreen) {
+								handleGuiMouse = true;
+								mc.currentScreen.handleMouseInput();
+							}
+						}
+
 						// reset no timer, coloca novo delay
 						clickTimer.reset();
 						setNewClickDelay();
 					} else {
-						// tempo nao passou ainda, abaixa click
-						attacking = false;
-						KeyBinding.setKeyBindState(attack, false);
+						if (nullScreen) {
+							// tempo nao passou ainda, abaixa click
+							attacking = false;
+							KeyBinding.setKeyBindState(attack, false);
+						} else {
+							if (workOnGui && !elixeScreen) {
+								if (attacking) {
+									attacking = false;
+									handleGuiMouse = true;
+									mc.currentScreen.handleMouseInput();
+								}
+							}
+						}
+
 					}
+				} catch (Exception clickerE) {
+
 				}
-
-			} else {
-				firstClick = true;
 			}
-			breaking = false;
 
+		} else {
+			firstClick = true;
+		}
+		breaking = false;
+
+	});
+
+	@EventHandler
+	private Listener<OnMouseInputGUIEvent> onMouseInputGUIEvent = new Listener<>(e -> {
+		// System.out.println(e.getEventButton() + ", " + e.getEventButtonState());
+		if (handleGuiMouse) {
+			e.setEventButton(attackCode);
+			e.setEventButtonState(attacking);
+			handleGuiMouse = false;
 		}
 	});
 

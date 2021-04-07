@@ -8,6 +8,7 @@ import elixe.modules.combat.*;
 import elixe.modules.misc.*;
 import elixe.modules.movement.*;
 import elixe.modules.render.*;
+import elixe.modules.world.*;
 import elixe.modules.player.*;
 
 import me.zero.alpine.listener.EventHandler;
@@ -21,14 +22,15 @@ public class ModuleManager implements Listenable {
     public Phase PHASE = new Phase();
     public Derp DERP = new Derp();
     //render
-    public elixe.modules.render.HUD HUD = new elixe.modules.render.HUD();
+    public HUD HUD = new elixe.modules.render.HUD();
     public Chams CHAMS = new Chams();
-    public elixe.modules.render.ESP ESP = new elixe.modules.render.ESP();
+    public ESP ESP = new elixe.modules.render.ESP();
     public ClickGUI CLICKGUI = new ClickGUI();
     public NameProtect NAMEPROTECT = new NameProtect();
     public Camera CAMERA = new Camera();
-    public ClearView CLEARVIEW = new ClearView();
+    public Aesthetics AESTHETICS = new Aesthetics();
     public HealthLog HEALTHLOG = new HealthLog();
+    public Skeletal SKELETAL = new Skeletal();
     //combat
     public KillAura KILLAURA = new KillAura();
     public AimAssist AIMASSIST = new AimAssist();
@@ -39,10 +41,15 @@ public class ModuleManager implements Listenable {
     public AutoSoup AUTOSOUP = new AutoSoup(); 
     public Misplace MISPLACE = new Misplace();
     //world
+    public MLG MLG = new MLG();
+    public FastPlace FASTPLACE = new FastPlace();
     //movement
     public Sprint SPRINT = new Sprint();
     public InventoryMove INVENTORYMOVE = new InventoryMove();
+    public SafeWalk SAFEWALK = new SafeWalk();
     //misc
+    public AntiBot ANTIBOT = new AntiBot();
+    public Commands COMMANDS = new Commands();
     public OldAnimations OLDANIMATIONS = new OldAnimations();
     public MushExploit MUSHEXPLOIT = new MushExploit();
     
@@ -57,7 +64,8 @@ public class ModuleManager implements Listenable {
     	modules.add(CLICKGUI);
     	modules.add(NAMEPROTECT);
     	modules.add(CAMERA);
-    	modules.add(CLEARVIEW);
+    	modules.add(AESTHETICS);
+    	modules.add(SKELETAL);
     	//modules.add(HEALTHLOG);
     	//combat
     	modules.add(AIMASSIST);
@@ -68,12 +76,17 @@ public class ModuleManager implements Listenable {
     	modules.add(VELOCITY);
     	modules.add(AUTOSOUP);  	
         //world
+    	modules.add(MLG);  
+    	modules.add(FASTPLACE);  
         //movement
     	modules.add(SPRINT);
     	modules.add(INVENTORYMOVE);
+    	modules.add(SAFEWALK);
         //misc
+    	modules.add(COMMANDS);
     	modules.add(OLDANIMATIONS);
-    	modules.add(MUSHEXPLOIT);
+    	modules.add(MUSHEXPLOIT);  	
+    	//modules.add(ANTIBOT);
     	
     	//post
     	HUD.setModuleManager(this);

@@ -4,6 +4,7 @@ import elixe.Elixe;
 import elixe.events.OnLivingUpdateEvent;
 import elixe.events.OnMoveEvent;
 import elixe.events.OnPacketSendEvent;
+import elixe.modules.AModuleOption;
 import elixe.utils.player.Rotations;
 import net.minecraft.client.Minecraft;
 
@@ -13,11 +14,6 @@ public class OffsetPhase implements IPhaseType {
 
 	boolean clip;
 	int step;
-
-	@Override
-	public void AddOptions() {
-		
-	}
 
 	double direction;
 	@Override

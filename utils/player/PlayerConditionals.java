@@ -4,11 +4,13 @@ import org.lwjgl.input.Mouse;
 
 import elixe.Elixe;
 import elixe.events.OnTickEvent;
+import elixe.utils.misc.BlockUtils;
 import me.zero.alpine.event.EventPriority;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listenable;
 import me.zero.alpine.listener.Listener;
 import net.minecraft.client.Minecraft;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemPickaxe;
@@ -19,9 +21,13 @@ import net.minecraft.potion.Potion;
 
 public class PlayerConditionals implements Listenable {
 	Minecraft mc = Elixe.INSTANCE.mc;
+	Item heldItem;
+	
+	BlockUtils util = new BlockUtils();
+	private boolean sprinting, holdingWeapon, holdingAttack, holdingBlock, holdingUse, inWater, onAir, speed;
 
-	private boolean sprinting, holdingWeapon, holdingAttack, holdingUse, inWater, onAir, speed;
-
+	
+	
 	@EventHandler
 	private Listener<OnTickEvent> onTickEvent = new Listener<>(e -> {
 		if (mc.currentScreen == null) {
@@ -43,8 +49,15 @@ public class PlayerConditionals implements Listenable {
 				holdingWeapon = (item.getItem() instanceof ItemSword || item.getItem() instanceof ItemAxe
 						|| item.getItem() instanceof ItemPickaxe || item.getItem() instanceof ItemSpade
 						|| item.getItem() instanceof ItemHoe);
+				
+				if (item.getItem() != heldItem) {
+					heldItem = item.getItem();
+					holdingBlock = util.isBlockPlaceable(heldItem);
+				}
 
 			} else {
+				holdingBlock = false;
+				heldItem = null;
 				holdingWeapon = false;
 			}
 		}
@@ -68,6 +81,10 @@ public class PlayerConditionals implements Listenable {
 
 	public boolean isHoldingAttack() {
 		return holdingAttack;
+	}
+	
+	public boolean isHoldingBlock() {
+		return holdingBlock;
 	}
 	
 	public boolean isHoldingUse() {

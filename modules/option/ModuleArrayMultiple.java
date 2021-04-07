@@ -2,13 +2,12 @@ package elixe.modules.option;
 
 import java.lang.reflect.Type;
 
-import elixe.modules.ModuleOption;
+import elixe.modules.AModuleOption;
+import elixe.ui.base.ElixeButtonBase;
 
-public class ModuleArrayMultiple implements ModuleOption {
+public class ModuleArrayMultiple extends AModuleOption {
 	private String[] array;
 	private boolean[] selectedIndexes;
-	
-	private String name;
 
 	public ModuleArrayMultiple(String name, boolean[] selected, String[] array) {
 		super();
@@ -38,11 +37,4 @@ public class ModuleArrayMultiple implements ModuleOption {
 		valueChanged();
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void valueChanged() {
-
-	}
 }
