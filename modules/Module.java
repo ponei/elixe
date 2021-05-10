@@ -11,7 +11,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.entity.Entity;
 
 public class Module implements Listenable, Comparable<Module> {
 	private String name;
@@ -20,6 +19,7 @@ public class Module implements Listenable, Comparable<Module> {
 
 	private int key = 0;
 	private ModuleKey keyOption = new ModuleKey(0) {
+		
 		public void valueChanged() {
 			key = (int) this.getValue();
 		}
@@ -109,7 +109,7 @@ public class Module implements Listenable, Comparable<Module> {
 		}
 	}
 
-	@Override
+	
 	public int compareTo(Module arg0) {
 		FontRenderer fontR = this.mc.fontRendererObj;
 		return fontR.getStringWidth(arg0.getName().toLowerCase()) - fontR.getStringWidth(name.toLowerCase());

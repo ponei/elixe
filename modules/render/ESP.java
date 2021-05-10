@@ -7,40 +7,21 @@ import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import elixe.Elixe;
-import elixe.events.OnKeyEvent;
 import elixe.events.OnRender3DEvent;
 import elixe.events.OnRenderNameEvent;
 import elixe.events.OnTickEvent;
+import elixe.modules.AModuleOption;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
-import elixe.modules.AModuleOption;
 import elixe.modules.option.ModuleArray;
 import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleColor;
-import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
-import elixe.modules.option.ModuleKey;
 import elixe.utils.render.ESPSetup;
 import elixe.utils.render.WorldToScreen;
-import joptsimple.HelpFormatter;
 import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listenable;
 import me.zero.alpine.listener.Listener;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.culling.ClippingHelper;
-import net.minecraft.client.renderer.culling.ClippingHelperImpl;
-import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.culling.ICamera;
-import net.minecraft.client.renderer.entity.Render;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -57,10 +38,7 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemSpade;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
-import net.minecraft.src.Config;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.Timer;
-import net.optifine.shaders.Shaders;
 
 public class ESP extends Module {
 	ESPSetup util = new ESPSetup();
@@ -97,6 +75,7 @@ public class ESP extends Module {
 	boolean[] allowedEntities;
 	ModuleArrayMultiple allowedEntitiesOption = new ModuleArrayMultiple("allowed entities",
 			new boolean[] { true, false, false, false }, new String[] { "player", "animal", "monster", "villager" }) {
+		
 		public void valueChanged() {
 			allowedEntities = (boolean[]) this.getValue();
 		}
@@ -106,6 +85,7 @@ public class ESP extends Module {
 	
 	float[] boxColor;
 	ModuleColor boxColorOption = new ModuleColor("box color", 255, 255, 255) {
+		
 		public void valueChanged() {
 			boxColor = this.getGLRGB();
 		}
@@ -113,6 +93,7 @@ public class ESP extends Module {
 
 	int boxStyle;
 	ModuleArray boxStyleOption = new ModuleArray("box style", 0, new String[] { "closed", "up and down" }) {
+		
 		public void valueChanged() {
 			boxStyle = (int) this.getValue();
 		}
@@ -120,6 +101,7 @@ public class ESP extends Module {
 	
 	boolean drawBox;
 	ModuleBoolean boxOption = new ModuleBoolean("draw box", false, true) {
+		
 		public void valueChanged() {
 			drawBox = (boolean) this.getValue();
 			updateVisibilityOfOptions(new AModuleOption[] {boxColorOption, boxStyleOption}, drawBox);
@@ -131,6 +113,7 @@ public class ESP extends Module {
 	int healthLocation;
 	ModuleArray healthLocationOption = new ModuleArray("health location", 0,
 			new String[] { "left", "right", "up", "down" }) {
+		
 		public void valueChanged() {
 			healthLocation = (int) this.getValue();
 		}
@@ -138,6 +121,7 @@ public class ESP extends Module {
 
 	int healthLines;
 	ModuleInteger healthLinesOption = new ModuleInteger("health lines", 3, 0, 8) {
+		
 		public void valueChanged() {
 			healthLines = (int) this.getValue();
 		}
@@ -145,6 +129,7 @@ public class ESP extends Module {
 
 	float[] healthColor;
 	ModuleColor healthColorOption = new ModuleColor("health color", 255, 255, 255) {
+		
 		public void valueChanged() {
 			healthColor = this.getGLRGB();
 		}
@@ -152,6 +137,7 @@ public class ESP extends Module {
 
 	boolean healthLevelColor;
 	ModuleBoolean healthLevelColorOption = new ModuleBoolean("health level color", false) {
+		
 		public void valueChanged() {
 			healthLevelColor = (boolean) this.getValue();
 		}
@@ -159,6 +145,7 @@ public class ESP extends Module {
 	
 	boolean drawHealth;
 	ModuleBoolean healthOption = new ModuleBoolean("draw health", false, true) {
+		
 		public void valueChanged() {
 			drawHealth = (boolean) this.getValue();
 			updateVisibilityOfOptions(new AModuleOption[] {healthLocationOption, healthLinesOption, healthColorOption, healthLevelColorOption}, drawHealth);
@@ -170,6 +157,7 @@ public class ESP extends Module {
 	int armorLocation;
 	ModuleArray armorLocationOption = new ModuleArray("armor location", 0,
 			new String[] { "left", "right", "up", "down" }) {
+		
 		public void valueChanged() {
 			armorLocation = (int) this.getValue();
 		}
@@ -177,6 +165,7 @@ public class ESP extends Module {
 
 	boolean armorColor;
 	ModuleBoolean armorColorOption = new ModuleBoolean("armor color", false) {
+		
 		public void valueChanged() {
 			armorColor = (boolean) this.getValue();
 		}
@@ -184,6 +173,7 @@ public class ESP extends Module {
 	
 	boolean drawArmor;
 	ModuleBoolean armorOption = new ModuleBoolean("draw armor", false, true) {
+		
 		public void valueChanged() {
 			drawArmor = (boolean) this.getValue();
 			updateVisibilityOfOptions(new AModuleOption[] {armorLocationOption, armorColorOption}, drawArmor);
@@ -194,6 +184,7 @@ public class ESP extends Module {
 	
 	int nameLocation;
 	ModuleArray nameLocationOption = new ModuleArray("name location", 0, new String[] { "up", "down" }) {
+		
 		public void valueChanged() {
 			nameLocation = (int) this.getValue();
 		}
@@ -201,6 +192,7 @@ public class ESP extends Module {
 	
 	boolean drawName;
 	ModuleBoolean nameOption = new ModuleBoolean("draw name", false, true) {
+		
 		public void valueChanged() {
 			drawName = (boolean) this.getValue();
 			updateVisibilityOfOptions(new AModuleOption[] {nameLocationOption}, drawName);
@@ -211,6 +203,7 @@ public class ESP extends Module {
 	
 	int itemNameLocation;
 	ModuleArray itemNameLocationOption = new ModuleArray("item name location", 0, new String[] { "up", "down" }) {
+		
 		public void valueChanged() {
 			itemNameLocation = (int) this.getValue();
 		}
@@ -218,6 +211,7 @@ public class ESP extends Module {
 
 	boolean drawItemName;
 	ModuleBoolean itemNameOption = new ModuleBoolean("draw item name", false, true) {
+		
 		public void valueChanged() {
 			drawItemName = (boolean) this.getValue();
 			updateVisibilityOfOptions(new AModuleOption[] {itemNameLocationOption}, drawItemName);
@@ -227,6 +221,7 @@ public class ESP extends Module {
 	//item icon
 	int itemIconLocation;
 	ModuleArray itemIconLocationOption = new ModuleArray("item icon location", 0, new String[] { "up", "down" }) {
+		
 		public void valueChanged() {
 			itemIconLocation = (int) this.getValue();
 		}
@@ -234,6 +229,7 @@ public class ESP extends Module {
 
 	boolean rotateWeaponIcon;
 	ModuleBoolean rotateWeaponIconOption = new ModuleBoolean("rotate weapon icons", false) {
+		
 		public void valueChanged() {
 			rotateWeaponIcon = (boolean) this.getValue();
 		}
@@ -241,6 +237,7 @@ public class ESP extends Module {
 
 	boolean drawItemIcon;
 	ModuleBoolean itemIconOption = new ModuleBoolean("draw item icon", false, true) {
+		
 		public void valueChanged() {
 			drawItemIcon = (boolean) this.getValue();
 			updateVisibilityOfOptions(new AModuleOption[] {itemIconLocationOption, rotateWeaponIconOption}, drawItemIcon);

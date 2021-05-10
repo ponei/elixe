@@ -1,7 +1,6 @@
 package elixe.modules.movement;
 
 import elixe.events.OnLivingUpdateEvent;
-import elixe.events.OnTickEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import me.zero.alpine.listener.EventHandler;

@@ -15,10 +15,9 @@ import com.google.gson.JsonParser;
 
 import elixe.Elixe;
 import elixe.file.FileConfig;
-import elixe.modules.Module;
+import elixe.file.FileManager;
 import elixe.modules.AModuleOption;
-import elixe.modules.option.ModuleBoolean;
-import elixe.modules.option.ModuleFloat;
+import elixe.modules.Module;
 import elixe.modules.option.ModuleKey;
 import elixe.modules.render.ClickGUI;
 
@@ -41,6 +40,7 @@ public class ModulePersonal implements FileConfig {
 		}
 	}
 
+	
 	public void loadConfig() throws IOException {
 		JsonObject jsonObject = (JsonObject) new JsonParser().parse(new BufferedReader(new FileReader(dir)));
 
@@ -78,13 +78,14 @@ public class ModulePersonal implements FileConfig {
 		}
 	}
 
+	
 	public void saveConfig() throws IOException {
 		JsonObject jsonObject = new JsonObject();
 
 		for (Module module : Elixe.INSTANCE.MODULE_MANAGER.getModules()) {
 			JsonObject jsonMod = new JsonObject();
 			// state
-			jsonMod.addProperty("state", (Boolean) module.isToggled());
+			jsonMod.addProperty("state", module.isToggled());
 			// keys
 			for (AModuleOption moduleOpt : module.getOptions()) {
 				if (moduleOpt instanceof ModuleKey) {
@@ -95,7 +96,7 @@ public class ModulePersonal implements FileConfig {
 		}
 
 		PrintWriter printWriter = new PrintWriter(new FileWriter(dir));
-		printWriter.println(Elixe.INSTANCE.FILE_MANAGER.GSON.toJson(jsonObject));
+		printWriter.println(FileManager.GSON.toJson(jsonObject));
 		printWriter.close();
 	}
 

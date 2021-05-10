@@ -1,12 +1,9 @@
 package elixe.modules.combat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Random;
 
 import elixe.events.OnKeybindActionEvent;
-import elixe.events.OnPacketSendEvent;
 import elixe.events.OnTickEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
@@ -16,24 +13,15 @@ import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
 import elixe.utils.misc.TimerUtils;
 import elixe.utils.player.InventoryItem;
-import me.zero.alpine.event.EventPriority;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBush;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.play.client.C00PacketKeepAlive;
-import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
-import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 
@@ -57,6 +45,7 @@ public class AutoSoup extends Module {
 
 	float healthToSoup;
 	ModuleFloat healthToSoupOption = new ModuleFloat("health to soup", 12f, 1f, 20f) {
+		
 		public void valueChanged() {
 			healthToSoup = (float) this.getValue();
 		}
@@ -64,6 +53,7 @@ public class AutoSoup extends Module {
 
 	boolean dropBowl;
 	ModuleBoolean dropBowlOption = new ModuleBoolean("drop bowl", false) {
+		
 		public void valueChanged() {
 			dropBowl = (boolean) this.getValue();
 		}
@@ -71,6 +61,7 @@ public class AutoSoup extends Module {
 
 	boolean refill;
 	ModuleBoolean refillOption = new ModuleBoolean("refill", false) {
+		
 		public void valueChanged() {
 			refill = (boolean) this.getValue();
 		}
@@ -78,6 +69,7 @@ public class AutoSoup extends Module {
 
 	int refillDelay;
 	ModuleInteger refillDelayOption = new ModuleInteger("refill delay", 100, 1, 300) {
+		
 		public void valueChanged() {
 			refillDelay = (int) this.getValue();
 		}
@@ -85,6 +77,7 @@ public class AutoSoup extends Module {
 
 	boolean recraft;
 	ModuleBoolean recraftOption = new ModuleBoolean("recraft", false) {
+		
 		public void valueChanged() {
 			recraft = (boolean) this.getValue();
 		}
@@ -93,6 +86,7 @@ public class AutoSoup extends Module {
 	boolean[] recraftableItems;
 	ModuleArrayMultiple recraftableItemsOption = new ModuleArrayMultiple("recraftable items", new boolean[] { true, false, false },
 			new String[] { "mushroom", "cocoa", "cactus" }) {
+		
 		public void valueChanged() {
 			recraftableItems = (boolean[]) this.getValue();
 		}
@@ -100,6 +94,7 @@ public class AutoSoup extends Module {
 
 	int recraftDelay;
 	ModuleInteger recraftDelayOption = new ModuleInteger("recraft delay", 100, 1, 300) {
+		
 		public void valueChanged() {
 			recraftDelay = (int) this.getValue();
 		}
@@ -107,6 +102,7 @@ public class AutoSoup extends Module {
 
 	boolean needAttackButton;
 	ModuleBoolean needAttackButtonOption = new ModuleBoolean("require attack button", false) {
+		
 		public void valueChanged() {
 			needAttackButton = (boolean) this.getValue();
 		}

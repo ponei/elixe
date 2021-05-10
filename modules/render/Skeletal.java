@@ -5,10 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Quaternion;
 
 import elixe.events.OnRender3DEvent;
-import elixe.events.OnRenderEntityEvent;
 import elixe.events.OnSetModelAngles;
 import elixe.events.OnTickEvent;
 import elixe.modules.Module;
@@ -16,14 +14,11 @@ import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleColor;
-import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
 import elixe.utils.render.Interpolation;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
-import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.client.model.ModelBiped;
-import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -34,7 +29,6 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.biome.BiomeGenBase.Height;
 
 public class Skeletal extends Module {
 
@@ -51,21 +45,24 @@ public class Skeletal extends Module {
 	boolean[] allowedEntities;
 	ModuleArrayMultiple allowedEntitiesOption = new ModuleArrayMultiple("allowed entities", new boolean[] { true, false, false, false },
 			new String[] { "player", "animal", "monster", "villager" }) {
+		
 		public void valueChanged() {
 			allowedEntities = (boolean[]) this.getValue();
 		}
 	};
-	
+
 	boolean workOnSelf;
 	ModuleBoolean workOnSelfOption = new ModuleBoolean("work on self", false) {
+		
 		public void valueChanged() {
-			workOnSelf = (boolean) this.getValue();			
+			workOnSelf = (boolean) this.getValue();
 		}
 	};
-	
+
 	boolean connectBones;
 	int bipedLength = 5;
 	ModuleBoolean connectBonesOption = new ModuleBoolean("connect bones", false) {
+		
 		public void valueChanged() {
 			connectBones = (boolean) this.getValue();
 			if (connectBones) {
@@ -78,6 +75,7 @@ public class Skeletal extends Module {
 
 	float lineWidth;
 	ModuleInteger lineWidthOption = new ModuleInteger("line width", 1, 1, 5) {
+		
 		public void valueChanged() {
 			lineWidth = (int) this.getValue();
 		}
@@ -85,6 +83,7 @@ public class Skeletal extends Module {
 
 	float[] lineColor;
 	ModuleColor lineColorOption = new ModuleColor("line color", 255, 255, 255) {
+		
 		public void valueChanged() {
 			lineColor = this.getGLRGB();
 		}
@@ -150,14 +149,14 @@ public class Skeletal extends Module {
 
 			// rotacao do corpo
 			float f = entity.prevRenderYawOffset + (entity.renderYawOffset - entity.prevRenderYawOffset) * e.getTickDelta();
-			
+
 			if (entity.isRiding() && entity.ridingEntity instanceof EntityLivingBase) {
 				EntityLivingBase entityRide = (EntityLivingBase) entity.ridingEntity;
-				//rotacao da entidade sendo usada
+				// rotacao da entidade sendo usada
 				f = entityRide.prevRenderYawOffset + (entityRide.renderYawOffset - entityRide.prevRenderYawOffset) * e.getTickDelta();
-				
+
 				float f1 = entity.prevRotationYawHead + (entity.rotationYawHead - entity.prevRotationYawHead) * e.getTickDelta();
-				
+
 				float f2 = MathHelper.wrapAngleTo180_float(f1 - f);
 
 				if (f2 < -85.0F) {
@@ -174,7 +173,7 @@ public class Skeletal extends Module {
 					f += f2 * 0.2F;
 				}
 			}
-			
+
 			GL11.glRotatef((-f), 0.0F, 1.0F, 0.0F);
 			GL11.glScalef(-1.0F, -1.0F, 1.0F);
 			GL11.glTranslatef(0.0F, -1.5078125F, 0.0F); // tava no RendererLivingEntity, nao sei porque assim exatamente
@@ -192,7 +191,7 @@ public class Skeletal extends Module {
 			}
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 			GlStateManager.disableBlend();
-			
+
 			GL11.glPopMatrix();
 			GL11.glPopMatrix();
 		}
@@ -253,23 +252,23 @@ public class Skeletal extends Module {
 	}
 
 	private Vec3 calculateRotation(float rotateAngleX, float rotateAngleY) {
-		float f = MathHelper.cos(-rotateAngleY); //yaw
-        float f1 = MathHelper.sin(-rotateAngleY);
-        float f2 = -MathHelper.cos(-half_pi + rotateAngleX); //pitch
-        float f3 = MathHelper.sin(-half_pi + rotateAngleX);
-        Vec3 rot = new Vec3((double)(f1 * f2), (double)f3, (double)(f * f2));
-		
+		float f = MathHelper.cos(-rotateAngleY); // yaw
+		float f1 = MathHelper.sin(-rotateAngleY);
+		float f2 = -MathHelper.cos(-half_pi + rotateAngleX); // pitch
+		float f3 = MathHelper.sin(-half_pi + rotateAngleX);
+		Vec3 rot = new Vec3(f1 * f2, f3, f * f2);
+
 		return rot;
 	}
-	
-	private float[] calculateAngleAndDistance(Vec3 point, float rotationPointX, float rotationPointY, float rotationPointZ) { 
+
+	private float[] calculateAngleAndDistance(Vec3 point, float rotationPointX, float rotationPointY, float rotationPointZ) {
 		double xDifR = point.xCoord - rotationPointX;
 		double yDifR = point.yCoord - rotationPointY;
 		double zDifR = point.zCoord - rotationPointZ;
-		float distR = (float) Math.sqrt( Math.pow(xDifR, 2) + Math.pow(yDifR, 2) + Math.pow(zDifR, 2));
+		float distR = (float) Math.sqrt(Math.pow(xDifR, 2) + Math.pow(yDifR, 2) + Math.pow(zDifR, 2));
 		float angleXR = (float) Math.atan2(xDifR, yDifR);
 		float angleYR = (float) Math.asin(zDifR / distR);
-		
+
 		return new float[] { distR, angleYR, angleXR };
 	}
 
@@ -285,19 +284,20 @@ public class Skeletal extends Module {
 		if (model.isRiding) {
 			// perna direita
 			modelsRot[0] = new ModelRotations(scale, model.bipedRightLeg.height, -model.bipedLeftLeg.rotateAngleX, model.bipedLeftLeg.rotateAngleY,
-					model.bipedLeftLeg.rotateAngleZ, model.bipedRightLeg.rotationPointX, model.bipedRightLeg.rotationPointY, model.bipedRightLeg.rotationPointZ);
+					model.bipedLeftLeg.rotateAngleZ, model.bipedRightLeg.rotationPointX, model.bipedRightLeg.rotationPointY,
+					model.bipedRightLeg.rotationPointZ);
 			// perna esquerda
 			modelsRot[1] = new ModelRotations(scale, model.bipedLeftLeg.height, -model.bipedRightLeg.rotateAngleX, model.bipedRightLeg.rotateAngleY,
 					model.bipedRightLeg.rotateAngleZ, model.bipedLeftLeg.rotationPointX, model.bipedLeftLeg.rotationPointY, model.bipedLeftLeg.rotationPointZ);
 		} else {
 			// perna direita
 			modelsRot[0] = new ModelRotations(scale, model.bipedRightLeg.height, model.bipedRightLeg.rotateAngleX, model.bipedRightLeg.rotateAngleY,
-					model.bipedRightLeg.rotateAngleZ, model.bipedRightLeg.rotationPointX, model.bipedRightLeg.rotationPointY, model.bipedRightLeg.rotationPointZ);
+					model.bipedRightLeg.rotateAngleZ, model.bipedRightLeg.rotationPointX, model.bipedRightLeg.rotationPointY,
+					model.bipedRightLeg.rotationPointZ);
 			// perna esquerda
 			modelsRot[1] = new ModelRotations(scale, model.bipedLeftLeg.height, model.bipedLeftLeg.rotateAngleX, model.bipedLeftLeg.rotateAngleY,
 					model.bipedLeftLeg.rotateAngleZ, model.bipedLeftLeg.rotationPointX, model.bipedLeftLeg.rotationPointY, model.bipedLeftLeg.rotationPointZ);
 		}
-			
 
 		if (sneak) {
 			// corpo
@@ -310,7 +310,7 @@ public class Skeletal extends Module {
 			// braço esquerdo
 			modelsRot[4] = new ModelRotations(scale, model.bipedLeftArm.height - 2, model.bipedLeftArm.rotateAngleX, model.bipedLeftArm.rotateAngleY,
 					model.bipedLeftArm.rotateAngleZ, model.bipedLeftArm.rotationPointX, model.bipedLeftArm.rotationPointY, model.bipedLeftArm.rotationPointZ);
-			
+
 		} else {
 			// corpo
 			modelsRot[2] = new ModelRotations(scale, model.bipedBody.height, model.bipedBody.rotateAngleX, model.bipedBody.rotateAngleY,
@@ -322,42 +322,43 @@ public class Skeletal extends Module {
 			// braço esquerdo
 			modelsRot[4] = new ModelRotations(scale, model.bipedLeftArm.height - 2, -model.bipedRightArm.rotateAngleX, model.bipedRightArm.rotateAngleY,
 					-model.bipedRightArm.rotateAngleZ, model.bipedLeftArm.rotationPointX, model.bipedLeftArm.rotationPointY, model.bipedLeftArm.rotationPointZ);
-			
+
 		}
-		
+
 		if (connectBones) {
-			//começo do corpo
+			// começo do corpo
 			Vec3 vecBody = new Vec3(model.bipedBody.rotationPointX, model.bipedBody.rotationPointY, model.bipedBody.rotationPointZ);
-			//vetor de direcao com os angulo. nao considera z porque fodase
-	        Vec3 vecDirectional = calculateRotation(model.bipedBody.rotateAngleX, model.bipedBody.rotateAngleY);
-		
-	        //final do corpo
-			Vec3 vecBodyEnd = vecBody.addVector(vecDirectional.xCoord * model.bipedBody.height, 
-					-vecDirectional.yCoord * model.bipedBody.height, 
+			// vetor de direcao com os angulo. nao considera z porque fodase
+			Vec3 vecDirectional = calculateRotation(model.bipedBody.rotateAngleX, model.bipedBody.rotateAngleY);
+
+			// final do corpo
+			Vec3 vecBodyEnd = vecBody.addVector(vecDirectional.xCoord * model.bipedBody.height, -vecDirectional.yCoord * model.bipedBody.height,
 					-vecDirectional.zCoord * model.bipedBody.height);
-			
-			//começo do corpo + y dos braço
+
+			// começo do corpo + y dos braço
 			float bodyArmDif = model.bipedLeftArm.rotationPointY - model.bipedBody.rotationPointY;
-			Vec3 vecBodyArms = vecBody.addVector(vecDirectional.xCoord * bodyArmDif, 
-					-vecDirectional.yCoord * bodyArmDif, 
-					-vecDirectional.zCoord * bodyArmDif);
-			 
-			//perna direita -> final corpo
-			float[] rightLeg = calculateAngleAndDistance(vecBodyEnd, model.bipedRightLeg.rotationPointX, model.bipedRightLeg.rotationPointY, model.bipedRightLeg.rotationPointZ);				
-			modelsRot[5] = new ModelRotations(scale, rightLeg[0], rightLeg[1], model.bipedRightLeg.rotateAngleY,
-					-rightLeg[2], model.bipedRightLeg.rotationPointX, model.bipedRightLeg.rotationPointY, model.bipedRightLeg.rotationPointZ);
-			//perna esquerda -> final corpo
-			float[] leftLeg = calculateAngleAndDistance(vecBodyEnd, model.bipedLeftLeg.rotationPointX, model.bipedLeftLeg.rotationPointY, model.bipedLeftLeg.rotationPointZ);				
-			modelsRot[6] = new ModelRotations(scale, leftLeg[0], leftLeg[1], model.bipedLeftLeg.rotateAngleY,
-					-leftLeg[2], model.bipedLeftLeg.rotationPointX, model.bipedLeftLeg.rotationPointY, model.bipedLeftLeg.rotationPointZ);
-			//braço esquerdo -> corpo
-			float[] leftArm = calculateAngleAndDistance(vecBodyArms, model.bipedLeftArm.rotationPointX, model.bipedLeftArm.rotationPointY, model.bipedLeftArm.rotationPointZ);				
-			modelsRot[7] = new ModelRotations(scale, leftArm[0], leftArm[1], 0f,
-					-leftArm[2], model.bipedLeftArm.rotationPointX, model.bipedLeftArm.rotationPointY, model.bipedLeftArm.rotationPointZ);
-			//braço direito -> corpo
-			float[] rightArm = calculateAngleAndDistance(vecBodyArms, model.bipedRightArm.rotationPointX, model.bipedRightArm.rotationPointY, model.bipedRightArm.rotationPointZ);				
-			modelsRot[8] = new ModelRotations(scale, rightArm[0], rightArm[1], 0f,
-					-rightArm[2], model.bipedRightArm.rotationPointX, model.bipedRightArm.rotationPointY, model.bipedRightArm.rotationPointZ);
+			Vec3 vecBodyArms = vecBody.addVector(vecDirectional.xCoord * bodyArmDif, -vecDirectional.yCoord * bodyArmDif, -vecDirectional.zCoord * bodyArmDif);
+
+			// perna direita -> final corpo
+			float[] rightLeg = calculateAngleAndDistance(vecBodyEnd, model.bipedRightLeg.rotationPointX, model.bipedRightLeg.rotationPointY,
+					model.bipedRightLeg.rotationPointZ);
+			modelsRot[5] = new ModelRotations(scale, rightLeg[0], rightLeg[1], model.bipedRightLeg.rotateAngleY, -rightLeg[2],
+					model.bipedRightLeg.rotationPointX, model.bipedRightLeg.rotationPointY, model.bipedRightLeg.rotationPointZ);
+			// perna esquerda -> final corpo
+			float[] leftLeg = calculateAngleAndDistance(vecBodyEnd, model.bipedLeftLeg.rotationPointX, model.bipedLeftLeg.rotationPointY,
+					model.bipedLeftLeg.rotationPointZ);
+			modelsRot[6] = new ModelRotations(scale, leftLeg[0], leftLeg[1], model.bipedLeftLeg.rotateAngleY, -leftLeg[2], model.bipedLeftLeg.rotationPointX,
+					model.bipedLeftLeg.rotationPointY, model.bipedLeftLeg.rotationPointZ);
+			// braço esquerdo -> corpo
+			float[] leftArm = calculateAngleAndDistance(vecBodyArms, model.bipedLeftArm.rotationPointX, model.bipedLeftArm.rotationPointY,
+					model.bipedLeftArm.rotationPointZ);
+			modelsRot[7] = new ModelRotations(scale, leftArm[0], leftArm[1], 0f, -leftArm[2], model.bipedLeftArm.rotationPointX,
+					model.bipedLeftArm.rotationPointY, model.bipedLeftArm.rotationPointZ);
+			// braço direito -> corpo
+			float[] rightArm = calculateAngleAndDistance(vecBodyArms, model.bipedRightArm.rotationPointX, model.bipedRightArm.rotationPointY,
+					model.bipedRightArm.rotationPointZ);
+			modelsRot[8] = new ModelRotations(scale, rightArm[0], rightArm[1], 0f, -rightArm[2], model.bipedRightArm.rotationPointX,
+					model.bipedRightArm.rotationPointY, model.bipedRightArm.rotationPointZ);
 		}
 
 		modelRotations.put(e.getEntity(), modelsRot);
@@ -367,7 +368,6 @@ public class Skeletal extends Module {
 		float scale, height;
 		float memberAngleX, memberAngleY, memberAngleZ;
 		float memberRotPointX, memberRotPointY, memberRotPointZ;
-		
 
 		public ModelRotations(float scale, float height, float legAngleX, float legAngleY, float legAngleZ, float legRotationX, float legRotationY,
 				float legRotationZ) {

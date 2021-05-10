@@ -1,7 +1,6 @@
 package elixe.modules.combat;
 
 import elixe.events.OnGetCollisionBorderEvent;
-import elixe.events.OnPlayerAnglesEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleBoolean;
@@ -20,6 +19,7 @@ public class Hitbox extends Module {
 	
 	float expandAmount;
 	ModuleFloat expandAmountOption = new ModuleFloat("expand amount", 0.1f, 0f, 1f) {
+		
 		public void valueChanged() {
 			expandAmount = (float) this.getValue();
 		}
@@ -27,6 +27,7 @@ public class Hitbox extends Module {
 	
 	boolean requireWeapon;
 	ModuleBoolean requireWeaponOption = new ModuleBoolean("require weapon", false) {
+		
 		public void valueChanged() {
 			requireWeapon = (boolean) this.getValue();
 		}

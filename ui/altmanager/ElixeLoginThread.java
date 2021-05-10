@@ -26,7 +26,7 @@ public final class ElixeLoginThread extends Thread {
 			ignorePass = true;
 			this.password = "elixe";
 		}
-		this.status = (Object) ((Object) EnumChatFormatting.GRAY) + "Waiting...";
+		this.status = (EnumChatFormatting.GRAY) + "Waiting...";
 	}
 
 	private Session createSession(String username, String password) {
@@ -51,24 +51,24 @@ public final class ElixeLoginThread extends Thread {
 
 	boolean ignorePass = false;
 
-	@Override
+	
 	public void run() {
 		if (this.username.equals("")) {
-			this.status = (Object) ((Object) EnumChatFormatting.RED) + "No username. (?)";
+			this.status = (EnumChatFormatting.RED) + "No username. (?)";
 			return;
 		} else {
 			if (this.password.equals("") && !ignorePass) {
 				this.mc.setSession(new Session(this.username, "", "", "mojang"));
-				this.status = (Object) ((Object) EnumChatFormatting.GREEN) + "Logged in. (" + this.username
+				this.status = (EnumChatFormatting.GREEN) + "Logged in. (" + this.username
 						+ " - offline name)";
 				return;
 			}
-			this.status = (Object) ((Object) EnumChatFormatting.YELLOW) + "Logging in...";
+			this.status = (EnumChatFormatting.YELLOW) + "Logging in...";
 			Session auth = this.createSession(this.username, this.password);
 			if (auth == null) {
-				this.status = (Object) ((Object) EnumChatFormatting.RED) + "Login failed!";
+				this.status = (EnumChatFormatting.RED) + "Login failed!";
 			} else {
-				this.status = (Object) ((Object) EnumChatFormatting.GREEN) + "Logged in. (" + auth.getUsername() + ")";
+				this.status = (EnumChatFormatting.GREEN) + "Logged in. (" + auth.getUsername() + ")";
 				this.mc.setSession(auth);
 			}
 		}

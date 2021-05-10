@@ -2,7 +2,6 @@ package elixe.events;
 
 import me.zero.alpine.event.type.Cancellable;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.item.ItemStack;
 
 //renderItemInFirstPerson(float) : void - net.minecraft.client.renderer.ItemRenderer
 //L:336

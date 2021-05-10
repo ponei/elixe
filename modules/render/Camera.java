@@ -23,6 +23,7 @@ public class Camera extends Module {
 	
 	boolean clipCamera;
 	ModuleBoolean clipCameraOption = new ModuleBoolean("clip", false) {
+		
 		public void valueChanged() {
 			clipCamera = (boolean) this.getValue();
 		}
@@ -30,6 +31,7 @@ public class Camera extends Module {
 	
 	float distanceCamera;
 	ModuleFloat distanceCameraOption = new ModuleFloat("distance", 4f, 0f, 15f) {
+		
 		public void valueChanged() {
 			distanceCamera = (float) this.getValue();
 		}
@@ -58,19 +60,19 @@ public class Camera extends Module {
             }
 
             if (!clipCamera) {
-            double d4 = (double)(-MathHelper.sin(f1 / 180.0F * (float)Math.PI) * MathHelper.cos(f2 / 180.0F * (float)Math.PI)) * d3;
-            double d5 = (double)(MathHelper.cos(f1 / 180.0F * (float)Math.PI) * MathHelper.cos(f2 / 180.0F * (float)Math.PI)) * d3;
-            double d6 = (double)(-MathHelper.sin(f2 / 180.0F * (float)Math.PI)) * d3;
+            double d4 = -MathHelper.sin(f1 / 180.0F * (float)Math.PI) * MathHelper.cos(f2 / 180.0F * (float)Math.PI) * d3;
+            double d5 = MathHelper.cos(f1 / 180.0F * (float)Math.PI) * MathHelper.cos(f2 / 180.0F * (float)Math.PI) * d3;
+            double d6 = (-MathHelper.sin(f2 / 180.0F * (float)Math.PI)) * d3;
 
             for (int i = 0; i < 8; ++i)
             {
-                float f3 = (float)((i & 1) * 2 - 1);
-                float f4 = (float)((i >> 1 & 1) * 2 - 1);
-                float f5 = (float)((i >> 2 & 1) * 2 - 1);
+                float f3 = (i & 1) * 2 - 1;
+                float f4 = (i >> 1 & 1) * 2 - 1;
+                float f5 = (i >> 2 & 1) * 2 - 1;
                 f3 = f3 * 0.1F;
                 f4 = f4 * 0.1F;
                 f5 = f5 * 0.1F;
-                MovingObjectPosition movingobjectposition = this.mc.theWorld.rayTraceBlocks(new Vec3(x + (double)f3, y + (double)f4, z + (double)f5), new Vec3(x - d4 + (double)f3 + (double)f5, y - d6 + (double)f4, z - d5 + (double)f5));
+                MovingObjectPosition movingobjectposition = this.mc.theWorld.rayTraceBlocks(new Vec3(x + f3, y + f4, z + f5), new Vec3(x - d4 + f3 + f5, y - d6 + f4, z - d5 + f5));
 
                 if (movingobjectposition != null)
                 {

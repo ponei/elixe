@@ -1,11 +1,5 @@
 package elixe;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.security.NoSuchAlgorithmException;
-
 import elixe.file.FileManager;
 import elixe.modules.ModuleManager;
 import elixe.utils.player.PlayerConditionals;
@@ -19,7 +13,7 @@ public class Elixe {
 	public final EventBus EVENT_BUS = new EventManager();
 	public final ModuleManager MODULE_MANAGER;
 	public final FileManager FILE_MANAGER;
-	
+
 	public final Rotations ROTATIONS;
 	public final PlayerConditionals CONDITIONALS;
 
@@ -27,16 +21,16 @@ public class Elixe {
 
 	public String build = "betatest7";
 
-	//startGame() : void - net.minecraft.client.Minecraft
-	//L:552
+	// startGame() : void - net.minecraft.client.Minecraft
+	// L:552
 	public Elixe(Minecraft mc) {
 		INSTANCE = this;
-		
+
 		this.mc = mc;
-		
+
 		this.ROTATIONS = new Rotations();
 		this.CONDITIONALS = new PlayerConditionals();
-		
+
 		this.MODULE_MANAGER = new ModuleManager();
 		this.FILE_MANAGER = new FileManager();
 
@@ -47,9 +41,8 @@ public class Elixe {
 
 		EVENT_BUS.subscribe(CONDITIONALS);
 		EVENT_BUS.subscribe(ROTATIONS);
-		
+
 		EVENT_BUS.subscribe(MODULE_MANAGER);
 	}
-
 
 }

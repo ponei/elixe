@@ -3,7 +3,6 @@ package elixe.modules.combat;
 import java.util.Random;
 
 import elixe.events.OnPacketReceiveEvent;
-import elixe.events.OnRenderNameEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleBoolean;
@@ -11,7 +10,6 @@ import elixe.modules.option.ModuleFloat;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 
 public class Velocity extends Module {
 	public Velocity() {
@@ -33,6 +31,7 @@ public class Velocity extends Module {
 
 	float activationChance;
 	ModuleFloat activationChanceOption = new ModuleFloat("chance to reduce", 80f, 0f, 100f) {
+		
 		public void valueChanged() {
 			activationChance = (float) this.getValue();
 		}
@@ -40,6 +39,7 @@ public class Velocity extends Module {
 
 	float horizontalMultiplier;
 	ModuleFloat horizontalMultiplierOption = new ModuleFloat("horizontal multiplier", 0.9f, 0f, 1f) {
+		
 		public void valueChanged() {
 			horizontalMultiplier = (float) this.getValue();
 		}
@@ -47,6 +47,7 @@ public class Velocity extends Module {
 
 	float verticalMultiplier;
 	ModuleFloat verticalMultiplierOption = new ModuleFloat("vertical multiplier", 0.9f, 0f, 1f) {
+		
 		public void valueChanged() {
 			verticalMultiplier = (float) this.getValue();
 		}
@@ -54,6 +55,7 @@ public class Velocity extends Module {
 
 	boolean needSprint;
 	ModuleBoolean needSprintOption = new ModuleBoolean("require sprint", false) {
+		
 		public void valueChanged() {
 			needSprint = (boolean) this.getValue();
 		}
@@ -61,6 +63,7 @@ public class Velocity extends Module {
 
 	boolean needSpeed;
 	ModuleBoolean needSpeedOption = new ModuleBoolean("require speed", false) {
+		
 		public void valueChanged() {
 			needSpeed = (boolean) this.getValue();
 		}
@@ -68,6 +71,7 @@ public class Velocity extends Module {
 
 	boolean needAttackButton;
 	ModuleBoolean needAttackButtonOption = new ModuleBoolean("require attack button", false) {
+		
 		public void valueChanged() {
 			needAttackButton = (boolean) this.getValue();
 		}
@@ -75,6 +79,7 @@ public class Velocity extends Module {
 
 	boolean needWeapon;
 	ModuleBoolean needWeaponOption = new ModuleBoolean("require weapon", false) {
+		
 		public void valueChanged() {
 			needWeapon = (boolean) this.getValue();
 		}
@@ -82,6 +87,7 @@ public class Velocity extends Module {
 
 	boolean waterCheck;
 	ModuleBoolean waterCheckOption = new ModuleBoolean("water check", false) {
+		
 		public void valueChanged() {
 			waterCheck = (boolean) this.getValue();
 		}
@@ -89,6 +95,7 @@ public class Velocity extends Module {
 
 	boolean airCheck;
 	ModuleBoolean airCheckOption = new ModuleBoolean("air check", false) {
+		
 		public void valueChanged() {
 			airCheck = (boolean) this.getValue();
 		}

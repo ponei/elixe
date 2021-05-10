@@ -1,12 +1,9 @@
 package elixe.modules.misc;
 
-import java.nio.FloatBuffer;
-
 import org.lwjgl.opengl.GL11;
 
 import elixe.events.OnRenderItemFirstPersonEvent;
 import elixe.events.OnRenderLayersEvent;
-import elixe.events.OnTickEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleBoolean;
@@ -42,6 +39,7 @@ public class OldAnimations extends Module {
 
 	boolean oldBlockHit = false;
 	ModuleBoolean oldBlockHitOption = new ModuleBoolean("old block hit", false) {
+		
 		public void valueChanged() {
 			oldBlockHit = (boolean) this.getValue();
 		}
@@ -49,6 +47,7 @@ public class OldAnimations extends Module {
 	
 	boolean oldArmorAnimation = false;
 	ModuleBoolean oldArmorAnimationOption = new ModuleBoolean("old armor animation", false) {
+		
 		public void valueChanged() {
 			oldArmorAnimation = (boolean) this.getValue();
 		}
@@ -56,6 +55,7 @@ public class OldAnimations extends Module {
 	
 	float redIntensity = 0.3f;
 	ModuleFloat redIntensityOption = new ModuleFloat("red intensity", 0.3f, 0f, 1f) {
+		
 		public void valueChanged() {
 			redIntensity = (float) this.getValue();
 		}
@@ -226,10 +226,10 @@ public class OldAnimations extends Module {
             }
             else
             {
-                float f1 = (float)(i >> 24 & 255) / 255.0F;
-                float f2 = (float)(i >> 16 & 255) / 255.0F;
-                float f3 = (float)(i >> 8 & 255) / 255.0F;
-                float f4 = (float)(i & 255) / 255.0F;
+                float f1 = (i >> 24 & 255) / 255.0F;
+                float f2 = (i >> 16 & 255) / 255.0F;
+                float f3 = (i >> 8 & 255) / 255.0F;
+                float f4 = (i & 255) / 255.0F;
                 rendererLiving.brightnessBuffer.put(f2);
                 rendererLiving.brightnessBuffer.put(f3);
                 rendererLiving.brightnessBuffer.put(f4);
@@ -242,10 +242,10 @@ public class OldAnimations extends Module {
             }
 
             rendererLiving.brightnessBuffer.flip();
-            GL11.glTexEnv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_COLOR, (FloatBuffer)rendererLiving.brightnessBuffer);
+            GL11.glTexEnv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_COLOR, rendererLiving.brightnessBuffer);
             GlStateManager.setActiveTexture(OpenGlHelper.GL_TEXTURE2);
             GlStateManager.enableTexture2D();
-            GlStateManager.bindTexture(rendererLiving.field_177096_e.getGlTextureId());
+            GlStateManager.bindTexture(RendererLivingEntity.field_177096_e.getGlTextureId());
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, OpenGlHelper.GL_COMBINE);
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, OpenGlHelper.GL_COMBINE_RGB, GL11.GL_MODULATE);
             GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, OpenGlHelper.GL_SOURCE0_RGB, OpenGlHelper.GL_PREVIOUS);

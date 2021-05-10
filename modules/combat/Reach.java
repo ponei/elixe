@@ -6,13 +6,11 @@ import java.util.Random;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 
-import elixe.events.OnBrightnessEntityEvent;
 import elixe.events.OnGetMouseOverEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleFloat;
-import elixe.modules.option.ModuleInteger;
 import elixe.utils.player.EntityUtils;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
@@ -20,19 +18,12 @@ import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
-import net.minecraft.item.ItemAxe;
-import net.minecraft.item.ItemHoe;
-import net.minecraft.item.ItemPickaxe;
-import net.minecraft.item.ItemSpade;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EntitySelectors;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
-import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 
 public class Reach extends Module {
 	public Reach() {
@@ -57,6 +48,7 @@ public class Reach extends Module {
 
 	float activationChance;
 	ModuleFloat activationChanceOption = new ModuleFloat("chance to activate", 80f, 0f, 100f) {
+
 		public void valueChanged() {
 			activationChance = (float) this.getValue();
 		}
@@ -105,13 +97,15 @@ public class Reach extends Module {
 
 	boolean needSprint;
 	ModuleBoolean needSprintOption = new ModuleBoolean("require sprint", false) {
+
 		public void valueChanged() {
 			needSprint = (boolean) this.getValue();
 		}
 	};
-	
+
 	boolean needSpeed;
 	ModuleBoolean needSpeedOption = new ModuleBoolean("require speed", false) {
+
 		public void valueChanged() {
 			needSpeed = (boolean) this.getValue();
 		}
@@ -119,6 +113,7 @@ public class Reach extends Module {
 
 	boolean needWeapon;
 	ModuleBoolean needWeaponOption = new ModuleBoolean("require weapon", false) {
+
 		public void valueChanged() {
 			needWeapon = (boolean) this.getValue();
 		}
@@ -126,6 +121,7 @@ public class Reach extends Module {
 
 	boolean ignoreBlocks;
 	ModuleBoolean ignoreBlocksOption = new ModuleBoolean("ignore blocks", false) {
+
 		public void valueChanged() {
 			ignoreBlocks = (boolean) this.getValue();
 		}
@@ -133,6 +129,7 @@ public class Reach extends Module {
 
 	boolean ignoreNaked;
 	ModuleBoolean ignoreNakedOption = new ModuleBoolean("ignore naked", false) {
+
 		public void valueChanged() {
 			ignoreNaked = (boolean) this.getValue();
 		}
@@ -140,6 +137,7 @@ public class Reach extends Module {
 
 	boolean waterCheck;
 	ModuleBoolean waterCheckOption = new ModuleBoolean("water check", false) {
+
 		public void valueChanged() {
 			waterCheck = (boolean) this.getValue();
 		}
@@ -147,13 +145,15 @@ public class Reach extends Module {
 
 	boolean yCheck;
 	ModuleBoolean yCheckOption = new ModuleBoolean("y check", false) {
+
 		public void valueChanged() {
 			yCheck = (boolean) this.getValue();
 		}
 	};
-	
+
 	boolean airCheck;
 	ModuleBoolean airCheckOption = new ModuleBoolean("air check", false) {
+
 		public void valueChanged() {
 			airCheck = (boolean) this.getValue();
 		}
@@ -170,13 +170,13 @@ public class Reach extends Module {
 				return;
 			}
 		}
-		
+
 		if (needSpeed) {
 			if (!conditionals.hasSpeed()) {
 				return;
 			}
 		}
-		
+
 		if (needWeapon) {
 			if (!conditionals.isHoldingWeapon()) {
 				return;
@@ -188,14 +188,12 @@ public class Reach extends Module {
 				return;
 			}
 		}
-		
+
 		if (airCheck) {
 			if (conditionals.isOnAir()) {
 				return;
 			}
 		}
-
-		
 
 		e.cancel();
 		EntityRenderer entityRenderer = e.getEntityRenderer();
@@ -210,7 +208,7 @@ public class Reach extends Module {
 			// novo reach
 			float customReach = reachMin + r.nextFloat() * (reachMax - reachMin);
 
-			double d0 = (double) mc.playerController.getBlockReachDistance();
+			double d0 = mc.playerController.getBlockReachDistance();
 			if (customReach > d0) {
 				d0 = customReach;
 			}
@@ -239,9 +237,9 @@ public class Reach extends Module {
 			float f = 1.0F;
 
 			List<Entity> list = this.mc.theWorld.getEntitiesInAABBexcluding(entity,
-					entity.getEntityBoundingBox().addCoord(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0)
-							.expand((double) f, (double) f, (double) f),
+					entity.getEntityBoundingBox().addCoord(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0).expand(f, f, f),
 					Predicates.and(EntitySelectors.NOT_SPECTATING, new Predicate<Entity>() {
+
 						public boolean apply(Entity p_apply_1_) {
 							return p_apply_1_.canBeCollidedWith();
 						}
@@ -250,10 +248,9 @@ public class Reach extends Module {
 			double d2 = d1;
 
 			for (int j = 0; j < list.size(); ++j) {
-				Entity entity1 = (Entity) list.get(j);
+				Entity entity1 = list.get(j);
 				float f1 = entity1.getCollisionBorderSize();
-				AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand((double) f1, (double) f1,
-						(double) f1); // hitbox normalizada
+				AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand(f1, f1, f1); // hitbox normalizada
 				MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32); // hitbox
 																											// contem
 																											// intercept
@@ -306,15 +303,13 @@ public class Reach extends Module {
 			// dá miss caso entidade estiver mais de 3d
 			if (entityRenderer.pointedEntity != null && flag && vec3.distanceTo(vec33) > customReach) {
 				entityRenderer.pointedEntity = null;
-				this.mc.objectMouseOver = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, vec33,
-						(EnumFacing) null, new BlockPos(vec33));
+				this.mc.objectMouseOver = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, vec33, (EnumFacing) null, new BlockPos(vec33));
 			}
 
 			if (entityRenderer.pointedEntity != null && (d2 < d1 || this.mc.objectMouseOver == null)) {
 				this.mc.objectMouseOver = new MovingObjectPosition(entityRenderer.pointedEntity, vec33);
 
-				if (entityRenderer.pointedEntity instanceof EntityLivingBase
-						|| entityRenderer.pointedEntity instanceof EntityItemFrame) {
+				if (entityRenderer.pointedEntity instanceof EntityLivingBase || entityRenderer.pointedEntity instanceof EntityItemFrame) {
 					this.mc.pointedEntity = entityRenderer.pointedEntity;
 				}
 			}

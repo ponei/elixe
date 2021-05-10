@@ -17,8 +17,9 @@ import com.google.gson.JsonPrimitive;
 
 import elixe.Elixe;
 import elixe.file.FileConfig;
-import elixe.modules.Module;
+import elixe.file.FileManager;
 import elixe.modules.AModuleOption;
+import elixe.modules.Module;
 import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleFloat;
@@ -43,6 +44,7 @@ public class ModuleConfig implements FileConfig {
 		}
 	}
 
+	
 	public void loadConfig() throws IOException {
 		JsonObject jsonObject = (JsonObject) new JsonParser().parse(new BufferedReader(new FileReader(dir)));
 
@@ -97,6 +99,7 @@ public class ModuleConfig implements FileConfig {
 		}
 	}
 
+	
 	public void saveConfig() throws IOException {
 		JsonObject jsonObject = new JsonObject();
 
@@ -129,7 +132,7 @@ public class ModuleConfig implements FileConfig {
 		}
 
 		PrintWriter printWriter = new PrintWriter(new FileWriter(dir));
-		printWriter.println(Elixe.INSTANCE.FILE_MANAGER.GSON.toJson(jsonObject));
+		printWriter.println(FileManager.GSON.toJson(jsonObject));
 		printWriter.close();
 	}
 

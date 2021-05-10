@@ -122,7 +122,7 @@ public class InventoryItem implements Comparable<InventoryItem> {
 	}
 	
 	// maior fica na frente
-	@Override
+	
 	public int compareTo(InventoryItem item) {
 		return item.getSize() - size;
 	}

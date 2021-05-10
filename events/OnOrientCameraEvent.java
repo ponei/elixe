@@ -1,8 +1,6 @@
 package elixe.events;
 
 import me.zero.alpine.event.type.Cancellable;
-import me.zero.alpine.listener.EventHandler;
-import me.zero.alpine.listener.Listener;
 import net.minecraft.entity.Entity;
 
 public class OnOrientCameraEvent extends Cancellable {

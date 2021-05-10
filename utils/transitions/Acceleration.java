@@ -12,12 +12,13 @@ public class Acceleration implements ITransition {
 		this.transitionTime = transitionTime;
 	}
 
+	
 	public boolean makeStep(float time) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
+	
 	public void makeTransition() {
 		// TODO Auto-generated method stub
 		

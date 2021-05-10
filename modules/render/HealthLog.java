@@ -6,10 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.lwjgl.opengl.GL11;
-
-import elixe.Elixe;
-import elixe.events.OnBrightnessEntityEvent;
 import elixe.events.OnPacketReceiveEvent;
 import elixe.events.OnRender2DEvent;
 import elixe.modules.Module;
@@ -17,7 +13,6 @@ import elixe.modules.ModuleCategory;
 import elixe.utils.transitions.ITransition;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.DataWatcher.WatchableObject;
 import net.minecraft.network.play.server.S1CPacketEntityMetadata;
 
@@ -29,6 +24,7 @@ public class HealthLog extends Module {
 	}
 	
 
+	
 	public void onDisable() {
 		super.onDisable();
 		healthLogs.clear();

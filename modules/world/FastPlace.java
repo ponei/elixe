@@ -2,12 +2,10 @@ package elixe.modules.world;
 
 import java.util.Random;
 
-import elixe.events.OnPlayerMoveStateEvent;
 import elixe.events.OnRightClickDelayTimerEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleBoolean;
-import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
@@ -24,6 +22,7 @@ public class FastPlace extends Module {
 	
 	int cpsMin;
 	ModuleInteger cpsMinOption = new ModuleInteger("cps min", 6, 0, 20) {
+		
 		public void valueChanged() {
 			int newCps = (int) this.getValue();
 
@@ -45,6 +44,7 @@ public class FastPlace extends Module {
 
 	int cpsMax;
 	ModuleInteger cpsMaxOption = new ModuleInteger("cps max", 10, 0, 20) {
+		
 		public void valueChanged() {
 			int newCps = (int) this.getValue();
 
@@ -65,6 +65,7 @@ public class FastPlace extends Module {
 	
 	boolean needBlock = false;
 	ModuleBoolean needBlockOption = new ModuleBoolean("holding block", false) {
+		
 		public void valueChanged() {
 			needBlock = (boolean) this.getValue();
 		}

@@ -20,6 +20,7 @@ public class InventoryMove extends Module {
 
 	boolean onlyClickGUI = false;
 	ModuleBoolean onlyClickGUIOption = new ModuleBoolean("only clickgui", false) {
+		
 		public void valueChanged() {
 			onlyClickGUI = (boolean) this.getValue();
 		}

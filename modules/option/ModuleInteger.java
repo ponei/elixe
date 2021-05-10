@@ -1,10 +1,6 @@
 package elixe.modules.option;
 
-import java.lang.reflect.Type;
-
 import elixe.modules.AModuleOption;
-import elixe.ui.base.ElixeButtonBase;
-import elixe.ui.clickgui.options.ElixeIntegerButton;
 
 public class ModuleInteger extends AModuleOption {
 	private int value;
@@ -34,9 +30,11 @@ public class ModuleInteger extends AModuleOption {
 	}
 
 	
+	
 	public Object getValue() {
 		return value;
 	}
+	
 	
 	public void setValue(Object v) {
 		this.value = (int) v;

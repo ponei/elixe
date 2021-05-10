@@ -5,7 +5,6 @@ import elixe.events.OnFireFirstPersonEvent;
 import elixe.events.OnNauseaScaleEvent;
 import elixe.events.OnOverlayDrawEvent;
 import elixe.events.OnPacketReceiveEvent;
-import elixe.events.OnTickEvent;
 import elixe.modules.AModuleOption;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
@@ -14,15 +13,7 @@ import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.monster.EntitySlime;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.S03PacketTimeUpdate;
-import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
 
 public class Aesthetics extends Module {
@@ -50,6 +41,7 @@ public class Aesthetics extends Module {
 	// trovao
 	float thunderStrength;
 	ModuleFloat thunderStrengthOption = new ModuleFloat("thunder strength", 0.5f, 0f, 4f) {
+		
 		public void valueChanged() {
 			thunderStrength = (float) this.getValue();
 			setCustomStates();
@@ -58,6 +50,7 @@ public class Aesthetics extends Module {
 
 	boolean thunder;
 	ModuleBoolean thunderOption = new ModuleBoolean("thundering", false, true) {
+		
 		public void valueChanged() {
 			thunder = (boolean) this.getValue();
 			setCustomStates();
@@ -69,6 +62,7 @@ public class Aesthetics extends Module {
 	// chuva
 	float rainStrength;
 	ModuleFloat rainStrengthOption = new ModuleFloat("rain strength", 0.5f, 0f, 4f) {
+		
 		public void valueChanged() {
 			rainStrength = (float) this.getValue();
 			setCustomStates();
@@ -77,6 +71,7 @@ public class Aesthetics extends Module {
 
 	boolean rain;
 	ModuleBoolean rainOption = new ModuleBoolean("raining", false, true) {
+		
 		public void valueChanged() {
 			rain = (boolean) this.getValue();
 			setCustomStates();
@@ -94,6 +89,7 @@ public class Aesthetics extends Module {
 	// tempo
 	int time;
 	ModuleInteger timeOption = new ModuleInteger("time value", 12000, 0, 24000) {
+		
 		public void valueChanged() {
 			time = (int) this.getValue();
 			setCustomStates();
@@ -102,6 +98,7 @@ public class Aesthetics extends Module {
 
 	boolean changeTime;
 	ModuleBoolean changeTimeOption = new ModuleBoolean("change time", false, true) {
+		
 		public void valueChanged() {
 			changeTime = (boolean) this.getValue();
 			setCustomStates();
@@ -119,6 +116,7 @@ public class Aesthetics extends Module {
 
 	boolean hideScoreboard;
 	ModuleBoolean hideScoreboardOption = new ModuleBoolean("hide scoreboard", false) {
+		
 		public void valueChanged() {
 			hideScoreboard = (boolean) this.getValue();
 		}
@@ -126,6 +124,7 @@ public class Aesthetics extends Module {
 
 	float fireHeight;
 	ModuleFloat fireHeightOption = new ModuleFloat("fire height", -0.7f, -1f, 0f) {
+		
 		public void valueChanged() {
 			fireHeight = (float) this.getValue();
 		}
@@ -133,6 +132,7 @@ public class Aesthetics extends Module {
 
 	boolean ignoreNausea;
 	ModuleBoolean ignoreNauseaOption = new ModuleBoolean("ignore nausea", false) {
+		
 		public void valueChanged() {
 			ignoreNausea = (boolean) this.getValue();
 		}
@@ -140,17 +140,20 @@ public class Aesthetics extends Module {
 
 	boolean ignorePumpkin;
 	ModuleBoolean ignorePumpkinOption = new ModuleBoolean("ignore pumpkin", false) {
+		
 		public void valueChanged() {
 			ignorePumpkin = (boolean) this.getValue();
 		}
 	};
 
+	
 	public void onEnable() {
 		super.onEnable();
 		saveCurrentState();
 		setCustomStates();
 	}
 
+	
 	public void onDisable() {
 		super.onDisable();
 		restoreOldState();

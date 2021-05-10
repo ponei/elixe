@@ -1,7 +1,12 @@
 package elixe.commands;
 
 import elixe.Elixe;
-import elixe.commands.action.*;
+import elixe.commands.action.BindAction;
+import elixe.commands.action.HelpAction;
+import elixe.commands.action.IAction;
+import elixe.commands.action.PingAction;
+import elixe.commands.action.ToggleAction;
+import elixe.commands.action.ValueAction;
 import elixe.modules.Module;
 import elixe.utils.misc.ChatUtils;
 import net.minecraft.client.Minecraft;

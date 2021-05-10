@@ -3,20 +3,14 @@ package elixe.modules.movement;
 import org.lwjgl.input.Keyboard;
 
 import elixe.events.OnGoingToFallEvent;
-import elixe.events.OnLivingUpdateEvent;
 import elixe.events.OnPlayerMoveStateEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
-import elixe.ui.clickgui.ElixeMenu;
-import elixe.utils.misc.BlockUtils;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
-import net.minecraft.client.gui.GuiChat;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 
 public class SafeWalk extends Module {
 	public SafeWalk() {
@@ -33,6 +27,7 @@ public class SafeWalk extends Module {
 
 	boolean onAir = false;
 	ModuleBoolean onAirOption = new ModuleBoolean("on air", false) {
+		
 		public void valueChanged() {
 			onAir = (boolean) this.getValue();
 		}
@@ -40,6 +35,7 @@ public class SafeWalk extends Module {
 
 	boolean sneakAtEdge = false;
 	ModuleBoolean sneakAtEdgeOption = new ModuleBoolean("sneak at edge", false) {
+		
 		public void valueChanged() {
 			sneakAtEdge = (boolean) this.getValue();
 		}
@@ -47,6 +43,7 @@ public class SafeWalk extends Module {
 
 	int sneakCooldown;
 	ModuleInteger sneakCooldownOption = new ModuleInteger("sneak cooldown", 2, 0, 6) {
+		
 		public void valueChanged() {
 			sneakCooldown = (int) this.getValue();
 		}
@@ -54,6 +51,7 @@ public class SafeWalk extends Module {
 
 	boolean needPitch = false;
 	ModuleBoolean needPitchOption = new ModuleBoolean("require pitch", false) {
+		
 		public void valueChanged() {
 			needPitch = (boolean) this.getValue();
 		}
@@ -61,6 +59,7 @@ public class SafeWalk extends Module {
 
 	float minimumPitch;
 	ModuleFloat minimumPitchOption = new ModuleFloat("minimum pitch", 40f, 0f, 90f) {
+		
 		public void valueChanged() {
 			minimumPitch = (float) this.getValue();
 		}
@@ -68,6 +67,7 @@ public class SafeWalk extends Module {
 
 	boolean needBlock = false;
 	ModuleBoolean needBlockOption = new ModuleBoolean("holding block", false) {
+		
 		public void valueChanged() {
 			needBlock = (boolean) this.getValue();
 		}
@@ -75,11 +75,13 @@ public class SafeWalk extends Module {
 
 	boolean needBackwards = false;
 	ModuleBoolean needBackwardsOption = new ModuleBoolean("holding backwards", false) {
+		
 		public void valueChanged() {
 			needBackwards = (boolean) this.getValue();
 		}
 	};
 
+	
 	public void onEnable() {
 		super.onEnable();
 		sneakCool = 0;

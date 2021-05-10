@@ -1,11 +1,8 @@
 package elixe.modules.render;
 
-import java.nio.FloatBuffer;
-
 import org.lwjgl.opengl.GL11;
 
 import elixe.events.OnBrightnessEntityEvent;
-import elixe.events.OnRender3DEvent;
 import elixe.events.OnRenderEntityEvent;
 import elixe.events.OnTickEvent;
 import elixe.modules.AModuleOption;
@@ -15,7 +12,6 @@ import elixe.modules.option.ModuleArray;
 import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
 import elixe.modules.option.ModuleColor;
-import elixe.modules.option.ModuleKey;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
 import net.minecraft.client.renderer.GlStateManager;
@@ -28,8 +24,6 @@ import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.src.Config;
-import net.optifine.shaders.Shaders;
 
 public class Chams extends Module {
 
@@ -51,6 +45,7 @@ public class Chams extends Module {
 	boolean[] allowedEntities;
 	ModuleArrayMultiple allowedEntitiesOption = new ModuleArrayMultiple("allowed entities", new boolean[] { true, false, false, false },
 			new String[] { "player", "animal", "monster", "villager" }) {
+		
 		public void valueChanged() {
 			allowedEntities = (boolean[]) this.getValue();
 		}
@@ -60,6 +55,7 @@ public class Chams extends Module {
 
 	boolean addLight;
 	ModuleBoolean lightOption = new ModuleBoolean("add light", false) {
+		
 		public void valueChanged() {
 			addLight = (boolean) this.getValue();
 		}
@@ -67,6 +63,7 @@ public class Chams extends Module {
 
 	boolean useColor;
 	ModuleBoolean useColorOption = new ModuleBoolean("use color", false) {
+		
 		public void valueChanged() {
 			useColor = (boolean) this.getValue();
 		}
@@ -74,6 +71,7 @@ public class Chams extends Module {
 
 	float[] visibleColor;
 	ModuleColor visibleColorOption = new ModuleColor("visible color", 255, 0, 0) {
+		
 		public void valueChanged() {
 			visibleColor = this.getGLRGB();
 		}
@@ -81,6 +79,7 @@ public class Chams extends Module {
 
 	float[] invisibleColor;
 	ModuleColor invisibleColorOption = new ModuleColor("invisible color", 150, 0, 0) {
+		
 		public void valueChanged() {
 			invisibleColor = this.getGLRGB();
 		}
@@ -88,6 +87,7 @@ public class Chams extends Module {
 
 	boolean flatColor;
 	ModuleBoolean flatColorOption = new ModuleBoolean("flat color", false) {
+		
 		public void valueChanged() {
 			flatColor = (boolean) this.getValue();
 		}
@@ -95,6 +95,7 @@ public class Chams extends Module {
 
 	boolean hurtColor;
 	ModuleBoolean hurtColorOption = new ModuleBoolean("hurt color", false) {
+		
 		public void valueChanged() {
 			hurtColor = (boolean) this.getValue();
 		}
@@ -105,6 +106,7 @@ public class Chams extends Module {
 	
 	int coloringMode;
 	ModuleArray coloringModeOption = new ModuleArray("coloring mode", 0, new String[] { "color", "buffer" }, true) {
+		
 		public void valueChanged() {
 			coloringMode = (int) this.getValue();
 			updateVisibilityOfOptions(coloringModuleOptions, coloringMode == 0);
@@ -265,10 +267,10 @@ public class Chams extends Module {
 		renderer.brightnessBuffer.put(1F);
 
 		renderer.brightnessBuffer.flip();
-		GL11.glTexEnv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_COLOR, (FloatBuffer) renderer.brightnessBuffer);
+		GL11.glTexEnv(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_COLOR, renderer.brightnessBuffer);
 		GlStateManager.setActiveTexture(OpenGlHelper.GL_TEXTURE2);
 		GlStateManager.enableTexture2D();
-		GlStateManager.bindTexture(renderer.field_177096_e.getGlTextureId());
+		GlStateManager.bindTexture(RendererLivingEntity.field_177096_e.getGlTextureId());
 		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, OpenGlHelper.GL_COMBINE);
 		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, OpenGlHelper.GL_COMBINE_RGB, GL11.GL_MODULATE);
 		GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, OpenGlHelper.GL_SOURCE0_RGB, OpenGlHelper.GL_PREVIOUS);

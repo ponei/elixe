@@ -1,15 +1,12 @@
 package elixe.modules.render;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 
 import org.lwjgl.opengl.GL11;
 
 import elixe.Elixe;
 import elixe.events.OnRender2DEvent;
-import elixe.events.OnTickEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import elixe.modules.ModuleManager;
@@ -32,6 +29,7 @@ public class HUD extends Module {
 
 	boolean watermark;
 	ModuleBoolean watermarkOption = new ModuleBoolean("watermark", false) {
+		
 		public void valueChanged() {
 			watermark = (boolean) this.getValue();
 		}
@@ -39,6 +37,7 @@ public class HUD extends Module {
 
 	boolean moduleList;
 	ModuleBoolean moduleListOption = new ModuleBoolean("module list", false) {
+		
 		public void valueChanged() {
 			moduleList = (boolean) this.getValue();
 		}
@@ -46,6 +45,7 @@ public class HUD extends Module {
 
 	boolean sprinting;
 	ModuleBoolean sprintingOption = new ModuleBoolean("sprinting", false) {
+		
 		public void valueChanged() {
 			sprinting = (boolean) this.getValue();
 		}

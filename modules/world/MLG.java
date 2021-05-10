@@ -1,8 +1,6 @@
 package elixe.modules.world;
 
 import elixe.events.OnKeybindActionEvent;
-import elixe.events.OnMoveEvent;
-import elixe.events.OnRender3DEvent;
 import elixe.events.OnTickEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
@@ -28,6 +26,7 @@ public class MLG extends Module {
 
 	float searchRange;
 	ModuleFloat searchRangeOption = new ModuleFloat("search range", 7f, 4.5f, 15f) {
+		
 		public void valueChanged() {
 			searchRange = (float) this.getValue();
 		}
@@ -35,6 +34,7 @@ public class MLG extends Module {
 
 	float fallDistance;
 	ModuleFloat fallDistanceOption = new ModuleFloat("fall distance", 8f, 3f, 30f) {
+		
 		public void valueChanged() {
 			fallDistance = (float) this.getValue();
 		}

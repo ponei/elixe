@@ -2,11 +2,9 @@ package elixe.modules.render;
 
 import elixe.events.OnDrawChatLineEvent;
 import elixe.events.OnDrawTitleEvent;
-import elixe.events.OnRender2DEvent;
 import elixe.events.OnScoreboardPlayerNameEvent;
 import elixe.events.OnSetSessionEvent;
 import elixe.events.OnTabPlayerNameEvent;
-import elixe.events.OnTickEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleBoolean;
@@ -26,6 +24,7 @@ public class NameProtect extends Module {
 
 	boolean chat;
 	ModuleBoolean chatOption = new ModuleBoolean("chat", false) {
+		
 		public void valueChanged() {
 			chat = (boolean) this.getValue();
 		}
@@ -33,6 +32,7 @@ public class NameProtect extends Module {
 
 	boolean tab;
 	ModuleBoolean tabOption = new ModuleBoolean("tab", false) {
+		
 		public void valueChanged() {
 			tab = (boolean) this.getValue();
 		}
@@ -40,6 +40,7 @@ public class NameProtect extends Module {
 
 	boolean scoreboard;
 	ModuleBoolean scoreboardOption = new ModuleBoolean("scoreboard", false) {
+		
 		public void valueChanged() {
 			scoreboard = (boolean) this.getValue();
 		}
@@ -47,6 +48,7 @@ public class NameProtect extends Module {
 	
 	boolean title;
 	ModuleBoolean titleOption = new ModuleBoolean("title", false) {
+		
 		public void valueChanged() {
 			title = (boolean) this.getValue();
 		}
@@ -54,6 +56,7 @@ public class NameProtect extends Module {
 
 	String sessionUsername;
 
+	
 	public void onEnable() {
 		super.onEnable();
 		sessionUsername = mc.getSession().getUsername();

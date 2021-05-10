@@ -1,21 +1,17 @@
 package elixe.modules.combat;
 
-import java.io.IOException;
 import java.util.Random;
 
 import org.lwjgl.input.Mouse;
 
-import elixe.Elixe;
 import elixe.events.OnMouseInputGUIEvent;
 import elixe.events.OnTickEvent;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
 import elixe.modules.option.ModuleBoolean;
-import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
 import elixe.ui.clickgui.ElixeMenu;
 import elixe.utils.misc.TimerUtils;
-import jdk.nashorn.internal.ir.CatchNode;
 import me.zero.alpine.listener.EventHandler;
 import me.zero.alpine.listener.Listener;
 import net.minecraft.client.settings.KeyBinding;
@@ -35,6 +31,7 @@ public class AutoClicker extends Module {
 
 	int cpsMin;
 	ModuleInteger cpsMinOption = new ModuleInteger("cps min", 6, 0, 20) {
+		
 		public void valueChanged() {
 			int newCps = (int) this.getValue();
 
@@ -56,6 +53,7 @@ public class AutoClicker extends Module {
 
 	int cpsMax;
 	ModuleInteger cpsMaxOption = new ModuleInteger("cps max", 10, 0, 20) {
+		
 		public void valueChanged() {
 			int newCps = (int) this.getValue();
 
@@ -76,6 +74,7 @@ public class AutoClicker extends Module {
 
 	boolean workOnGui;
 	ModuleBoolean workOnGuiOption = new ModuleBoolean("work on gui", false) {
+		
 		public void valueChanged() {
 			workOnGui = (boolean) this.getValue();
 		}
@@ -83,6 +82,7 @@ public class AutoClicker extends Module {
 
 	boolean breakBlocks;
 	ModuleBoolean breakBlocksOption = new ModuleBoolean("break blocks", false) {
+		
 		public void valueChanged() {
 			breakBlocks = (boolean) this.getValue();
 		}
@@ -90,6 +90,7 @@ public class AutoClicker extends Module {
 
 	boolean requireWeapon;
 	ModuleBoolean requireWeaponOption = new ModuleBoolean("require weapon", false) {
+		
 		public void valueChanged() {
 			requireWeapon = (boolean) this.getValue();
 		}

@@ -1,10 +1,6 @@
 package elixe.modules;
 
-import java.lang.reflect.Type;
-
-import elixe.Elixe;
-import elixe.ui.base.ElixeButtonBase;
-import net.minecraft.client.Minecraft;
+import elixe.ui.clickgui.controls.base.ElixeButtonBase;
 
 public abstract class AModuleOption {
 	private boolean show = true;

@@ -4,7 +4,6 @@ import elixe.Elixe;
 import elixe.events.OnLivingUpdateEvent;
 import elixe.events.OnMoveEvent;
 import elixe.events.OnPacketSendEvent;
-import elixe.modules.AModuleOption;
 import elixe.utils.player.Rotations;
 import net.minecraft.client.Minecraft;
 
@@ -16,7 +15,7 @@ public class OffsetPhase implements IPhaseType {
 	int step;
 
 	double direction;
-	@Override
+	
 	public void OnMove(OnMoveEvent event) {
 		if (mc.thePlayer.isCollidedHorizontally) {
 			clip = true;
@@ -49,16 +48,17 @@ public class OffsetPhase implements IPhaseType {
 				mc.thePlayer.posZ + (Math.cos(direction) * offset));
 	}
 
-	@Override
+	
 	public void OnLivingUpdate(OnLivingUpdateEvent event) {
 		
 	}
 
-	@Override
+	
 	public void OnPacket(OnPacketSendEvent event) {
 		
 	}
 
+	
 	public String getName() {
 		return "offset";
 	}

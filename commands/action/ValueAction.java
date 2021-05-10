@@ -3,37 +3,39 @@ package elixe.commands.action;
 import elixe.commands.CommandManager;
 import elixe.modules.AModuleOption;
 import elixe.modules.Module;
-import elixe.modules.option.*;
+import elixe.modules.option.ModuleBoolean;
+import elixe.modules.option.ModuleFloat;
+import elixe.modules.option.ModuleInteger;
 import elixe.utils.misc.ChatUtils;
 
 public class ValueAction implements IAction {
 
-	@Override
+	
 	public String[] getPrefixes() {
 		return new String[] { "v", "value" };
 	}
 
-	@Override
+	
 	public String getArguments() {
 		return "<module> <option> <value>";
 	}
 
-	@Override
+	
 	public int necessaryArguments() {
 		return 3;
 	}
 
-	@Override
+	
 	public String getName() {
 		return "value";
 	}
 
-	@Override
+	
 	public String getDescription() {
 		return "changes a certain value of a module";
 	}
 
-	@Override
+	
 	public void execute(CommandManager commandManager, String[] args) {
 		Module module = commandManager.getModule(args[1]);
 		if (module != null) {

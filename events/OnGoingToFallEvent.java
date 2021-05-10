@@ -1,7 +1,5 @@
 package elixe.events;
 
-import me.zero.alpine.event.type.Cancellable;
-
 //moveEntity(double, double, double) : void - net.minecraft.entity.Entity
 //L:632
 public class OnGoingToFallEvent {

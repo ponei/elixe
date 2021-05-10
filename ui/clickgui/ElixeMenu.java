@@ -1,6 +1,5 @@
 package elixe.ui.clickgui;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -8,9 +7,9 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import elixe.Elixe;
+import elixe.modules.AModuleOption;
 import elixe.modules.Module;
 import elixe.modules.ModuleCategory;
-import elixe.modules.AModuleOption;
 import elixe.modules.option.ModuleArray;
 import elixe.modules.option.ModuleArrayMultiple;
 import elixe.modules.option.ModuleBoolean;
@@ -19,15 +18,16 @@ import elixe.modules.option.ModuleFloat;
 import elixe.modules.option.ModuleInteger;
 import elixe.modules.option.ModuleKey;
 import elixe.modules.render.ClickGUI;
-import elixe.ui.base.ElixeButtonBase;
-import elixe.ui.clickgui.options.ElixeArrayButton;
-import elixe.ui.clickgui.options.ElixeArrayMultipleButton;
-import elixe.ui.clickgui.options.ElixeBooleanButton;
-import elixe.ui.clickgui.options.ElixeColorButton;
-import elixe.ui.clickgui.options.ElixeFloatButton;
-import elixe.ui.clickgui.options.ElixeIntegerButton;
-import elixe.ui.clickgui.options.ElixeKeyButton;
-import elixe.utils.misc.ChatUtils;
+import elixe.ui.clickgui.controls.ElixeArrayButton;
+import elixe.ui.clickgui.controls.ElixeArrayMultipleButton;
+import elixe.ui.clickgui.controls.ElixeBooleanButton;
+import elixe.ui.clickgui.controls.ElixeCategoryButton;
+import elixe.ui.clickgui.controls.ElixeColorButton;
+import elixe.ui.clickgui.controls.ElixeFloatButton;
+import elixe.ui.clickgui.controls.ElixeIntegerButton;
+import elixe.ui.clickgui.controls.ElixeKeyButton;
+import elixe.ui.clickgui.controls.ElixeModuleButton;
+import elixe.ui.clickgui.controls.base.ElixeButtonBase;
 import elixe.utils.misc.LoggingUtils;
 import elixe.utils.render.GUIUtils;
 import net.minecraft.client.gui.GuiScreen;
@@ -35,33 +35,39 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 
 public class ElixeMenu extends GuiScreen {
-	int GUI_X = 0, GUI_Y = 0;
+	//gui location
+	private int GUI_X = 0, GUI_Y = 0;
+	//gui size
+	private int GUI_WIDTH = 300, GUI_HEIGHT = 200;
 
-	int GUI_WIDTH = 300, GUI_HEIGHT = 200;
+	//tamanho do botao de categoria, depende do width. double pra ter precisao
+	private double GUI_CATEGORY_WIDTH;
+	
+	final int GUI_BUTTON_HEIGHT = 17;
 
-	int GUI_CATEGORY_WIDTH;
-	int GUI_CATEGORY_HEIGHT = 20;
-
-	int GUI_MODULE_HEIGHT = 20;
-
+	//module selecionado
 	public Module CURRENT_MODULE;
 
-	boolean FIRST = true;
+	private boolean FIRST = true;
 
-	int SCALE_FACTOR;
+	//fator da gui
+	private int SCALE_FACTOR;
 
+	//categoria selecionada
 	private ModuleCategory SELECTED_CATEGORY = ModuleCategory.PLAYER;
 
-	private ElixeCategoryButton[] catButtons = new ElixeCategoryButton[ModuleCategory.values().length];
-	private ArrayList<ElixeModuleButton> modButtons = new ArrayList<ElixeModuleButton>();
-	private ArrayList<ElixeButtonBase> modOptions = new ArrayList<ElixeButtonBase>();
+	//botoes
+	private ElixeCategoryButton[] catButtons = new ElixeCategoryButton[ModuleCategory.values().length]; //categoria
+	private ArrayList<ElixeModuleButton> modButtons = new ArrayList<ElixeModuleButton>(); //modules
+	private ArrayList<ElixeButtonBase> modOptions = new ArrayList<ElixeButtonBase>(); //opcoes do module
 
 	public ElixeMenu(ClickGUI ck) {
 		// var setup
 		CLICKGUI = ck;
-		GUI_CATEGORY_WIDTH = GUI_WIDTH / ModuleCategory.values().length;
+		GUI_CATEGORY_WIDTH = (double)(GUI_WIDTH) / (double)(ModuleCategory.values().length);
 	}
 
+	
 	public void initGui() {
 		if (FIRST) {
 			setupMenu();
@@ -88,12 +94,13 @@ public class ElixeMenu extends GuiScreen {
 	}
 
 	private void setupMenu() {
+		//centralizar
 		GUI_X = this.width / 2 - GUI_WIDTH / 2;
 		GUI_Y = 10;
 
 		for (int i = 0; ModuleCategory.values().length > i; i++) {
 			catButtons[i] = new ElixeCategoryButton(ModuleCategory.values()[i].toString().toLowerCase(), ModuleCategory.values()[i],
-					GUI_X + GUI_CATEGORY_WIDTH * i, GUI_Y, GUI_CATEGORY_WIDTH, GUI_CATEGORY_HEIGHT);
+					(int)(GUI_X + GUI_CATEGORY_WIDTH * i), GUI_Y, (int)(GUI_CATEGORY_WIDTH), GUI_BUTTON_HEIGHT);
 		}
 
 		changeCategory(SELECTED_CATEGORY);
@@ -104,7 +111,7 @@ public class ElixeMenu extends GuiScreen {
 	}
 
 	private boolean isInOptionsAreaStrict(int btY) {
-		return btY >= GUI_Y + GUI_CATEGORY_HEIGHT && GUI_Y + GUI_HEIGHT >= btY;
+		return btY >= GUI_Y + GUI_BUTTON_HEIGHT && GUI_Y + GUI_HEIGHT >= btY;
 	}
 
 	private boolean isInGUIArea(int mouseX, int mouseY) {
@@ -112,11 +119,11 @@ public class ElixeMenu extends GuiScreen {
 	}
 
 	private boolean isInOptionsArea(int mouseX, int mouseY) {
-		return (mouseX >= GUI_X + 140 && mouseX <= GUI_X + GUI_WIDTH && mouseY >= GUI_Y + GUI_CATEGORY_HEIGHT && mouseY <= GUI_Y + GUI_HEIGHT);
+		return (mouseX >= GUI_X + 140 && mouseX <= GUI_X + GUI_WIDTH && mouseY >= GUI_Y + GUI_BUTTON_HEIGHT && mouseY <= GUI_Y + GUI_HEIGHT);
 	}
 	
 	private boolean isInModulesArea(int mouseX, int mouseY) {
-		return (mouseX >= GUI_X && mouseX <= GUI_X + 140 && mouseY >= GUI_Y + GUI_CATEGORY_HEIGHT && mouseY <= GUI_Y + GUI_HEIGHT);
+		return (mouseX >= GUI_X && mouseX <= GUI_X + 140 && mouseY >= GUI_Y + GUI_BUTTON_HEIGHT && mouseY <= GUI_Y + GUI_HEIGHT);
 	}
 
 	private ElixeButtonBase modOptionOverlay;
@@ -133,6 +140,7 @@ public class ElixeMenu extends GuiScreen {
 		return modOptionOverlay == modOpt;
 	}
 
+	
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 
 		dragIfPossible(mouseX, mouseY);
@@ -181,7 +189,7 @@ public class ElixeMenu extends GuiScreen {
 	}
 
 	private void scissorButtons() {
-		glScissor(GUI_X, GUI_Y + GUI_CATEGORY_HEIGHT, GUI_X + GUI_WIDTH, GUI_Y + GUI_HEIGHT);
+		glScissor(GUI_X, GUI_Y + GUI_BUTTON_HEIGHT, GUI_X + GUI_WIDTH, GUI_Y + GUI_HEIGHT);
 	}
 
 	private void glScissor(int x1, int y1, int x2, int y2) {
@@ -196,6 +204,7 @@ public class ElixeMenu extends GuiScreen {
 
 	int clickX, clickY;
 
+	
 	public void mouseClicked(int mouseX, int mouseY, int mouseButton) {
 
 		if (modOptionOverlay != null) {
@@ -208,7 +217,7 @@ public class ElixeMenu extends GuiScreen {
 
 		// category change
 		for (int i = 0; catButtons.length > i; i++) {
-			if (catButtons[i].checkMouseClick(mouseX, mouseY)) {
+			if (catButtons[i].checkMouseOver(mouseX, mouseY)) {
 				changeCategory(catButtons[i].getCategory());
 				return;
 			}
@@ -242,6 +251,7 @@ public class ElixeMenu extends GuiScreen {
 
 	}
 
+	
 	protected void mouseReleased(int mouseX, int mouseY, int state) {
 		if (dragging) {
 			dragging = false;
@@ -282,12 +292,14 @@ public class ElixeMenu extends GuiScreen {
 		}
 	}
 
+	
 	public boolean doesGuiPauseGame() {
 		return false;
 	}
 
 	ClickGUI CLICKGUI;
 
+	
 	public void onGuiClosed() {
 		if (CLICKGUI.isToggled()) {
 			try {
@@ -306,51 +318,51 @@ public class ElixeMenu extends GuiScreen {
 		modOptionOverlay = null;
 
 		CURRENT_MODULE = mod;
-		optionsSpacing = GUI_MODULE_HEIGHT;
+		optionsSpacing = GUI_BUTTON_HEIGHT;
 		for (AModuleOption opt : mod.getOptions()) {
 			if (!opt.shouldShow()) {
 				continue;
 			}
 			if (opt instanceof ModuleKey) {
 				ElixeKeyButton kbt = new ElixeKeyButton(opt.getName(), (ModuleKey) opt, GUI_X + 140, GUI_Y + 5 + optionsSpacing, GUI_WIDTH - 150,
-						GUI_MODULE_HEIGHT);
-				optionsSpacing += GUI_MODULE_HEIGHT;
+						GUI_BUTTON_HEIGHT);
+				optionsSpacing += GUI_BUTTON_HEIGHT;
 				modOptions.add(kbt);
 			}
 			if (opt instanceof ModuleBoolean) {
 				ElixeBooleanButton bbt = new ElixeBooleanButton(this, opt.getName(), (ModuleBoolean) opt, GUI_X + 140, GUI_Y + 5 + optionsSpacing, GUI_WIDTH - 150,
-						GUI_MODULE_HEIGHT);
-				optionsSpacing += GUI_MODULE_HEIGHT;
+						GUI_BUTTON_HEIGHT);
+				optionsSpacing += GUI_BUTTON_HEIGHT;
 				modOptions.add(bbt);
 			}
 			if (opt instanceof ModuleFloat) {
 				ElixeFloatButton fbt = new ElixeFloatButton(opt.getName(), (ModuleFloat) opt, GUI_X + 140, GUI_Y + 5 + optionsSpacing, GUI_WIDTH - 150,
-						GUI_MODULE_HEIGHT + 14, GUI_MODULE_HEIGHT);
-				optionsSpacing += GUI_MODULE_HEIGHT + 16;
+						GUI_BUTTON_HEIGHT + 14, GUI_BUTTON_HEIGHT);
+				optionsSpacing += GUI_BUTTON_HEIGHT + 16;
 				modOptions.add(fbt);
 			}
 			if (opt instanceof ModuleInteger) {
 				ElixeIntegerButton ibt = new ElixeIntegerButton(opt.getName(), (ModuleInteger) opt, GUI_X + 140, GUI_Y + 5 + optionsSpacing, GUI_WIDTH - 150,
-						GUI_MODULE_HEIGHT + 14, GUI_MODULE_HEIGHT);
-				optionsSpacing += GUI_MODULE_HEIGHT + 16;
+						GUI_BUTTON_HEIGHT + 14, GUI_BUTTON_HEIGHT);
+				optionsSpacing += GUI_BUTTON_HEIGHT + 16;
 				modOptions.add(ibt);
 			}
 			if (opt instanceof ModuleArray) {
 				ElixeArrayButton abt = new ElixeArrayButton(this, opt.getName(), (ModuleArray) opt, GUI_X + 140, GUI_Y + 5 + optionsSpacing, GUI_WIDTH - 150,
-						GUI_MODULE_HEIGHT + 14, GUI_MODULE_HEIGHT);
-				optionsSpacing += GUI_MODULE_HEIGHT + 16;
+						GUI_BUTTON_HEIGHT + 14, GUI_BUTTON_HEIGHT);
+				optionsSpacing += GUI_BUTTON_HEIGHT + 16;
 				modOptions.add(abt);
 			}
 			if (opt instanceof ModuleArrayMultiple) {
 				ElixeArrayMultipleButton ambt = new ElixeArrayMultipleButton(this, opt.getName(), (ModuleArrayMultiple) opt, GUI_X + 140,
-						GUI_Y + 5 + optionsSpacing, GUI_WIDTH - 150, GUI_MODULE_HEIGHT + 14, GUI_MODULE_HEIGHT);
-				optionsSpacing += GUI_MODULE_HEIGHT + 16;
+						GUI_Y + 5 + optionsSpacing, GUI_WIDTH - 150, GUI_BUTTON_HEIGHT + 14, GUI_BUTTON_HEIGHT);
+				optionsSpacing += GUI_BUTTON_HEIGHT + 16;
 				modOptions.add(ambt);
 			}
 			if (opt instanceof ModuleColor) {
 				ElixeColorButton cbt = new ElixeColorButton(this, opt.getName(), (ModuleColor) opt, GUI_X + 140, GUI_Y + 5 + optionsSpacing, GUI_WIDTH - 150,
-						GUI_MODULE_HEIGHT);
-				optionsSpacing += GUI_MODULE_HEIGHT;
+						GUI_BUTTON_HEIGHT);
+				optionsSpacing += GUI_BUTTON_HEIGHT;
 				modOptions.add(cbt);
 			}
 		}
@@ -363,7 +375,7 @@ public class ElixeMenu extends GuiScreen {
 	int optionsScroll, optionsScrollMax;
 
 	private void refreshScrollLogic(boolean keepScroll) {	
-		optionsScrollMax = (GUI_HEIGHT - GUI_CATEGORY_HEIGHT) - optionsSpacing;
+		optionsScrollMax = (GUI_HEIGHT - GUI_BUTTON_HEIGHT) - optionsSpacing;
 		if (optionsScrollMax > 0) {
 			optionsScrollMax = 0;
 		}
@@ -407,16 +419,16 @@ public class ElixeMenu extends GuiScreen {
 		modOptions.clear();
 		modOptionOverlay = null;
 
-		modulesSpacing = GUI_MODULE_HEIGHT;
+		modulesSpacing = GUI_BUTTON_HEIGHT;
 		int i = 1;
 		for (Module m : Elixe.INSTANCE.MODULE_MANAGER.getModulesByCategory(SELECTED_CATEGORY)) {
-			ElixeModuleButton bt = new ElixeModuleButton(m.getName().toLowerCase(), m, GUI_X + 10, GUI_Y + GUI_CATEGORY_HEIGHT * i, 110, 30);
+			ElixeModuleButton bt = new ElixeModuleButton(m.getName().toLowerCase(), m, GUI_X + 10, GUI_Y + GUI_BUTTON_HEIGHT * i, 110, 30);
 			modButtons.add(bt);
-			modulesSpacing += GUI_MODULE_HEIGHT;
+			modulesSpacing += GUI_BUTTON_HEIGHT;
 			i++;
 		}	
 		
-		modulesScrollMax = (GUI_HEIGHT - GUI_CATEGORY_HEIGHT) - modulesSpacing;
+		modulesScrollMax = (GUI_HEIGHT - GUI_BUTTON_HEIGHT) - modulesSpacing;
 		if (modulesScrollMax > 0) {
 			modulesScrollMax = 0;
 		}
@@ -498,6 +510,7 @@ public class ElixeMenu extends GuiScreen {
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}
 
+	
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		super.keyTyped(typedChar, keyCode);
 		for (ElixeButtonBase bti : modOptions) {

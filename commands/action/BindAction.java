@@ -9,32 +9,32 @@ import elixe.utils.misc.ChatUtils;
 
 public class BindAction implements IAction {
 
-	@Override
+	
 	public String[] getPrefixes() {
 		return new String[] { "b", "bind" };
 	}
 
-	@Override
+	
 	public String getArguments() {
 		return "<module> <key>";
 	}
 
-	@Override
+	
 	public int necessaryArguments() {
 		return 2;
 	}
 
-	@Override
+	
 	public String getName() {
 		return "bind";
 	}
 
-	@Override
+	
 	public String getDescription() {
 		return "binds a key to a module";
 	}
 
-	@Override
+	
 	public void execute(CommandManager commandManager, String[] args) {
 		Module module = commandManager.getModule(args[1]);
 		if (module != null) {

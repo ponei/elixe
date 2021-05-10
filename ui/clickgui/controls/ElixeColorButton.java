@@ -1,19 +1,17 @@
-package elixe.ui.clickgui.options;
+package elixe.ui.clickgui.controls;
 
 import java.awt.Color;
 
 import org.lwjgl.opengl.GL11;
 
 import elixe.modules.option.ModuleColor;
-import elixe.ui.base.ElixeButtonBase;
 import elixe.ui.clickgui.ElixeMenu;
+import elixe.ui.clickgui.controls.base.ElixeButtonBase;
 import elixe.utils.render.GUIUtils;
 
 public class ElixeColorButton extends ElixeButtonBase {
 	// menu ref
 	private ElixeMenu menu;
-
-	private String text;
 
 	// option
 	private ModuleColor colorOption;
@@ -23,9 +21,6 @@ public class ElixeColorButton extends ElixeButtonBase {
 	private float[] colorOptionHUEGL = new float[3];
 
 	private int[] colorOptionRGB;
-
-	private int textWid;
-	private int mid;
 
 	static int previewBoxWidth = 30;
 	static int previewBoxHeight = 7;
@@ -45,9 +40,8 @@ public class ElixeColorButton extends ElixeButtonBase {
 	int hueXStart, hueXEnd;
 
 	public ElixeColorButton(ElixeMenu menu, String text, ModuleColor opt, int x, int y, int wid, int hei) {
+		super(text, x, y, wid, hei);
 		this.menu = menu;
-
-		this.text = text;
 
 		opt.setButton(this);
 		
@@ -66,13 +60,6 @@ public class ElixeColorButton extends ElixeButtonBase {
 
 		updateBaseColor();
 
-		this.x = x;
-		this.y = y;
-		this.width = wid;
-		this.height = hei;
-
-		textWid = fontrenderer.getStringWidth(text);
-		mid = y + height / 2;
 		overlayY = y + height;
 
 		alphaXStart = x + width - pickerSize - hueSize - alphaSize + pickerSpacing;
@@ -106,8 +93,9 @@ public class ElixeColorButton extends ElixeButtonBase {
 	}
 
 	// update all values
+	
 	public void updatePosition(int xDif, int yDif) {
-		mid = y + height / 2;
+		updateControlMiddle();
 		overlayY = y + height;
 
 
@@ -132,6 +120,7 @@ public class ElixeColorButton extends ElixeButtonBase {
 		}
 	}
 
+	
 	public void drawText(int mouseX, int mouseY) {
 		fontrenderer.drawStringWithShadow(text, x, y + height / 2f - fontrenderer.FONT_HEIGHT / 2, 0.86f, 1f); // 220
 	}
@@ -141,6 +130,7 @@ public class ElixeColorButton extends ElixeButtonBase {
 	// use cached polygons
 	double[][] colorPreview;
 
+	
 	public void drawButton(int mouseX, int mouseY) {
 		float c = pickerOpen ? 0.86f : 0.47f; // 220 e 120
 		GUIUtils.drawPolygon(colorPreview, colorOptionGL[0], colorOptionGL[1], colorOptionGL[2], 1f);
@@ -150,13 +140,14 @@ public class ElixeColorButton extends ElixeButtonBase {
 
 		GL11.glLineWidth(2f);
 		GL11.glBegin(GL11.GL_LINES);
-		GL11.glVertex2f(x + 2 + textWid, mid);
-		GL11.glVertex2f(x + width - previewBoxWidth - 3, mid);
+		GL11.glVertex2f(x + 2 + textWidth, controlMiddle);
+		GL11.glVertex2f(x + width - previewBoxWidth - 3, controlMiddle);
 		GL11.glEnd();
 	}
 
+	
 	public boolean mouseClick(int mouseX, int mouseY, int mouseButton) {
-		if (!checkMouseClick(mouseX, mouseY)) {
+		if (!checkMouseOver(mouseX, mouseY)) {
 			return false;
 		}
 
@@ -172,6 +163,7 @@ public class ElixeColorButton extends ElixeButtonBase {
 		return true;
 	}
 
+	
 	public void setOverlayOpen(boolean b) {
 		pickerOpen = b;
 	}
@@ -292,6 +284,7 @@ public class ElixeColorButton extends ElixeButtonBase {
 		}
 	}
 
+	
 	public void drawOverlay(int mouseX, int mouseY) {
 		GUIUtils.drawPolygon(colorPicker, 0.24f, 1f);
 
@@ -326,10 +319,12 @@ public class ElixeColorButton extends ElixeButtonBase {
 		GL11.glEnd();
 	}
 
+	
 	public void drawOverlayText(int mouseX, int mouseY) {
 
 	}
 
+	
 	public boolean overlayClick(int mouseX, int mouseY, int mouseButton) {
 		if (!containsPicker(mouseX, mouseY)) {
 			return false;
@@ -340,6 +335,7 @@ public class ElixeColorButton extends ElixeButtonBase {
 		return true;
 	}
 
+	
 	public void overlayClickReleased(int mouseX, int mouseY, int state) {
 		holding = false;
 	}

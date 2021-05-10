@@ -1,7 +1,6 @@
 package elixe.modules.option;
 
 import elixe.modules.AModuleOption;
-import elixe.ui.base.ElixeButtonBase;
 
 public class ModuleColor extends AModuleOption {
 	private int color;
@@ -58,10 +57,12 @@ public class ModuleColor extends AModuleOption {
 	}
 
 
+	
 	public Object getValue() {
 		return color;
 	}
 
+	
 	public void setValue(Object v) {
 		this.color = (int) v;
 		valueChanged();

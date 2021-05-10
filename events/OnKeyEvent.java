@@ -1,7 +1,5 @@
 package elixe.events;
 
-import net.minecraft.client.gui.GuiScreen;
-
 //runTick() : void - net.minecraft.client.Minecraft
 //L:1708
 public class OnKeyEvent {

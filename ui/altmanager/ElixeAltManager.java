@@ -25,7 +25,7 @@ public final class ElixeAltManager extends GuiScreen {
 		this.previousScreen = previousScreen;
 	}
 
-	@Override
+	
 	protected void actionPerformed(GuiButton button) {
 		switch (button.id) {
 		case 1:
@@ -47,13 +47,13 @@ public final class ElixeAltManager extends GuiScreen {
 		}
 	}
 
-	@Override
+	
 	public void drawScreen(int x2, int y2, float z2) {
 		this.drawDefaultBackground();
 		this.username.drawTextBox();
 		this.password.drawTextBox();
 		this.drawCenteredString(this.mc.fontRendererObj, "Alt Login", width / 2, 20, -1);
-		this.drawCenteredString(this.mc.fontRendererObj, (Object) ((Object) EnumChatFormatting.GRAY) + currentService, width / 2, 29, -1);
+		this.drawCenteredString(this.mc.fontRendererObj, (EnumChatFormatting.GRAY) + currentService, width / 2, 29, -1);
 		this.drawCenteredString(this.mc.fontRendererObj,
 				this.thread == null ? "Idle..." : this.thread.getStatus(),
 				width / 2, 49, -1);
@@ -66,7 +66,7 @@ public final class ElixeAltManager extends GuiScreen {
 		super.drawScreen(x2, y2, z2);
 	}
 
-	@Override
+	
 	public void initGui() {
 		int var3 = height / 4 + 24;
 		this.buttonList.add(new GuiButton(1, width / 2 - 100, var3 + 72 + 12, "Login"));
@@ -78,7 +78,7 @@ public final class ElixeAltManager extends GuiScreen {
 		Keyboard.enableRepeatEvents(true);
 	}
 
-	@Override
+	
 	protected void keyTyped(char character, int key) {
 		try {
 			super.keyTyped(character, key);
@@ -94,13 +94,13 @@ public final class ElixeAltManager extends GuiScreen {
 			}
 		}
 		if (character == '\r') {
-			this.actionPerformed((GuiButton) this.buttonList.get(0));
+			this.actionPerformed(this.buttonList.get(0));
 		}
 		this.username.textboxKeyTyped(character, key);
 		this.password.textboxKeyTyped(character, key);
 	}
 
-	@Override
+	
 	protected void mouseClicked(int x2, int y2, int button) {
 		try {
 			super.mouseClicked(x2, y2, button);
@@ -111,12 +111,12 @@ public final class ElixeAltManager extends GuiScreen {
 		this.password.mouseClicked(x2, y2, button);
 	}
 
-	@Override
+	
 	public void onGuiClosed() {
 		Keyboard.enableRepeatEvents(false);
 	}
 
-	@Override
+	
 	public void updateScreen() {
 		this.username.updateCursorCounter();
 		this.password.updateCursorCounter();

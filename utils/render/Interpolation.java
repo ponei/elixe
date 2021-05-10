@@ -3,8 +3,6 @@ package elixe.utils.render;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.Vec3;
 
 public class Interpolation {
 	public static double[] interpolateEntity(Minecraft mc, double tickDelta, Entity entity) {

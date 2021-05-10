@@ -1,9 +1,6 @@
 package elixe.modules.option;
 
-import java.lang.reflect.Type;
-
 import elixe.modules.AModuleOption;
-import elixe.ui.base.ElixeButtonBase;
 
 public class ModuleArrayMultiple extends AModuleOption {
 	private String[] array;
@@ -28,9 +25,11 @@ public class ModuleArrayMultiple extends AModuleOption {
 	}
 
 	
+	
 	public Object getValue() {
 		return selectedIndexes;
 	}
+	
 	
 	public void setValue(Object b) {
 		this.selectedIndexes = (boolean[]) b;

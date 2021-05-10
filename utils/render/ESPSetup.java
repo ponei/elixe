@@ -17,7 +17,7 @@ public class ESPSetup {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glPushMatrix();
 		GL11.glLoadIdentity();
-		GL11.glOrtho(0.0, (double)mc.displayWidth, (double)mc.displayHeight, 0.0, -200, 10.0);
+		GL11.glOrtho(0.0, mc.displayWidth, mc.displayHeight, 0.0, -200, 10.0);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPushMatrix();
 		GL11.glLoadIdentity();
