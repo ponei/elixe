@@ -16,3 +16,8 @@ We can't release the decompiled source code of Minecraft in any way. Because of 
 
 ### TheAlteningAuth4j
 [TheAlteningAuth4j](https://github.com/TheAltening/TheAlteningAuth4j) is a TheAltening Auth API made by [Vladymyr](https://github.com/Vladymyr). We use this to quickly switch service types in the AltManager GUI.
+
+## Discord
+Our little community if you want to join. Please read FAQ before anything!
+
+[![widget for the community guild](https://discord.com/api/guilds/739053636583424060/widget.png?style=shield)](https://discord.gg/cUqkhDxWrK)
